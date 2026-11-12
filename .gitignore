@@ -1,0 +1,33 @@
+# Environment variables and secrets
+.env
+.env.local
+.env.*.local
+*.secret
+*.pem
+*.key
+
+# Operating System files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Editor & IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Node / dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build & Logs
+dist/
+build/
+*.log
