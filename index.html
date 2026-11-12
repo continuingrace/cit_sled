@@ -1177,7 +1177,24 @@ function makeVillager(o) {
 // ===== 사운드 (Web Audio 직접 합성) =====
 const AU = { ctx: null, muted: false, next: 0, idx: 0, on: false };
 try { AU.muted = localStorage.getItem('sledMute') === '1'; } catch (e) { }
+
+function setPlaybackSession() {
+  if ('audioSession' in navigator) {
+    try { navigator.audioSession.type = 'playback'; } catch (e) { }
+  }
+}
+setPlaybackSession();
+['touchstart', 'touchend', 'click', 'pointerdown'].forEach(evt => {
+  window.addEventListener(evt, () => {
+    setPlaybackSession();
+    if (AU.ctx && (AU.ctx.state === 'suspended' || AU.ctx.state === 'interrupted')) {
+      AU.ctx.resume();
+    }
+  }, { passive: true });
+});
+
 function auInit() {
+  setPlaybackSession();
   if (AU.ctx) { if (AU.ctx.state === 'suspended' || AU.ctx.state === 'interrupted') AU.ctx.resume(); return; }
   const C = window.AudioContext || window.webkitAudioContext; if (!C) return;
   const c = AU.ctx = new C(); AU.master = c.createGain(); AU.master.gain.value = AU.muted ? 0 : 0.85; AU.master.connect(c.destination);
@@ -1218,7 +1235,7 @@ function bgmTick(fast) {
     AU.beatPos += l; if ((AU.idx + 1) % MEL.length === 0) AU.beatPos = 0; AU.idx++; AU.next += d;
   }
 }
-function bgm(on) { AU.on = on; if (on) { if (AU.ctx && (AU.ctx.state === 'suspended' || AU.ctx.state === 'interrupted')) AU.ctx.resume(); AU.idx = 0; AU.beatPos = 0; AU.next = AU.ctx ? AU.ctx.currentTime + 0.05 : 0; } }
+function bgm(on) { AU.on = on; if (on) { setPlaybackSession(); if (AU.ctx && (AU.ctx.state === 'suspended' || AU.ctx.state === 'interrupted')) AU.ctx.resume(); AU.idx = 0; AU.beatPos = 0; AU.next = AU.ctx ? AU.ctx.currentTime + 0.05 : 0; } }
 function auEngine(v, ground, mute) { if (!AU.ctx) return; const t = AU.ctx.currentTime, k = mute ? 0 : 1; AU.sled.g.gain.setTargetAtTime(k * (ground ? Math.min(0.3, v / 110) : 0), t, 0.05); AU.sled.bq.frequency.setTargetAtTime(700 + v * 30, t, 0.1); AU.wind.g.gain.setTargetAtTime(k * Math.min(0.5, v * v / 3200), t, 0.1); AU.wind.bq.frequency.setTargetAtTime(300 + v * 14, t, 0.1); }
 
 // ===== 메인: 렌더 · 카메라 · UI · 게임 흐름 =====
