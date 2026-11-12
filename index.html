@@ -187,6 +187,7 @@ body.paused *{animation-play-state:paused!important}
   <div class="total"><span>총점</span><b id="rTotal">0</b></div>
   <form class="namerow" id="nameForm"><input id="nameIn" maxlength="10" placeholder="이름을 남겨 주세요" autocomplete="off" enterkeyhint="done"><button class="btn sub" id="bSave" type="submit">기록 남기기</button></form>
   <div class="best" id="rBest"></div>
+  <button class="btn" id="bLookAround" style="background:rgba(255,216,77,.22);border:1px solid #ffd84d;color:#ffd84d;font-weight:700;margin-bottom:6px">주변 풍경 둘러보기 👀 (360도 회전)</button>
   <div class="row"><button class="btn" id="bRetry">한 번 더</button><button class="btn sub" id="bMenu">메인으로</button><button class="btn sub" id="bBoard2">순위표</button></div>
   <div class="row"><button class="btn sub" id="bStory">스토리로 공유</button><button class="btn sub" id="bFeed">피드로 공유</button></div>
   <a class="btn link" id="bHome" href="https://www.citkorea.co.kr" target="_blank" rel="noopener">CiT코칭연구소 홈페이지 구경하기 ↗</a>
@@ -1177,7 +1178,7 @@ function makeVillager(o) {
 const AU = { ctx: null, muted: false, next: 0, idx: 0, on: false };
 try { AU.muted = localStorage.getItem('sledMute') === '1'; } catch (e) { }
 function auInit() {
-  if (AU.ctx) { if (AU.ctx.state === 'suspended') AU.ctx.resume(); return; }
+  if (AU.ctx) { if (AU.ctx.state === 'suspended' || AU.ctx.state === 'interrupted') AU.ctx.resume(); return; }
   const C = window.AudioContext || window.webkitAudioContext; if (!C) return;
   const c = AU.ctx = new C(); AU.master = c.createGain(); AU.master.gain.value = AU.muted ? 0 : 0.85; AU.master.connect(c.destination);
   const nb = c.createBuffer(1, c.sampleRate * 2, c.sampleRate), d = nb.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1; AU.noise = nb;
@@ -1217,7 +1218,7 @@ function bgmTick(fast) {
     AU.beatPos += l; if ((AU.idx + 1) % MEL.length === 0) AU.beatPos = 0; AU.idx++; AU.next += d;
   }
 }
-function bgm(on) { AU.on = on; if (on) { AU.idx = 0; AU.beatPos = 0; AU.next = 0; } }
+function bgm(on) { AU.on = on; if (on) { if (AU.ctx && (AU.ctx.state === 'suspended' || AU.ctx.state === 'interrupted')) AU.ctx.resume(); AU.idx = 0; AU.beatPos = 0; AU.next = AU.ctx ? AU.ctx.currentTime + 0.05 : 0; } }
 function auEngine(v, ground, mute) { if (!AU.ctx) return; const t = AU.ctx.currentTime, k = mute ? 0 : 1; AU.sled.g.gain.setTargetAtTime(k * (ground ? Math.min(0.3, v / 110) : 0), t, 0.05); AU.sled.bq.frequency.setTargetAtTime(700 + v * 30, t, 0.1); AU.wind.g.gain.setTargetAtTime(k * Math.min(0.5, v * v / 3200), t, 0.1); AU.wind.bq.frequency.setTargetAtTime(300 + v * 14, t, 0.1); }
 
 // ===== 메인: 렌더 · 카메라 · UI · 게임 흐름 =====
@@ -1310,6 +1311,14 @@ function setCam(dt, snap) {
     if (st === 'finish' || st === 'result') { // 오두막 앞 마지막 장면으로 천천히 이동
       const e = sst(0.4, 4.2, G.finT), sw = Math.sin(G.time * 0.22), wide = innerWidth / innerHeight > 1.15;
       wpos(2049.5 - sw * 0.8, 5.4 + sw * 1.1, 4.5, eP); wpos(2079, -0.6, 3.4, eL); oP.lerp(eP, e); oL.lerp(eL, e); fov = lerp(fov, wide ? 43 : 58, e);
+      if (G.lookYaw || G.lookPitch) {
+        const yaw = G.lookYaw || 0, pitch = G.lookPitch || 0;
+        const dx = oL.x - oP.x, dz = oL.z - oP.z, dist = Math.sqrt(dx * dx + dz * dz) || 30;
+        const baseA = Math.atan2(dx, dz);
+        oL.x = oP.x + Math.sin(baseA + yaw) * Math.cos(pitch) * dist;
+        oL.z = oP.z + Math.cos(baseA + yaw) * Math.cos(pitch) * dist;
+        oL.y = oP.y + Math.sin(pitch) * dist;
+      }
       G.offR += (((st === 'result' && wide && G.resOpen) ? 0.17 : 0) - G.offR) * Math.min(1, dt * 2.2); off = G.offR; } }
   camera.position.copy(oP); camera.lookAt(oL); camera.fov = fov;
   if (off > 0.002) camera.setViewOffset(innerWidth, innerHeight, -off * innerWidth, 0, innerWidth, innerHeight); else if (camera.view) camera.clearViewOffset();
@@ -1349,6 +1358,7 @@ function saveName() {
   const b = getBoard(), at = Date.now(), rec = { n, s: G.last.score, t: G.last.time, c: G.pick, d: G.diff, at }; b.push(rec); b.sort((x, y) => (y.s - x.s) || (x.t - y.t));
   try { localStorage.setItem('sledBoard', JSON.stringify(b.slice(0, 30))); localStorage.setItem('sledName', n); } catch (e) { }
   G.saved = at; G.mine = rec; $('#bSave').textContent = '등록 완료'; $('#bSave').disabled = true; $('#nameIn').disabled = true; $('#nameIn').blur(); SFX.gate();
+  if (G.updateResultRoster) G.updateResultRoster();
   $('#rBest').textContent = '온라인 순위표에 올리는 중이에요…';
   postOnline(rec).then(() => { $('#rBest').textContent = '온라인 순위표에 이름을 남겼어요.'; }, () => { $('#rBest').textContent = '온라인에 올리지 못해 이 기기에만 저장했어요.'; }).then(() => toggleBoard(true));
 }
@@ -1400,6 +1410,8 @@ function buildUI() {
   $('#bStart').onclick = () => startRace(); $('#bHelp').onclick = () => toggleHelp(); $('#bHelpX').onclick = () => { toggleHelp(false); if (G.paused) pause(false); };
   $('#bBoard').onclick = $('#bBoard2').onclick = () => toggleBoard(true); $('#bBoardX').onclick = () => toggleBoard(false);
   $('#nameForm').onsubmit = (e) => { e.preventDefault(); saveName(); };
+  $('#nameIn').addEventListener('input', () => { if (G.updateResultRoster) G.updateResultRoster(); });
+  $('#bResX').onclick = () => { setResOpen(false); toast('화면을 드래그하거나 방향키로', '주변 360도를 둘러보세요! 👀'); };
   $('#bShot').onclick = $('#bShot2').onclick = () => sceneShot(); $('#bStory').onclick = () => shareCard('story'); $('#bFeed').onclick = () => shareCard('feed');
   // Claude 게시 페이지에서는 일반 다운로드가 막혀 있어 downloads 기능으로 저장
   try { if (window.claude && window.claude.use) window.claude.use('downloads').then(d => { G.dl = d; }).catch(() => { }); } catch (e) { }
@@ -1407,7 +1419,22 @@ function buildUI() {
   $('#bShare').onclick = () => doShare(); $('#bShotX').onclick = () => $('#shot').classList.add('hidden'); $('#bResX').onclick = () => setResOpen(false); $('#bResOpen').onclick = () => setResOpen(true);
   $('#bSnd').onclick = $('#bSnd2').onclick = () => { auInit(); auMute(!AU.muted); sndIcon(); };
   $('#bCam').onclick = () => { G.camMode = (G.camMode + 1) % 3; }; $('#bPause').onclick = () => pause();
-  $('#bResume').onclick = () => pause(false); $('#bRetry').onclick = $('#bRetry2').onclick = $('#bRetry3').onclick = () => whiteFade(() => { pause(false, true); setResOpen(false); $('#endbar').classList.add('hidden'); startRace(true); });
+  $('#bResume').onclick = () => pause(false); const doRetry = () => {
+    auInit();
+    if (AU.ctx && (AU.ctx.state === 'suspended' || AU.ctx.state === 'interrupted')) AU.ctx.resume();
+    whiteFade(() => {
+      pause(false, true);
+      setResOpen(false);
+      $('#endbar').classList.add('hidden');
+      G.lookYaw = 0;
+      G.lookPitch = 0;
+      toMenu();
+    });
+  };
+  $('#bRetry').onclick = $('#bRetry2').onclick = $('#bRetry3').onclick = doRetry;
+  $('#bMenu').onclick = doRetry;
+  const la = document.getElementById('bLookAround');
+  if (la) la.onclick = () => { setResOpen(false); toast('화면을 드래그하거나 방향키로', '주변 360도를 둘러보세요! 👀'); };
   $('#bMenu').onclick = $('#bMenu2').onclick = () => whiteFade(() => { pause(false, true); toMenu(); });
   // 마지막 장면의 팻말·간판을 누르면 홈페이지로
   const ray = new THREE.Raycaster(), nd = new THREE.Vector2(), hit = (e) => { if (G.state !== 'result') return false; nd.set(e.clientX / innerWidth * 2 - 1, -(e.clientY / innerHeight) * 2 + 1); ray.setFromCamera(nd, camera); return ray.intersectObjects(W.links, false).length > 0; };
@@ -1419,13 +1446,13 @@ function whiteFade(fn) { const f = $('#fade'); f.classList.add('on'); setTimeout
 function pause(v, silent) { if (G.state !== 'race' && !G.paused) return; G.paused = v === undefined ? !G.paused : v; $('#pause').classList.toggle('hidden', !G.paused || !!silent || !$('#help').classList.contains('hidden')); document.body.classList.toggle('paused', G.paused); if (G.paused) auEngine(0, false, true); }
 function resetWorld() { Object.values(W.snowmen).forEach(m => { m.visible = true; m.position.copy(m.userData.home); m.rotation.x = m.rotation.z = 0; }); trails.forEach(t => t.reset()); W.fireOn = false; G.lastSec = -1; G.offR = 0; G.last = null; G.saved = 0; G.mine = null; G.resOpen = false; $('#endbar').classList.add('hidden'); $('#shot').classList.add('hidden'); $('#turbo').classList.remove('on'); $('#gl').style.cursor = ''; }
 function toMenu(first) {
-  G.state = 'menu'; G.R = newRace(G.diff, 1); resetWorld(); G.finT = 0; bgm(false); auEngine(0, false, true);
+  G.state = 'menu'; G.R = newRace(G.diff, 1); resetWorld(); G.finT = 0; G.lookYaw = 0; G.lookPitch = 0; bgm(false); auEngine(0, false, true);
   $('#result').classList.add('hidden'); $('#board').classList.add('hidden'); $('#hud').classList.remove('on'); $('#menu').classList.remove('hidden'); requestAnimationFrame(() => $('#menu').classList.remove('out')); showBest(); $('#speedlines').style.opacity = 0;
   if (!first) setTimeout(() => { if (G.state === 'menu') $('#hud').classList.add('hidden'); }, 500); else $('#hud').classList.add('hidden');
 }
 function startRace(again) {
-  if (G.state !== 'menu' && !again) return; auInit(); SFX.click();
-  G.R = newRace(G.diff, 0, AUTO); resetWorld(); G.state = 'intro'; G.introT = again ? 1.0 : 0; G.countI = -1; G.finT = 0; G.acc = 0; G.jumpQ = false; G.hintT = 0;
+  if (G.state !== 'menu' && !again) return; auInit(); if (AU.ctx && (AU.ctx.state === 'suspended' || AU.ctx.state === 'interrupted')) AU.ctx.resume(); SFX.click();
+  G.R = newRace(G.diff, 0, AUTO); resetWorld(); G.state = 'intro'; G.lookYaw = 0; G.lookPitch = 0; G.introT = again ? 1.0 : 0; G.countI = -1; G.finT = 0; G.acc = 0; G.jumpQ = false; G.hintT = 0;
   $('#menu').classList.add('out'); setTimeout(() => { if (G.state !== 'menu') $('#menu').classList.add('hidden'); }, 520);
   $('#hud').classList.remove('hidden'); requestAnimationFrame(() => $('#hud').classList.add('on')); $('#hint').style.opacity = 1; $('#pops').innerHTML = ''; hud(true);
 }
@@ -1447,7 +1474,17 @@ function showResult() {
   const R = G.R, dt = 1 / PH.HZ; let n = 0; while (n++ < PH.HZ * 300 && !R.racers.every(r => r.fin)) { raceStep(R, null, dt); R.events.length = 0; }
   const rk = ranking(R), p = R.racers[0], my = rk.indexOf(p), sc = scoreOf(p, my);
   $('#rRank').textContent = my + 1; $('#rMsg').textContent = ['완벽한 질주였어요!', '아깝다, 한 끗 차이!', '다음엔 더 빠르게!', '끝까지 달렸어요!'][my];
-  $('#rList').innerHTML = rk.map((r, k) => `<li class="${r.id ? '' : 'me'}"><em>${k + 1}</em><i style="background:${ch(r.id).col}"></i><span>${ch(r.id).name}</span><b>${fmt(r.time)}</b></li>`).join('');
+  const updateResultRoster = () => {
+    const savedName = G.mine?.n || $('#nameIn')?.value?.trim() || (localStorage.getItem('sledName') || '').trim();
+    $('#rList').innerHTML = rk.map((r, k) => {
+      const isMe = !r.id;
+      let displayName = ch(r.id).name;
+      if (isMe && savedName) displayName = `${ch(r.id).name} (${savedName})`;
+      return `<li class="${isMe ? 'me' : ''}"><em>${k + 1}</em><i style="background:${ch(r.id).col}"></i><span>${displayName}</span><b>${fmt(r.time)}</b></li>`;
+    }).join('');
+  };
+  G.updateResultRoster = updateResultRoster;
+  updateResultRoster();
   $('#rStats').innerHTML = [['시간', fmt(p.time)], ['선물', p.gifts + '개'], ['기문', p.gates + '/' + COURSE.gates.length], ['트릭', p.tricks + '회'], ['최고속도', Math.round(p.vmax * 3.6) + 'km/h'], ['순위 보너스', '+' + sc.bonus]].map(([a, b]) => `<div>${a}<b>${b}</b></div>`).join('');
   $('#rTotal').textContent = sc.total; const b = getBest(); let msg;
   if (!b || sc.total > b.score) { try { localStorage.setItem('sledBest', JSON.stringify({ score: sc.total, time: p.time, diff: G.diff })); } catch (e) { } msg = '내 최고 기록을 새로 썼어요. 이름을 남겨 보세요.'; } else msg = `내 최고 기록 <span class="num">${b.score}</span>점 · 이름을 남기면 순위표에 올라가요.`;
@@ -1504,7 +1541,19 @@ function frame_(dt) {
     while (G.acc >= h && n++ < 8 * SPEED) { pin.jump = G.jumpQ; G.jumpQ = false; raceStep(R, pin, h); G.acc -= h; }
     events();
     if (G.state === 'race') { G.hintT += dt; if (G.hintT > 9) $('#hint').style.opacity = 0; const sec = sectionOf(p.s); if (sec !== G.lastSec) { G.lastSec = sec; toast(SECTIONS[sec].name, SECTIONS[sec].sub); } }
-    if (G.state !== 'race') { G.finT += dt; if (G.state === 'finish' && G.finT > 4.4) showResult(); }
+    if (G.state !== 'race') {
+      G.finT += dt; if (G.state === 'finish' && G.finT > 4.4) showResult();
+      if (G.state === 'finish' || G.state === 'result') {
+        const l = keys['ArrowLeft'] || keys['KeyA'] || touch.l;
+        const r = keys['ArrowRight'] || keys['KeyD'] || touch.r;
+        const u = keys['ArrowUp'] || keys['KeyW'];
+        const d = keys['ArrowDown'] || keys['KeyS'] || touch.b;
+        if (l) G.lookYaw = (G.lookYaw || 0) + dt * 2.4;
+        if (r) G.lookYaw = (G.lookYaw || 0) - dt * 2.4;
+        if (u) G.lookPitch = Math.min(1.1, (G.lookPitch || 0) + dt * 1.8);
+        if (d) G.lookPitch = Math.max(-0.8, (G.lookPitch || 0) - dt * 1.8);
+      }
+    }
     // 눈 튀김 · 자국
     for (let i = 0; i < R.racers.length; i++) { const r = R.racers[i]; if (r.air || r.v < 1) { trails[i].add(r.s, r.u, 0, true); continue; } trails[i].add(r.s, r.u, r.psi);
       if (r.v > 6 && (Math.abs(r.slip) > 0.1 || (i === 0 && pin.brake)) && Math.random() < 0.7) { trk(r.s, tt); wpos(r.s - 0.5, r.u, 0, fxV); const a = tt.th + r.phi, sd = -Math.sign(r.slip || 1); W.emit(fxV, Math.sin(a) * r.v * 0.25 + Math.cos(a) * sd * 4, 2.2, -Math.cos(a) * r.v * 0.25 + Math.sin(a) * sd * 4, i === 0 ? 3 : 1, 2.5); } }
@@ -1580,6 +1629,31 @@ boot().catch(e => { console.error(e); const l = $('#loading'); l.classList.remov
     }
     lastTouch = now;
   }, { passive: false });
+})();
+
+// ---------- 주변 구경하기 360도 드래그 ----------
+(function() {
+  let isDrag = false, dragX = 0, dragY = 0, startYaw = 0, startPitch = 0;
+  window.addEventListener('pointerdown', function(e) {
+    if (window.G && (G.state === 'finish' || G.state === 'result') && !G.resOpen) {
+      if (e.target.closest('button, input, a, .tb, #endbar, .modal:not(.hidden)')) return;
+      isDrag = true;
+      dragX = e.clientX;
+      dragY = e.clientY;
+      startYaw = G.lookYaw || 0;
+      startPitch = G.lookPitch || 0;
+    }
+  });
+  window.addEventListener('pointermove', function(e) {
+    if (isDrag && window.G && (G.state === 'finish' || G.state === 'result')) {
+      const dx = e.clientX - dragX;
+      const dy = e.clientY - dragY;
+      G.lookYaw = startYaw - dx * 0.007;
+      G.lookPitch = Math.max(-0.8, Math.min(1.1, startPitch + dy * 0.007));
+    }
+  });
+  window.addEventListener('pointerup', function() { isDrag = false; });
+  window.addEventListener('pointercancel', function() { isDrag = false; });
 })();
 </script>
 </body>
