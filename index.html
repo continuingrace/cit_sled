@@ -142,6 +142,7 @@ body.paused *{animation-play-state:paused!important}
 * { touch-action: manipulation; }
 #gl, canvas, #touch, .tb, button, .btn { touch-action: none !important; }
 </style>
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
 </head>
 <body>
 <canvas id="gl"></canvas>
@@ -1357,11 +1358,44 @@ function setPick(i) { // 캐릭터 선택: 고른 캐릭터가 0번(플레이어
   for (let k = 0; k < ROSTER.length; k++) $('#dot' + k).style.background = ch(k).col;
   trails.forEach(t => t.reset());
 }
-// 온라인 공동 순위표 (Supabase REST). 공개 키라 읽기와 한 줄 추가만 허용돼 있음
-const SB = { url: 'https://twuvusjliabfuyompask.supabase.co/rest/v1/sled_scores', key: 'sb_publishable_7ARC133ruOGCb6Y8KVOFwQ_q-bax4Ou' };
-async function sbFetch(q, opt) { const c = new AbortController(), tm = setTimeout(() => c.abort(), 7000); try { const r = await fetch(SB.url + q, { method: (opt && opt.method) || 'GET', body: opt && opt.body, signal: c.signal, headers: Object.assign({ apikey: SB.key, 'Content-Type': 'application/json' }, (opt && opt.headers) || {}) }); if (!r.ok) throw new Error('http ' + r.status); return r; } finally { clearTimeout(tm); } }
-async function loadOnline() { const r = await sbFetch('?select=name,score,time_sec,char,diff&order=score.desc,time_sec.asc&limit=30'), j = await r.json(); if (!Array.isArray(j)) throw new Error('bad'); return j.map(e => ({ n: e.name, s: e.score, t: +e.time_sec, c: e.char, d: e.diff })); }
-function postOnline(e) { return sbFetch('', { method: 'POST', headers: { Prefer: 'return=minimal' }, body: JSON.stringify({ name: e.n, score: e.s | 0, time_sec: +(+e.t).toFixed(2), char: e.c | 0, diff: e.d }) }); }
+// 온라인 공동 순위표 (Cloudflare Worker + D1). 비밀 키는 브라우저나 저장소에 두지 않음
+const SCORE_API = 'https://cit-sled-api.continuingrace.workers.dev/v1';
+const TURNSTILE_SITE_KEY = '0x4AAAAAAGIM70HiRreXR4b7';
+let turnstileWidget = null, turnstileResolve = null, turnstileReject = null;
+async function apiFetch(path, opt) {
+  const c = new AbortController(), tm = setTimeout(() => c.abort(), 7000);
+  try {
+    const r = await fetch(SCORE_API + path, { method: (opt && opt.method) || 'GET', body: opt && opt.body, signal: c.signal, headers: { 'Content-Type': 'application/json' } });
+    if (!r.ok) throw new Error('http ' + r.status);
+    return r;
+  } finally { clearTimeout(tm); }
+}
+async function startOnlineSession() {
+  G.onlineSession = null;
+  try { const r = await apiFetch('/session', { method: 'POST' }), j = await r.json(); if (j && typeof j.sessionId === 'string') G.onlineSession = j.sessionId; } catch (e) { }
+}
+function getTurnstileToken() {
+  return new Promise((resolve, reject) => {
+    if (!window.turnstile) { reject(new Error('turnstile unavailable')); return; }
+    turnstileResolve = resolve; turnstileReject = reject;
+    if (turnstileWidget === null) {
+      const box = document.createElement('div'); box.id = 'turnstileBox'; box.style.cssText = 'position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:10000'; document.body.appendChild(box);
+      turnstileWidget = turnstile.render(box, {
+        sitekey: TURNSTILE_SITE_KEY, execution: 'execute', appearance: 'interaction-only',
+        callback: token => { const done = turnstileResolve; turnstileResolve = turnstileReject = null; if (done) done(token); },
+        'error-callback': () => { const fail = turnstileReject; turnstileResolve = turnstileReject = null; if (fail) fail(new Error('turnstile failed')); },
+        'timeout-callback': () => { const fail = turnstileReject; turnstileResolve = turnstileReject = null; if (fail) fail(new Error('turnstile timeout')); }
+      });
+    } else turnstile.reset(turnstileWidget);
+    turnstile.execute(turnstileWidget);
+  });
+}
+async function loadOnline() { const r = await apiFetch('/scores'), j = await r.json(); if (!j || !Array.isArray(j.scores)) throw new Error('bad'); return j.scores.map(e => ({ n: e.name, s: e.score, t: +e.timeSec, c: e.char, d: e.diff })); }
+async function postOnline(e) {
+  if (!G.onlineSession) throw new Error('session unavailable');
+  const token = await getTurnstileToken();
+  return apiFetch('/scores', { method: 'POST', body: JSON.stringify({ sessionId: G.onlineSession, turnstileToken: token, name: e.n, score: e.s | 0, timeSec: +(+e.t).toFixed(2), char: e.c | 0, diff: e.d }) });
+}
 function drawBoard(b, note) {
   const me = G.mine, isMe = (e) => me && e.n === me.n && (e.s | 0) === (me.s | 0) && Math.abs(e.t - me.t) < 0.011; let hit = false;
   $('#bList').innerHTML = b.length ? b.slice(0, 30).map((e, k) => { const q = ROSTER[e.c | 0] || ROSTER[0], m = !hit && isMe(e); if (m) hit = true; return `<li class="${m ? 'me' : ''}"><em>${k + 1}</em><img src="${G.thumbs[e.c | 0] || ''}" alt=""><span>${esc(e.n)}<small>${q.name} · ${DIFFS[e.d] ? DIFFS[e.d].label : ''}</small></span><b>${e.s | 0}</b><i>${fmt(+e.t || 0)}</i></li>`; }).join('') : '<li class="empty">아직 기록이 없어요. 완주하고 이름을 남겨 보세요.</li>';
@@ -1481,6 +1515,7 @@ function toMenu(first) {
 }
 function startRace(again) {
   if (G.state !== 'menu' && !again) return; auInit(); if (AU.ctx && (AU.ctx.state === 'suspended' || AU.ctx.state === 'interrupted')) AU.ctx.resume(); SFX.click();
+  startOnlineSession();
   G.R = newRace(G.diff, 0, AUTO); resetWorld(); G.state = 'intro'; G.orbitYaw = 0; G.orbitPitch = 0; G.autoSpin = false; G.introT = again ? 1.0 : 0; G.countI = -1; G.finT = 0; G.acc = 0; G.jumpQ = false; G.hintT = 0;
   $('#menu').classList.add('out'); setTimeout(() => { if (G.state !== 'menu') $('#menu').classList.add('hidden'); }, 520);
   $('#hud').classList.remove('hidden'); requestAnimationFrame(() => $('#hud').classList.add('on')); $('#hint').style.opacity = 1; $('#pops').innerHTML = ''; hud(true);

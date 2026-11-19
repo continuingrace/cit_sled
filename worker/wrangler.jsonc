@@ -1,0 +1,18 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "cit-sled-api",
+  "main": "src/index.js",
+  "compatibility_date": "2026-11-19",
+  "workers_dev": true,
+  "vars": {
+    "ALLOWED_ORIGINS": "https://continuingrace.github.io",
+    "ALLOWED_HOSTNAMES": "continuingrace.github.io"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "cit-sled-db",
+      "database_id": "ce8b62a0-ba95-4aa4-9d60-99f95caab1d8"
+    }
+  ]
+}

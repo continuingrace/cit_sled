@@ -1,10 +1,13 @@
 # Environment variables and secrets
 .env
-.env.local
-.env.*.local
+.env.*
+**/.env
+**/.env.*
 *.secret
 *.pem
 *.key
+*.p12
+*.pfx
 
 # Operating System files
 .DS_Store
@@ -31,3 +34,9 @@ yarn-error.log*
 dist/
 build/
 *.log
+.wrangler/
+.dev.vars
+**/.dev.vars
+**/.dev.vars.*
+worker/.wrangler/
+worker/private/
