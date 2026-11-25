@@ -1269,20 +1269,32 @@ function makeVillager(o) {
 const AU = { ctx: null, muted: false, next: 0, idx: 0, on: false, synth: false };
 try { AU.muted = localStorage.getItem('sledMute') === '1'; } catch (e) { }
 
-// 캐럴 녹음 파일 (모두 퍼블릭 도메인/CC0 — audio/LICENSES.md 참고)
+// 캐럴 녹음 파일 (모두 퍼블릭 도메인 — audio/LICENSES.md 참고)
+// 미 공군 악단(Airmen of Note · Diplomats · Starlifter/Roots in Blue)의 재즈·빅밴드 캐럴 연주.
+// 재즈 편성을 앞에 두고, 한 곡이 2~2분 30초라 레이스 한 판(약 70초)을 같은 곡 반복 없이 덮는다.
 const TRACKS = [
   { ko: '징글벨', name: 'Jingle Bells', file: './audio/jingle-bells.mp3' },
-  { ko: '덱 더 홀스', name: 'Deck the Halls', file: './audio/deck-the-halls.mp3' },
-  { ko: '메리 크리스마스', name: 'We Wish You a Merry Christmas', file: './audio/we-wish.mp3' },
-  { ko: '오 홀리 나이트', name: 'O Holy Night', file: './audio/o-holy-night.mp3' },
-  { ko: '고요한 밤', name: 'Silent Night', file: './audio/silent-night.mp3' },
-  { ko: '저 들 밖에 한밤중에', name: 'The First Noel', file: './audio/the-first-noel.mp3' }
+  { ko: '기쁘다 구주 오셨네', name: 'Joy to the World', file: './audio/joy-to-the-world.mp3' },
+  { ko: '오 크리스마스트리', name: 'O Christmas Tree', file: './audio/o-christmas-tree.mp3' },
+  { ko: '동방 박사 세 사람', name: 'We Three Kings', file: './audio/we-three-kings.mp3' },
+  { ko: '한밤중에 천사 노래', name: 'It Came Upon the Midnight Clear', file: './audio/midnight-clear.mp3' },
+  { ko: '임마누엘 오소서', name: 'O Come, O Come Emmanuel', file: './audio/o-come-emmanuel.mp3' }
 ];
 const BGA = new Audio();
-BGA.loop = true; BGA.preload = 'auto'; BGA.volume = 0.68;
+BGA.loop = false; BGA.preload = 'auto'; BGA.volume = 0.68;
 BGA.setAttribute('playsinline', ''); BGA.setAttribute('webkit-playsinline', '');
 let bgaUnlocked = false;
 BGA.addEventListener('error', () => { if (AU.on) { AU.synth = true; AU.idx = 0; AU.beatPos = 0; AU.next = AU.ctx ? AU.ctx.currentTime + 0.05 : 0; } });
+// 한 곡이 끝나면 같은 곡을 되풀이하지 않고 다음 캐럴로 넘어간다 (레이스 중일 때만 소리가 나므로 AU.on으로 판단)
+BGA.addEventListener('ended', () => {
+  if (!AU.on) return;
+  const tr = pickCarol();
+  try {
+    BGA.src = bgmSrc(tr); BGA.muted = AU.muted; BGA.volume = 0.68; BGA.currentTime = 0;
+  } catch (e) { }
+  try { const p = BGA.play(); if (p && p.catch) p.catch(() => { }); } catch (e) { }
+  if (G.state === 'race') pop('♪ ' + (tr.ko || tr.name), 'gold');
+});
 function bgmTrack() { return AU.carol || TRACKS[0]; }
 function bgmSrc(tr) { return new URL(tr.file, location.href).href; }
 window.AU = AU; window.BGA = BGA; window.TRACKS = TRACKS; // 진단용(개발자 도구에서 상태 확인)
