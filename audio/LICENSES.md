@@ -1,7 +1,9 @@
 # BGM 캐럴 출처 · 라이선스
 
 게임 배경음악(`index.html`의 `TRACKS`)으로 쓰는 녹음 파일입니다. 모두 **퍼블릭 도메인**이며
-상업적 이용·수정·재배포에 제한이 없습니다. 6곡 전부 **미 공군 악단의 재즈·빅밴드 편성 캐럴** 연주이고,
+상업적 이용·수정·재배포에 제한이 없습니다. 6곡 전부 **미 공군 악단의 재즈 편성 캐럴** 연주입니다 —
+Airmen of Note(재즈 오케스트라) 2곡, Diplomats(재즈 앙상블) 3곡, 징글벨 1곡은 재즈 앙상블 Roots in Blue가
+팝 악단 Starlifter와 함께 연주한 2020년 방송용(브로드캐스트 베드) 버전입니다.
 곡당 1분 59초~2분 30초 길이로 잘라 모노 96 kbps MP3로 다시 인코딩했습니다(약 −18 LUFS로 음량 통일).
 
 - **곡(작곡)**: 모두 19세기 이전 전통 캐럴 — 작곡 저작권 만료(퍼블릭 도메인).
@@ -10,7 +12,7 @@
 
 | 파일 | 곡 | 연주 앙상블 | 편곡 | 원본 길이 | 이 파일 | 원본(위키미디어 공용) |
 | --- | --- | --- | --- | --- | --- | --- |
-| `jingle-bells.mp3` | Jingle Bells (징글벨) | 미 공군 미드아메리카 악단 — Starlifter · Roots in Blue | SSgt Tim Davis, SrA David Duneman | 2:12 | 1:59 | [File:Jingle Bells (2020) … Band of Mid-America](https://commons.wikimedia.org/wiki/File:Jingle_Bells_(2020)_-_Starlifter_and_Roots_in_Blue_-_United_States_Air_Force_Band_of_Mid-America.mp3) |
+| `jingle-bells.mp3` | Jingle Bells (징글벨) | 미 공군 미드아메리카 악단 — Roots in Blue(재즈 앙상블)·Starlifter 합동, 방송용 편성 | SSgt Tim Davis, SrA David Duneman | 2:12 | 1:59 | [File:Jingle Bells (2020) … Band of Mid-America](https://commons.wikimedia.org/wiki/File:Jingle_Bells_(2020)_-_Starlifter_and_Roots_in_Blue_-_United_States_Air_Force_Band_of_Mid-America.mp3) |
 | `joy-to-the-world.mp3` | Joy to the World (기쁘다 구주 오셨네) | 미 공군 악단 — Diplomats (재즈 앙상블) | Dennis Hoffmann, Frank Pappajohn | 4:28 | 2:19 | [File:Joy to the World - Diplomats …](https://commons.wikimedia.org/wiki/File:Joy_to_the_World_-_Diplomats_-_United_States_Air_Force_Band.mp3) |
 | `o-christmas-tree.mp3` | O Christmas Tree (오 크리스마스트리) | 미 공군 악단 — Airmen of Note (재즈 오케스트라, 보컬 TSgt Paige Wroble) | MSgt Rich Sigler | 5:47 | 2:21 | [File:O Christmas Tree - Airmen of Note …](https://commons.wikimedia.org/wiki/File:O_Christmas_Tree_-_Airmen_of_Note_-_United_States_Air_Force_Band.mp3) |
 | `we-three-kings.mp3` | We Three Kings (동방 박사 세 사람) | 미 공군 악단 — Airmen of Note (보컬 TSgt Paige Wroble) | MSgt Jeff Martin | 6:00 | 2:21 | [File:We Three Kings - Airmen of Note …](https://commons.wikimedia.org/wiki/File:We_Three_Kings_-_Airmen_of_Note_-_United_States_Air_Force_Band.mp3) |
