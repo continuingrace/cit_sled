@@ -1609,9 +1609,11 @@ function wrapLines(x, text, maxW, maxLines) { // 캔버스 폭에 맞춰 최대 
   }
   return out;
 }
+let _polCanvas = null, _polarLast = null;
 function polaroidCanvas(raw, customText) { // 3D 원본 장면 + 흰 폴라로이드 틀 + Pretendard 문구 합성
   const PW = 1280, PAD = 64, FWD = PW - PAD * 2, FHT = Math.round(FWD * 1152 / 1536), PH = PAD + FHT + 430;
-  const c = document.createElement('canvas'); c.width = PW; c.height = PH; const x = c.getContext('2d');
+  const c = _polCanvas || (_polCanvas = document.createElement('canvas')); if (c.width !== PW || c.height !== PH) { c.width = PW; c.height = PH; }
+  const x = c.getContext('2d'); x.clearRect(0, 0, PW, PH);
   x.fillStyle = '#fbf9f4'; x.fillRect(0, 0, PW, PH);
   for (let i = 0; i < 1100; i++) { x.fillStyle = `rgba(120,108,86,${0.012 + Math.random() * 0.02})`; x.fillRect(Math.random() * PW, Math.random() * PH, 1 + Math.random() * 2, 1); }
   x.save(); x.shadowColor = 'rgba(24,28,54,.28)'; x.shadowBlur = 26; x.shadowOffsetY = 8; x.fillStyle = '#fff'; x.fillRect(PAD - 14, PAD - 14, FWD + 28, FHT + 28); x.restore();
@@ -1653,14 +1655,13 @@ async function takePolaroid() { // 오두막 앞에 네 캐릭터를 모아 한 
   _polarRaw = src;                                              // 3D 원본은 그대로 두고 문구만 다시 합성한다
   const nm = (G.pname || '').trim();
   _polarMsg = nm ? `${nm} 님, 메리 크리스마스! 🎄` : '메리 크리스마스! 🎄';
+  _polarLast = _polarMsg;
   const inp = $('#shotMsg'); if (inp) inp.value = _polarMsg;
   openShot(polaroidCanvas(_polarRaw, _polarMsg), '폴라로이드 기념사진', 'cit-sled-polaroid.jpg', true);
 }
 function applyShotCanvas(c) { // 다시 그린 폴라로이드를 미리보기·저장·공유 값에 반영 (3D 재렌더 없음)
   const s = G.shot; if (!s) return;
   const seq = ++_shotSeq;
-  let url = ''; try { url = c.toDataURL('image/jpeg', 0.92); } catch (e) { }
-  if (url) { s.data = url; $('#shotImg').src = url; $('#bSaveImg').href = url; }
   try {
     c.toBlob((blob) => {
       if (!blob || seq !== _shotSeq || G.shot !== s) return;
@@ -1715,7 +1716,11 @@ function buildUI() {
     smi.addEventListener('input', () => {
       _polarMsg = smi.value;
       clearTimeout(_polarTimer);
-      _polarTimer = setTimeout(() => { if (_polarRaw && G.shot) applyShotCanvas(polaroidCanvas(_polarRaw, _polarMsg)); }, 110);
+      _polarTimer = setTimeout(() => {
+        if (!_polarRaw || !G.shot || _polarLast === _polarMsg) return;
+        _polarLast = _polarMsg;
+        applyShotCanvas(polaroidCanvas(_polarRaw, _polarMsg));
+      }, 220);
     });
     smi.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); smi.blur(); } });
   }
