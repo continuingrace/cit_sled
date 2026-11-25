@@ -14,11 +14,14 @@ html,body{margin:0;height:100%;overflow:hidden;background:#0b1238;font-family:va
 .hidden{display:none!important}
 .num,#timer,#spd,#score{font-variant-numeric:tabular-nums;font-weight:800;letter-spacing:.02em}
 button,input{font-family:inherit;letter-spacing:.02em;line-height:1.35}
-.panel{background:var(--bg);border:1px solid var(--line);border-radius:22px}
+.panel{background:var(--bg);border:1px solid rgba(255,255,255,.16);border-radius:22px;box-shadow:0 18px 46px rgba(5,9,30,.42),inset 0 1px 0 rgba(255,255,255,.08)}
 .btn{font-weight:700;font-size:16px;color:#fff;border:0;border-radius:14px;padding:13px 16px;cursor:pointer;background:var(--red);transition:background .15s,transform .08s;display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;white-space:nowrap}
 .btn:hover{background:#ee5d61}.btn:active{transform:scale(.97)}
 .btn.sub{background:rgba(255,255,255,.1);font-size:15px;padding:12px 10px}.btn.sub:hover{background:rgba(255,255,255,.18)}
 .btn.big{font-size:22px;font-weight:800;padding:17px;width:100%;border-radius:16px}
+#bStart{margin-top:2px;background:linear-gradient(180deg,#f45c62,#dc3b44 58%,#c62f38);box-shadow:0 12px 28px rgba(214,58,65,.36),inset 0 1px 0 rgba(255,255,255,.32),inset 0 -2px 0 rgba(0,0,0,.18);letter-spacing:.02em}
+#bStart:hover{background:linear-gradient(180deg,#ff6d73,#e6454e 58%,#cf3540)}
+#bStart small{border-color:rgba(255,255,255,.55);background:rgba(0,0,0,.14)}
 .btn.link{background:var(--acc);color:var(--ink);width:100%}.btn.link:hover{background:#ffe27a}
 .btn:disabled{opacity:.55;cursor:default}
 .btn small{font-size:11px;font-weight:700;opacity:.7;border:1px solid currentColor;padding:1px 6px;border-radius:6px;letter-spacing:.06em}
@@ -26,18 +29,18 @@ button,input{font-family:inherit;letter-spacing:.02em;line-height:1.35}
 #menu{position:fixed;inset:0;display:flex;align-items:center;padding:0 5vw;transition:opacity .5s;background:linear-gradient(90deg,rgba(11,17,42,.8),rgba(11,17,42,.4) 38%,rgba(11,17,42,0) 60%)}
 #menu.out{opacity:0;pointer-events:none}
 .mcol{width:min(440px,92vw);display:flex;flex-direction:column;gap:18px;max-height:100vh;overflow-y:auto;touch-action:pan-y;padding:12px 0;scrollbar-width:none}
-.logo{margin:0;font-size:52px;font-weight:900;line-height:1.2;letter-spacing:.01em}
-.logo span{color:var(--acc)}
-.card{padding:20px;display:flex;flex-direction:column;gap:14px}
+.logo{margin:0;display:flex;align-items:center;flex-wrap:wrap;gap:.24em;font-size:50px;font-weight:900;line-height:1.16;letter-spacing:-.012em;color:#fff;text-shadow:0 2px 3px rgba(8,14,40,.55),0 8px 26px rgba(8,14,40,.5)}
+.logo span{display:inline-flex;align-items:center;justify-content:center;padding:.04em .34em .1em;border-radius:.34em;color:#ffe066;background:linear-gradient(158deg,rgba(26,36,80,.96),rgba(9,14,38,.92));border:1px solid rgba(255,216,77,.5);box-shadow:0 10px 26px rgba(6,10,32,.55),inset 0 1px 0 rgba(255,255,255,.22);text-shadow:0 2px 8px rgba(255,176,0,.35);letter-spacing:.01em}
+.card{padding:19px;display:flex;flex-direction:column;gap:13px;background:linear-gradient(168deg,rgba(26,34,72,.88),rgba(11,17,42,.92));backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);box-shadow:0 22px 60px rgba(4,8,26,.5),0 2px 0 rgba(255,255,255,.06) inset,0 0 0 1px rgba(255,255,255,.05)}
 .lbl{font-size:13px;font-weight:700;color:var(--sub);margin-bottom:-6px;letter-spacing:.06em}
 .chars{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-.char{padding:0;border:2px solid transparent;border-radius:16px;background:rgba(255,255,255,.07);cursor:pointer;color:#cfd6f3;font-size:13px;font-weight:700;overflow:hidden;display:flex;flex-direction:column;align-items:stretch;transition:border-color .15s,background .15s}
+.char{padding:0;border:2px solid transparent;border-radius:16px;background:rgba(255,255,255,.06);cursor:pointer;color:#cfd6f3;font-size:13px;font-weight:700;overflow:hidden;display:flex;flex-direction:column;align-items:stretch;transition:border-color .15s,background .15s,box-shadow .15s,transform .1s;box-shadow:inset 0 0 0 1px rgba(255,255,255,.05)}
 .char img{width:100%;aspect-ratio:1;display:block;object-fit:cover;object-position:50% 30%}
 .char span{padding:7px 2px 8px;line-height:1.3}
-.char.on{border-color:var(--acc);color:#fff;background:rgba(255,216,77,.16)}
-.diffs{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;background:rgba(255,255,255,.07);border-radius:14px;padding:4px}
-.diff{font-weight:700;font-size:15px;color:#c5cdee;background:none;border:0;border-radius:10px;padding:10px 4px;cursor:pointer;transition:background .15s}
-.diff.on{background:#fff;color:var(--ink)}
+.char:active{transform:scale(.975)}.char.on{border-color:var(--acc);color:#fff;background:rgba(255,216,77,.15);box-shadow:0 0 0 3px rgba(255,216,77,.16),0 10px 22px rgba(4,8,26,.4)}
+.diffs{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;background:rgba(6,10,30,.55);border:1px solid rgba(255,255,255,.1);border-radius:15px;padding:4px;box-shadow:inset 0 2px 8px rgba(0,0,0,.35)}
+.diff{font-weight:700;font-size:15px;color:#c5cdee;background:none;border:0;border-radius:11px;padding:10px 4px;cursor:pointer;transition:background .15s,color .15s,box-shadow .15s}
+.diff.on{background:linear-gradient(180deg,#ffffff,#f3f5ff);color:var(--ink);box-shadow:0 2px 8px rgba(0,0,0,.35),inset 0 -2px 0 rgba(20,28,66,.12)}
 #diffDesc{font-size:14px;line-height:1.6;color:#d7ddf5;min-height:22px;text-align:center;font-weight:500}
 .row{display:flex;gap:8px}.row>*{flex:1;min-width:0}
 .best{font-size:14px;line-height:1.6;color:var(--sub);text-align:center;font-weight:500}
@@ -110,8 +113,8 @@ kbd{display:inline-block;min-width:26px;padding:1px 7px;margin:0 2px;border-radi
 .namerow input{flex:1;min-width:0;font-size:16px;font-weight:600;color:#fff;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.22);border-radius:14px;padding:12px 14px;outline:none;user-select:text;-webkit-user-select:text;touch-action:auto}
 .namerow input:focus{border-color:var(--acc)}.namerow input::placeholder{color:#8f99c2;font-weight:500}
 .namerow .btn{flex:none;padding:12px 16px}
-.namefield{width:100%;min-width:0;font-size:16px;font-weight:600;color:#fff;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.22);border-radius:14px;padding:13px 14px;outline:none;user-select:text;-webkit-user-select:text;touch-action:auto}
-.namefield:focus{border-color:var(--acc)}
+.namefield{width:100%;min-width:0;font-size:16px;font-weight:600;color:#fff;background:rgba(7,12,32,.55);border:1px solid rgba(255,255,255,.16);border-radius:14px;padding:13px 14px;outline:none;user-select:text;-webkit-user-select:text;touch-action:auto;box-shadow:inset 0 2px 7px rgba(0,0,0,.32);transition:border-color .15s,box-shadow .15s}
+.namefield:focus{border-color:var(--acc);box-shadow:0 0 0 3px rgba(255,216,77,.16),inset 0 2px 7px rgba(0,0,0,.28)}
 .namefield::placeholder{color:#8f99c2;font-weight:500;font-size:15px}
 .blist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px;min-width:min(400px,84vw);max-height:52vh;overflow-y:auto;touch-action:pan-y;scrollbar-width:thin}
 .blist li{display:flex;align-items:center;gap:10px;padding:7px 12px 7px 10px;border-radius:12px;background:rgba(255,255,255,.06);font-size:15px}
@@ -124,10 +127,11 @@ kbd{display:inline-block;min-width:26px;padding:1px 7px;margin:0 2px;border-radi
 .note{margin:12px 0 0;text-align:center;font-size:13px;font-weight:500;color:var(--sub)}
 .x{position:absolute;right:14px;top:14px;width:36px;height:36px;border-radius:50%;border:0;background:rgba(255,255,255,.1);color:#fff;font-size:22px;font-weight:500;line-height:1;cursor:pointer;padding:0}
 .x:hover{background:rgba(255,255,255,.2)}
-#endbar{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);display:flex;gap:6px;z-index:19;padding:6px;border-radius:20px;background:var(--bg);border:1px solid var(--line)}
+#endbar{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);display:flex;gap:6px;flex-wrap:wrap;justify-content:center;max-width:calc(100vw - 20px);z-index:19;padding:6px;border-radius:20px;background:var(--bg);border:1px solid var(--line)}
 #turbo{position:absolute;left:50%;bottom:66px;width:170px;margin-left:-85px;padding:7px 14px 10px;border-radius:14px;background:var(--bg);font-size:12px;font-weight:800;color:var(--acc);text-align:center;letter-spacing:.14em;opacity:0;transition:opacity .2s}
 #turbo.on{opacity:1}#turbo i{display:block;height:5px;border-radius:3px;background:var(--acc);margin-top:6px;transform-origin:left center}
-.shotbox{text-align:center}.shotbox img{display:block;max-width:min(560px,84vw);max-height:54vh;border-radius:14px;margin:0 auto 14px}
+.shotbox{text-align:center}.shotbox img{display:block;max-width:min(560px,84vw);max-height:54vh;border-radius:14px;margin:0 auto 14px;box-shadow:0 12px 30px rgba(0,0,0,.4)}
+#shotImg{pointer-events:auto;-webkit-touch-callout:default;user-select:auto;-webkit-user-select:auto;touch-action:auto}
 .shotbox .note{margin:0 auto 14px;max-width:440px;line-height:1.65}
 #fade{position:fixed;inset:0;background:#fff;opacity:0;pointer-events:none;transition:opacity .35s;z-index:40}#fade.on{opacity:1}
 #loading{position:fixed;inset:0;background:#101a4a;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;font-size:20px;font-weight:600;z-index:50;transition:opacity .6s}
@@ -140,7 +144,7 @@ body.paused *{animation-play-state:paused!important}
   .hbtns{gap:4px;margin-top:8px}.hbtns .btn{min-height:42px;padding:4px 1px}.hbtns .btn .ic{font-size:15px}.hbtns .btn .lb{font-size:9px}
   .namefield{padding:11px 12px;font-size:15px}.namefield::placeholder{font-size:14px}
   #topC{width:min(300px,40vw);padding:8px 14px 13px}#timer{font-size:22px}#toast{font-size:19px;top:92px}#hint{display:none}
-  .logo{font-size:38px}.mcol{gap:12px}.card{padding:16px;gap:11px}.btn.big{font-size:19px;padding:14px}
+  .logo{font-size:36px}.mcol{gap:12px}.card{padding:16px;gap:11px}.btn.big{font-size:19px;padding:14px}
   .help{grid-template-columns:1fr}
 }
 @media (pointer:coarse){#touch{display:block}#pops{bottom:34%}}
@@ -219,7 +223,7 @@ body.paused *{animation-play-state:paused!important}
   <p class="note" id="boardNote"></p>
   <div class="center"><button class="btn" id="bBoardX">닫기</button></div>
 </div></div>
-<div id="endbar" class="hidden"><button class="btn" id="bSpinToggle" style="background:rgba(255,216,77,.25);border:1px solid #ffd84d;color:#ffd84d;font-weight:700">360° 회전 멈춤/재생</button><button class="btn sub" id="bResOpen">결과 보기</button><button class="btn sub" id="bShot2">장면 캡처</button><button class="btn sub" id="bRetry3">한 번 더</button></div>
+<div id="endbar" class="hidden"><button class="btn" id="bSpinToggle" style="background:rgba(255,216,77,.25);border:1px solid #ffd84d;color:#ffd84d;font-weight:700">360° 회전 멈춤/재생</button><button class="btn" id="bPhoto" style="background:linear-gradient(180deg,#f45c62,#d13a43);box-shadow:0 8px 18px rgba(209,58,67,.35)">📸 기념사진</button><button class="btn sub" id="bResOpen">결과 보기</button><button class="btn sub" id="bShot2">장면 캡처</button><button class="btn sub" id="bRetry3">한 번 더</button></div>
 <div id="shot" class="modal hidden"><div class="panel shotbox">
   <h2 id="shotTitle">장면 캡처</h2>
   <img id="shotImg" alt="캡처한 장면">
@@ -666,6 +670,7 @@ function bannerCiT() {
 function woodSign(x, w, h) { x.fillStyle = '#8a5a3c'; rr(x, 0, 0, w, h, 26); x.fill(); for (let i = 0; i < 60; i++) { x.fillStyle = `rgba(60,34,18,${0.05 + (i * 37 % 10) / 90})`; x.fillRect(0, (i * 53) % h, w, 2 + (i % 3)); } x.strokeStyle = '#5e3b25'; x.lineWidth = 12; rr(x, 8, 8, w - 16, h - 16, 20); x.stroke(); x.fillStyle = '#ffffff'; for (let i = 0; i < 34; i++) { x.beginPath(); x.arc(10 + i * (w - 20) / 33, 6 + (i % 2) * 5, 16 + (i * 7 % 10), 0, 7); x.fill(); } x.textAlign = 'center'; x.textBaseline = 'middle'; }
 function signCiT() { return signTex((x, w, h) => { woodSign(x, w, h); try { x.letterSpacing = '6px'; } catch (e) { } x.font = `900 150px ${FONT_K}`; x.fillStyle = '#fff3d6'; x.fillText('CiT코칭연구소', w / 2, h * 0.58); }, 1280, 320); }
 function signHome() { return signTex((x, w, h) => { woodSign(x, w, h); try { x.letterSpacing = '4px'; } catch (e) { } x.font = `900 104px ${FONT_K}`; x.fillStyle = '#ffe27a'; x.fillText('장학이벤트 보기', w / 2, h * 0.44); x.font = `800 70px ${FONT_K}`; x.fillStyle = '#fff3d6'; x.fillText('citkorea.co.kr  →', w / 2, h * 0.76); }, 1024, 512); }
+function signPhoto() { return signTex((x, w, h) => { woodSign(x, w, h); try { x.letterSpacing = '2px'; } catch (e) { } x.font = `900 108px ${FONT_K}`; x.fillStyle = '#ffe27a'; x.fillText('기념사진 찍기', w / 2, h * 0.42); x.font = `800 82px ${FONT_K}`; x.fillStyle = '#fff3d6'; x.fillText('폴라로이드 📸', w / 2, h * 0.75); }, 1024, 512); }
 
 // ===== 지오메트리 합치기 (정점 색) =====
 function bake(geo, color, m) { const g = geo.index ? geo.toNonIndexed() : geo.clone(); if (m) g.applyMatrix4(m); const n = g.attributes.position.count, c = new Float32Array(n * 3), col = new THREE.Color(color); for (let i = 0; i < n; i++) { c[i * 3] = col.r; c[i * 3 + 1] = col.g; c[i * 3 + 2] = col.b; } g.setAttribute('color', new THREE.BufferAttribute(c, 3)); return g; }
@@ -868,6 +873,12 @@ function prismGeo() {
   q([-.5, 0, .5], [0, 1, .5], [0, 1, -.5], [-.5, 0, -.5]); q([.5, 0, -.5], [0, 1, -.5], [0, 1, .5], [.5, 0, .5]); t([-.5, 0, .5], [.5, 0, .5], [0, 1, .5]); t([.5, 0, -.5], [-.5, 0, -.5], [0, 1, -.5]);
   const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(p, 3)); g.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2)); g.computeVertexNormals(); return g;
 }
+function starGeo5(R, dep) { // 오각별 (나무 꼭대기 장식)
+  const sh = new THREE.Shape();
+  for (let i = 0; i < 10; i++) { const q = i % 2 ? 0.42 : 1, an = i * Math.PI / 5, x = Math.sin(an) * q * R, y = Math.cos(an) * q * R; if (i) sh.lineTo(x, y); else sh.moveTo(x, y); }
+  const g = new THREE.ExtrudeGeometry(sh, { depth: dep, bevelEnabled: true, bevelSize: R * 0.035, bevelThickness: dep * 0.2, bevelSegments: 2, curveSegments: 1 });
+  g.translate(0, 0, -dep / 2); g.computeVertexNormals(); return g;
+}
 function buildWorld(scene) {
   const W = { glowS: [], glowB: [], snowmen: {}, signMats: [] }, r = rng(77);
   const std = (o) => new THREE.MeshStandardMaterial(Object.assign({ roughness: 0.85 }, o));
@@ -937,7 +948,7 @@ function buildWorld(scene) {
   const bigGlow = (p, c) => W.glowB.push(p.x, p.y, p.z, c);
   const tree = (s, u, sc, lit) => { const F = frame(s, u); B.tree.add(L(F, MX(0, -0.15, 0, sc, sc * (0.9 + r() * 0.3), sc, 0, r() * 6, 0))); if (lit) for (let i = 0; i < 9; i++) { const y = 0.9 + i * 0.33, rad = 1.25 * (1 - (y - 0.9) / 3.6) + 0.05, a = i * 2.3; bulb(PT(F, Math.cos(a) * rad * sc, y * sc, Math.sin(a) * rad * sc), BULBC[i % 6]); } };
   const lamp = (s, u) => { const F = frame(s, u); B.lamp.add(F); const p = PT(F, 0, 4.45, 0); B.lampHead.add(MX(p.x, p.y, p.z)); bigGlow(p, '#ffd890'); };
-  const occupied = [], chims = []; W.villagers = []; W.links = [];
+  const occupied = [], chims = []; W.villagers = []; W.links = []; W.photoLinks = [];
   function house(s, u, o) {
     const side = Math.sign(u), F = frame(s, u).multiply(MX(0, 0, 0, 1, 1, 1, 0, -side * Math.PI / 2 + (o.rot || 0), 0)), { w, h, d } = o, rh = o.rh || w * 0.55;
     occupied.push([s, u, Math.max(w, d) * 0.8]);
@@ -1011,7 +1022,7 @@ function buildWorld(scene) {
     const F = frame(2112, 0), a = [bake(Cyl(0.9, 1.2, 4, 10), '#7a5236', MX(0, 2, 0))]; let y = 3;
     [[8, 7], [6.6, 6.4], [5.2, 5.8], [3.8, 5.2], [2.4, 4.6]].forEach(([rad, h], i) => { a.push(bake(new THREE.ConeGeometry(rad, h, 16), ['#236b4c', '#28765a', '#2e8262', '#348e6a', '#3b9a72'][i], MX(0, y + h / 2, 0))); a.push(bake(new THREE.ConeGeometry(rad * 0.74, h * 0.58, 16, 1, true), '#ffffff', MX(0, y + h * 0.75, 0))); for (let k = 0; k < 14 + (4 - i) * 5; k++) { const t = k / (14 + (4 - i) * 5), ang = t * Math.PI * 2 + i, yy = y + h * (0.08 + 0.5 * ((k * 0.37) % 1)), rr2 = rad * (1 - (yy - y) / h) + 0.25; bulb(PT(F, Math.cos(ang) * rr2, yy, Math.sin(ang) * rr2), BULBC[(k + i) % 6]); } y += h * 0.62; });
     const m = new THREE.Mesh(merge(a), vc); m.matrixAutoUpdate = false; m.matrix.copy(F); m.frustumCulled = false; scene.add(m);
-    const sp = PT(F, 0, y + 2.3, 0), st = new THREE.Mesh(new THREE.OctahedronGeometry(1.3), new THREE.MeshBasicMaterial({ color: '#fff3a0', toneMapped: false })); st.position.copy(sp); st.scale.set(1, 1.5, 0.5); scene.add(st); W.star = st; for (let k = 0; k < 4; k++) bigGlow(sp, '#ffe98a');
+    const sp = PT(F, 0, y + 2.6, 0), st = new THREE.Mesh(starGeo5(1.8, 0.44), new THREE.MeshBasicMaterial({ color: '#ffd84d', toneMapped: false, side: THREE.DoubleSide })); st.position.copy(sp); st.frustumCulled = false; scene.add(st); W.star = st; for (let k = 0; k < 4; k++) bigGlow(sp, '#ffe98a');
     W.treeTop = sp.clone();
   }
   { // ---------- 엔딩: CiT 오두막과 파티 준비 ----------
@@ -1019,6 +1030,8 @@ function buildWorld(scene) {
     const fr = (x, z) => frame(s0 - z, x);                                   // 오두막 기준 (x: 좌우, z: 트랙 위쪽)
     occupied.push([s0, 0, 10]);
     B.wall.add(L(F, MX(0, h / 2 - 0.7, 0, w, h + 1.4, d)), '#c08a5a');
+    a.push(bake(Box, '#6f6259', MX(0, -2.6, 0, w * 1.05, 5.4, d * 1.05)));   // 눈 아래까지 내려가는 돌 기초 (아래에서 봐도 틈 없음)
+    a.push(bake(Box, '#f2f7ff', MX(0, -0.55, 0, w * 1.12, 1.5, d * 1.12)));  // 밑동 눈더미
     B.roof.add(L(F, MX(0, h, 0, w * 1.22, rh, d * 1.16)), '#b5483f');
     B.rsnow.add(L(F, MX(0, h + rh * 0.3 + 0.16, 0, w * 1.22 * 0.7, rh * 0.7, d * 1.13)));
     const zg = d * 0.58 + 0.05; a.push(bake(prismGeo(), '#d3a06e', MX(0, h + 0.05, zg, w * 1.04, rh * 0.84, 0.1)));                    // 박공 벽
@@ -1041,16 +1054,19 @@ function buildWorld(scene) {
     a.push(bake(Box, '#6f4a31', MX(0, h + 1.05, zg + 0.1, 6.1, 1.66, 0.1)));                                                                           // 간판 받침
     a.push(bake(Box, '#8a5a3c', MX(4.3, 0.4, zf + 0.8, 0.9, 0.8, 0.9)), bake(Box, '#6f4a31', MX(4.3, 0.82, zf + 0.8, 0.96, 0.06, 0.96)));        // 나무 상자
     const cm = new THREE.Mesh(merge(a), vc); cm.matrixAutoUpdate = false; cm.matrix.copy(F); cm.castShadow = true; cm.frustumCulled = false; scene.add(cm);
-    const plate = (map, pw, ph, M) => { const mt = new THREE.MeshBasicMaterial({ map, transparent: true }), m = new THREE.Mesh(new THREE.PlaneGeometry(pw, ph), mt); m.matrixAutoUpdate = false; m.matrix.copy(M); m.matrixWorld.copy(M); m.frustumCulled = false; scene.add(m); W.signMats.push(mt); W.links.push(m); return m; };
+    const plate = (map, pw, ph, M, arr) => { const mt = new THREE.MeshBasicMaterial({ map, transparent: true }), m = new THREE.Mesh(new THREE.PlaneGeometry(pw, ph), mt); m.matrixAutoUpdate = false; m.matrix.copy(M); m.matrixWorld.copy(M); m.frustumCulled = false; scene.add(m); W.signMats.push(mt); (arr || W.links).push(m); return m; };
     plate(signCiT(), 5.9, 1.48, L(F, MX(0, h + 1.05, zg + 0.17)));
     { const Fs = fr(-2.0, 7.9), b = [bake(Box, '#8a5a3c', MX(0, 1.2, 0, 0.2, 2.6, 0.2)), bake(Box, '#6f4a31', MX(0, 2.85, 0.02, 4.0, 2.1, 0.12, 0, 0.18, 0)), bake(Box, '#ffffff', MX(0, 3.93, 0.02, 3.9, 0.14, 0.26, 0, 0.18, 0))];
       const sm = new THREE.Mesh(merge(b), vc); sm.matrixAutoUpdate = false; sm.matrix.copy(Fs); sm.castShadow = true; sm.frustumCulled = false; scene.add(sm);
       plate(signHome(), 3.8, 1.9, L(Fs, MX(0, 2.85, 0.02, 1, 1, 1, 0, 0.18, 0).multiply(MX(0, 0, 0.08)))); const gp = PT(Fs, 0, 4.25, 0.3); B.lampHead.add(MX(gp.x, gp.y, gp.z, 0.45)); bigGlow(gp, '#fff0c0'); }
+    { const Fp = fr(2.0, 7.9), b = [bake(Box, '#8a5a3c', MX(0, 1.2, 0, 0.2, 2.6, 0.2)), bake(Box, '#6f4a31', MX(0, 2.85, 0.02, 4.0, 2.1, 0.12, 0, -0.18, 0)), bake(Box, '#ffffff', MX(0, 3.93, 0.02, 3.9, 0.14, 0.26, 0, -0.18, 0))];
+      const pm = new THREE.Mesh(merge(b), vc); pm.matrixAutoUpdate = false; pm.matrix.copy(Fp); pm.castShadow = true; pm.frustumCulled = false; scene.add(pm);
+      plate(signPhoto(), 3.8, 1.9, L(Fp, MX(0, 2.85, 0.02, 1, 1, 1, 0, -0.18, 0).multiply(MX(0, 0, 0.08))), W.photoLinks); const gp2 = PT(Fp, 0, 4.25, 0.3); B.lampHead.add(MX(gp2.x, gp2.y, gp2.z, 0.45)); bigGlow(gp2, '#fff0c0'); }
     const warm = new THREE.PointLight('#ffb866', 0, 38, 1.7); warm.position.copy(PT(F, 0, 3.4, zf + 6.5)); scene.add(warm); W.warm = warm;
     giftPile(s0 - zf - 1.3, -1.9, 3, 0.7); giftPile(s0 - zf - 1.3, 2.0, 3, 0.7);
     // 장식 중인 트리 · 파티 테이블 · 꼬마 눈사람
     { const Ft = fr(-6.2, 6.4); B.tree.add(L(Ft, MX(0, -0.1, 0, 1.35, 1.35, 1.35))); for (let i = 0; i < 12; i++) { const y = 1.3 + i * 0.3, rad = (1.28 * (1 - (y - 0.9) / 3.7) + 0.08) * 1.35, an = i * 2.4, p = PT(Ft, Math.cos(an) * rad, y * 1.35, Math.sin(an) * rad); if (i % 2) bulb(p, BULBC[i % 6]); else B.ball.add(MX(p.x, p.y, p.z, 0.15), BULBC[(i + 3) % 6]); }
-      const tp = PT(Ft, 0, 5.85, 0); B.lampHead.add(MX(tp.x, tp.y, tp.z, 0.6)); bigGlow(tp, '#ffe98a');
+      const tp = PT(Ft, 0, 5.95, 0); const ts = new THREE.Mesh(starGeo5(0.74, 0.18), new THREE.MeshBasicMaterial({ color: '#ffd84d', toneMapped: false, side: THREE.DoubleSide })); ts.position.copy(tp); ts.frustumCulled = false; scene.add(ts); bigGlow(tp, '#ffe98a'); bigGlow(tp, '#ffd84d');
       const st = new THREE.Mesh(merge([bake(Box, '#a87650', MX(0, 0.5, 0, 0.8, 0.1, 0.6)), bake(Box, '#8a5a3c', MX(-0.3, 0.24, 0, 0.1, 0.5, 0.5)), bake(Box, '#8a5a3c', MX(0.3, 0.24, 0, 0.1, 0.5, 0.5))]), vc); st.matrixAutoUpdate = false; st.matrix.copy(fr(-4.8, 6.4)); st.castShadow = true; st.frustumCulled = false; scene.add(st); }
     { const Ft = fr(6.05, 9.9), b = [bake(Box, '#e2463f', MX(0, 0.95, 0, 1.15, 0.07, 2.5)), bake(Box, '#ffffff', MX(0, 0.97, 0, 0.5, 0.07, 2.52)), bake(Box, '#e2463f', MX(0, 0.72, 0, 1.17, 0.42, 2.52))];
       [[-0.48, -1.1], [0.48, -1.1], [-0.48, 1.1], [0.48, 1.1]].forEach(([x, z]) => b.push(bake(Box, '#8a5a3c', MX(x, 0.45, z, 0.1, 0.9, 0.1))));
@@ -1160,7 +1176,7 @@ function buildWorld(scene) {
         else { aR.rotation.x = aL.rotation.x = -1.15; u.body.rotation.z = Math.sin(t * 1.8) * 0.04; } }
     }
     W.sky.position.copy(cam.position); W.stars.position.copy(cam.position); W.aurora.position.set(cam.position.x, cam.position.y - 60, cam.position.z); W.aurora.material.uniforms.t.value = time;
-    W.padMat.map.offset.y = (time * 1.6) % 1; if (W.star) W.star.rotation.y = time * 1.5;
+    W.padMat.map.offset.y = (time * 1.6) % 1; if (W.star) W.star.rotation.y = Math.sin(time * 0.7) * 0.22;
     const P = W.snow.geometry.attributes.position.array, cx = cam.position.x, cy = cam.position.y, cz = cam.position.z;
     for (let i = 0; i < NSN; i++) { const sw = Math.sin(time * 0.8 + snowO[i * 4] * 6.283) * 0.9, fx = (snowO[i * 4] + time * 0.012 * (1 + snowO[i * 4 + 3])) % 1, fy = (snowO[i * 4 + 1] - time * (0.06 + snowO[i * 4 + 3] * 0.05)) % 1, fz = snowO[i * 4 + 2]; P[i * 3] = cx + ((fx - cx / 70) % 1 + 1) % 1 * 70 - 35 + sw; P[i * 3 + 1] = cy + ((fy - cy / 40) % 1 + 1) % 1 * 40 - 20; P[i * 3 + 2] = cz + ((fz - cz / 70) % 1 + 1) % 1 * 70 - 35 + sw * 0.6; }
     W.snow.geometry.attributes.position.needsUpdate = true;
@@ -1173,6 +1189,7 @@ function buildWorld(scene) {
     for (let i = 0; i < NF; i++) { if (fw.l[i] <= 0) continue; fw.l[i] -= dt; if (fw.l[i] <= 0) { Fp[i * 3 + 1] = -9999; continue; } fw.v[i * 3 + 1] -= 5 * dt; const d = 1 - 1.2 * dt; fw.v[i * 3] *= d; fw.v[i * 3 + 1] *= d; fw.v[i * 3 + 2] *= d; Fp[i * 3] += fw.v[i * 3] * dt; Fp[i * 3 + 1] += fw.v[i * 3 + 1] * dt; Fp[i * 3 + 2] += fw.v[i * 3 + 2] * dt; if (fw.l[i] < 0.5) { Fc[i * 3] *= 0.94; Fc[i * 3 + 1] *= 0.94; Fc[i * 3 + 2] *= 0.94; } }
     fw.p.geometry.attributes.position.needsUpdate = true; fw.p.geometry.attributes.color.needsUpdate = true;
   };
+  { const v = new THREE.Vector3(); wpos(2080, 0, 0, v); W.baseY = v.y; W.floorY = v.y + 1.3; } // 오두막 마당 바닥 높이 (카메라 하한선)
   return W;
 }
 // 썰매 자국
@@ -1256,28 +1273,69 @@ const SFX = {
   firework() { const t = AU.ctx && AU.ctx.currentTime; if (!t) return; nz(t, 0.5, 900, 0.4, 0.22, 'lowpass'); nz(t + 0.05, 0.6, 5000, 1, 0.05); },
   click() { const t = AU.ctx && AU.ctx.currentTime; if (!t) return; tone(900, t, 0.08, 'triangle', 0.15); }
 };
-// 캐럴 멜로디: Deck the Halls (C major, 4/4, 16마디=64박) + 방울 리듬
-const N = { C: 523.25, D: 587.33, E: 659.25, F: 698.46, Fs: 739.99, G: 783.99, A: 880.00, B: 493.88 };
-const MEL = [
-  ['G', 1], ['F', 1], ['E', 1], ['D', 1], ['C', 1], ['D', 1], ['E', 1], ['C', 1],
-  ['D', .5], ['E', .5], ['F', .5], ['D', .5], ['E', 2], ['C', .5], ['B', .5], ['C', 3],
-  ['G', 1], ['F', 1], ['E', 1], ['D', 1], ['C', 1], ['D', 1], ['E', 1], ['C', 1],
-  ['D', .5], ['E', .5], ['F', .5], ['D', .5], ['E', 2], ['C', .5], ['B', .5], ['C', 3],
-  ['D', 1], ['E', 1], ['F', 1], ['D', 1], ['E', 1], ['F', 1], ['G', 1], ['D', 1],
-  ['E', .5], ['Fs', .5], ['G', .5], ['A', .5], ['B', .5], ['C', 1.5], ['B', 1], ['A', 1], ['G', 2],
-  ['G', 1], ['F', 1], ['E', 1], ['D', 1], ['C', 1], ['D', 1], ['E', 1], ['C', 1],
-  ['A', .5], ['A', .5], ['A', .5], ['A', .5], ['G', 1], ['F', 1], ['E', 1], ['D', 1], ['C', 2]
+// 캐럴 멜로디: 레이스마다 다른 캐럴이 흐른다 (모두 퍼블릭 도메인) + 방울 리듬
+const N = { C: 523.25, D: 587.33, E: 659.25, F: 698.46, Fs: 739.99, G: 783.99, A: 880.00, B: 493.88, C4: 261.63, D4: 293.66, E4: 329.63, F4: 349.23, G4: 392.00, A4: 440.00, B4: 493.88, C3: 130.81, D3: 146.83, E3: 164.81, F3: 174.61, Fs3: 185.00, G3: 196.00, A3: 220.00, B3: 246.94, C6: 1046.50, D6: 1174.66, E6: 1318.51, F6: 1396.91, G6: 1567.98 };
+const CAROLS = [
+  {
+    name: 'Deck the Halls', beat: 0.42,
+    bass: ['C3', 'C3', 'G3', 'C3', 'C3', 'C3', 'G3', 'C3', 'F3', 'C3', 'G3', 'C3', 'C3', 'C3', 'G3', 'C3'],
+    mel: [
+      ['G', 1], ['F', 1], ['E', 1], ['D', 1], ['C', 1], ['D', 1], ['E', 1], ['C', 1],
+      ['D', .5], ['E', .5], ['F', .5], ['D', .5], ['E', 2], ['C', .5], ['B', .5], ['C', 3],
+      ['G', 1], ['F', 1], ['E', 1], ['D', 1], ['C', 1], ['D', 1], ['E', 1], ['C', 1],
+      ['D', .5], ['E', .5], ['F', .5], ['D', .5], ['E', 2], ['C', .5], ['B', .5], ['C', 3],
+      ['D', 1], ['E', 1], ['F', 1], ['D', 1], ['E', 1], ['F', 1], ['G', 1], ['D', 1],
+      ['E', .5], ['Fs', .5], ['G', .5], ['A', .5], ['B', .5], ['C', 1.5], ['B', 1], ['A', 1], ['G', 2],
+      ['G', 1], ['F', 1], ['E', 1], ['D', 1], ['C', 1], ['D', 1], ['E', 1], ['C', 1],
+      ['A', .5], ['A', .5], ['A', .5], ['A', .5], ['G', 1], ['F', 1], ['E', 1], ['D', 1], ['C', 2]
+    ]
+  },
+  {
+    name: 'Jingle Bells', beat: 0.38,
+    bass: ['C3', 'C3', 'C3', 'C3', 'F3', 'F3', 'C3', 'C3', 'C3', 'C3', 'G3', 'C3', 'C3', 'C3', 'G3', 'C3'],
+    mel: [
+      ['E', 1], ['E', 1], ['E', 2], ['E', 1], ['E', 1], ['E', 2],
+      ['E', 1], ['G', 1], ['C', 1.5], ['D', .5], ['E', 4],
+      ['F', 1], ['F', 1], ['F', 1.5], ['F', .5], ['F', 1], ['E', 1], ['E', 1], ['E', .5], ['E', .5],
+      ['E', 1], ['D', 1], ['D', 1], ['E', 1], ['D', 2], ['G4', 2]
+    ]
+  },
+  {
+    name: 'We Wish You a Merry Christmas', beat: 0.4,
+    bass: ['C3', 'C3', 'C3', 'C3', 'F3', 'F3', 'G3', 'C3', 'C3', 'C3', 'C3', 'C3', 'F3', 'G3', 'C3', 'C3'],
+    mel: [
+      ['G4', 1], ['C', .5], ['C', .5], ['D', 1], ['C', 1], ['B', 1], ['A4', 2],
+      ['G4', 1], ['C', .5], ['C', .5], ['D', 1], ['C', 1], ['B', 1], ['A4', 2],
+      ['G4', 1], ['C', .5], ['C', .5], ['D', 1], ['C', 1], ['B', 1], ['A4', 2],
+      ['D', 1], ['D', 1], ['E', 1], ['F', 1], ['F', 1], ['G', 1], ['E', 1], ['C', 3]
+    ]
+  },
+  {
+    name: 'Joy to the World', beat: 0.44,
+    bass: ['C3', 'C3', 'C3', 'C3', 'F3', 'F3', 'G3', 'G3', 'C3', 'C3', 'C3', 'C3', 'F3', 'G3', 'C3', 'C3'],
+    mel: [
+      ['C', 1], ['B', .5], ['A4', .5], ['G4', 1], ['F', .5], ['E', .5], ['D', 1], ['C', 2],
+      ['G4', 1], ['A4', 1], ['B', 1], ['C', 3],
+      ['C', 1], ['B', .5], ['A4', .5], ['G4', 1], ['F', .5], ['E', .5], ['D', 1], ['C', 2],
+      ['G4', 1], ['A4', 1], ['B', 1], ['C', 3]
+    ]
+  }
 ];
-const BASS = [131, 131, 196, 131, 131, 131, 196, 131, 175, 131, 196, 131, 131, 131, 196, 131];
+function pickCarol() {
+  const n = CAROLS.length;
+  G.carolI = G.carolI == null ? (Math.random() * n | 0) : (G.carolI + 1) % n;
+  AU.carol = CAROLS[G.carolI];
+  return AU.carol;
+}
 function bgmTick(fast) {
-  const c = AU.ctx; if (!c || !AU.on) return; const beat = fast ? 0.36 : 0.42;
+  const c = AU.ctx; if (!c || !AU.on) return; const S = AU.carol || CAROLS[0], mel = S.mel, bass = S.bass; const beat = (S.beat || 0.42) * (fast ? 0.86 : 1);
   if (AU.next < c.currentTime) { AU.next = c.currentTime + 0.05; }
   while (AU.next < c.currentTime + 0.3) {
-    const [n, l] = MEL[AU.idx % MEL.length], t = AU.next, d = l * beat;
+    const [n, l] = mel[AU.idx % mel.length], t = AU.next, d = l * beat;
     tone(N[n], t, d * 0.92, 'triangle', 0.5, AU.music); tone(N[n] * 2, t, Math.min(0.25, d), 'sine', 0.16, AU.music); tone(N[n], t, Math.min(0.2, d), 'square', 0.08, AU.music);
     AU.beatPos = AU.beatPos || 0;
-    for (let b = Math.ceil(AU.beatPos * 2 - 1e-6) / 2; b < AU.beatPos + l - 1e-6; b += 0.5) { const tb = t + (b - AU.beatPos) * beat; nz(tb, 0.07, 7500, 4, b % 1 === 0 ? 0.16 : 0.08, 'bandpass', AU.music); nz(tb + 0.02, 0.05, 9500, 5, 0.07, 'bandpass', AU.music); if (b % 2 === 0) { const bar = (b / 4 | 0) % 16; tone(BASS[bar] / 2 * (b % 4 === 2 ? 1.5 : 1), tb, beat * 1.6, 'triangle', 0.55, AU.music); } }
-    AU.beatPos += l; if ((AU.idx + 1) % MEL.length === 0) AU.beatPos = 0; AU.idx++; AU.next += d;
+    for (let b = Math.ceil(AU.beatPos * 2 - 1e-6) / 2; b < AU.beatPos + l - 1e-6; b += 0.5) { const tb = t + (b - AU.beatPos) * beat; nz(tb, 0.07, 7500, 4, b % 1 === 0 ? 0.16 : 0.08, 'bandpass', AU.music); nz(tb + 0.02, 0.05, 9500, 5, 0.07, 'bandpass', AU.music); if (b % 2 === 0) { const bar = (b / 4 | 0) % 16; tone(N[bass[bar % bass.length]] / 2 * (b % 4 === 2 ? 1.5 : 1), tb, beat * 1.6, 'triangle', 0.55, AU.music); } }
+    AU.beatPos += l; if ((AU.idx + 1) % mel.length === 0) AU.beatPos = 0; AU.idx++; AU.next += d;
   }
 }
 function bgm(on) { AU.on = on; if (on) { setPlaybackSession(); if (AU.ctx && (AU.ctx.state === 'suspended' || AU.ctx.state === 'interrupted')) AU.ctx.resume(); AU.idx = 0; AU.beatPos = 0; AU.next = AU.ctx ? AU.ctx.currentTime + 0.05 : 0; } }
@@ -1376,15 +1434,17 @@ function setCam(dt, snap) {
       const e = sst(0.4, 4.2, G.finT), sw = Math.sin(G.time * 0.22), wide = innerWidth / innerHeight > 1.15;
       wpos(2049.5 - sw * 0.8, 5.4 + sw * 1.1, 4.5, eP); wpos(2079, -0.6, 3.4, eL); oP.lerp(eP, e); oL.lerp(eL, e); fov = lerp(fov, wide ? 43 : 58, e);
       if (G.orbitYaw || G.orbitPitch) {
-        const oy = G.orbitYaw || 0, op = Math.max(-0.4, Math.min(0.65, G.orbitPitch || 0));
+        const oy = G.orbitYaw || 0, op = Math.max(-0.05, Math.min(0.72, G.orbitPitch || 0));
         const dx = eP.x - eL.x, dz = eP.z - eL.z, dist = Math.sqrt(dx * dx + dz * dz) || 30;
         const baseA = Math.atan2(dx, dz);
         oP.x = eL.x + Math.sin(baseA + oy) * Math.cos(op) * dist;
         oP.z = eL.z + Math.cos(baseA + oy) * Math.cos(op) * dist;
         oP.y = eL.y + 5.4 + Math.sin(op) * dist * 0.7;
         oL.copy(eL);
+        if (oP.y < W.floorY) oP.y = W.floorY; // 눈 지면 아래로 내려가지 않게
       }
       G.offR += (((st === 'result' && wide && G.resOpen) ? 0.17 : 0) - G.offR) * Math.min(1, dt * 2.2); off = G.offR; } }
+  if ((st === 'finish' || st === 'result') && W.floorY && oP.y < W.floorY) oP.y = W.floorY; // 어떤 각도에서도 카메라가 설면을 뚫지 않게
   camera.position.copy(oP); camera.lookAt(oL); camera.fov = fov;
   if (off > 0.002) camera.setViewOffset(innerWidth, innerHeight, -off * innerWidth, 0, innerWidth, innerHeight); else if (camera.view) camera.clearViewOffset();
   camera.updateProjectionMatrix();
@@ -1493,13 +1553,77 @@ function shareCard(kind) { // 인스타그램 스토리(9:16) · 피드(4:5) 크
   x.fillStyle = 'rgba(255,255,255,0.14)'; x.fillRect(104, cy + 306, w - 208, 2); x.textAlign = 'center'; x.fillStyle = '#ffffff'; x.font = `700 36px ${FONT_K}`; x.fillText('CiT코칭연구소 · citkorea.co.kr', w / 2, cy + 352);
   openShot(c, story ? '스토리용 이미지' : '피드용 이미지', story ? 'cit-sled-story.jpg' : 'cit-sled-feed.jpg');
 }
+const IS_IOS = /\b(iPad|iPhone|iPod)\b/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+let _shotUrl = null;
+function shotFallback() { // 저장이 막힌 환경: 화면의 이미지를 길게 눌러 저장하게 안내
+  const s = G.shot; if (!s) return;
+  $('#shotNote').textContent = '위 이미지를 길게 눌러 ‘사진에 저장’을 선택해 주세요.';
+  try { $('#shotImg').scrollIntoView({ block: 'center' }); } catch (e) { }
+  if (s.url) { try { window.open(s.url, '_blank'); } catch (e) { } }
+}
+// ---------- 폴라로이드 기념사진 ----------
+function takePolaroid() { // 오두막 앞에 네 캐릭터를 모아 한 장 찍고 폴라로이드 틀에 담는다
+  if (G.state !== 'finish' && G.state !== 'result') return;
+  SFX.click();
+  const saved = meshes.map(m => ({ p: m.position.clone(), q: m.quaternion.clone() }));
+  const camP = camera.position.clone(), camQ = camera.quaternion.clone(), camFov = camera.fov;
+  let src = null;
+  try {
+    const th = trk(2069.4).th, spots = [[-3.5, 0], [-1.15, 0.5], [1.15, 0.5], [3.5, 0]];
+    meshes.forEach((m, i) => { const [u, ds] = spots[i] || [0, 0]; wpos(2069.4 + ds, u, 0.02, m.position); m.rotation.set(0, -th + (i === 0 ? 0.08 : i === 3 ? -0.08 : 0), 0); });
+    const cp = new THREE.Vector3(), cl = new THREE.Vector3();
+    wpos(2061.6, 1.4, 3.1, cp); wpos(2073.4, -0.7, 2.4, cl);
+    camera.position.copy(cp); camera.lookAt(cl); camera.fov = 52;
+    src = grab(1536, 1152)[0];
+  } catch (e) { src = null; }
+  finally {
+    meshes.forEach((m, i) => { m.position.copy(saved[i].p); m.quaternion.copy(saved[i].q); });
+    camera.position.copy(camP); camera.quaternion.copy(camQ); camera.fov = camFov;
+  }
+  if (!src) return;
+  const PW = 1280, PAD = 64, FWD = PW - PAD * 2, FHT = Math.round(FWD * 1152 / 1536), PH = PAD + FHT + 372;
+  const c = document.createElement('canvas'); c.width = PW; c.height = PH; const x = c.getContext('2d');
+  x.fillStyle = '#fbf9f4'; x.fillRect(0, 0, PW, PH);
+  for (let i = 0; i < 1100; i++) { x.fillStyle = `rgba(120,108,86,${0.012 + Math.random() * 0.02})`; x.fillRect(Math.random() * PW, Math.random() * PH, 1 + Math.random() * 2, 1); }
+  x.save(); x.shadowColor = 'rgba(24,28,54,.28)'; x.shadowBlur = 26; x.shadowOffsetY = 8; x.fillStyle = '#fff'; x.fillRect(PAD - 14, PAD - 14, FWD + 28, FHT + 28); x.restore();
+  x.drawImage(src, PAD, PAD, FWD, FHT);
+  x.strokeStyle = 'rgba(24,28,54,.14)'; x.lineWidth = 2; x.strokeRect(PAD, PAD, FWD, FHT);
+  const cx = PW / 2; x.textAlign = 'center'; x.textBaseline = 'middle';
+  x.fillStyle = '#171d3d'; x.font = `900 56px ${FONT_K}`; x.fillText('CiT코칭연구소 · 2026 크리스마스', cx, PAD + FHT + 86);
+  x.fillStyle = '#e6bd4a'; x.fillRect(cx - 44, PAD + FHT + 124, 88, 3);
+  x.fillStyle = '#5d6480'; x.font = `600 40px ${FONT_K}`; x.fillText('정영 · HR둥이 · 이환승 · 이코칭', cx, PAD + FHT + 174);
+  const nm = (G.pname || '').trim();
+  x.fillStyle = '#b83b34'; x.font = `800 44px ${FONT_K}`; x.fillText(nm ? `‘${nm}’ 님의 기념사진` : '나의 기념사진', cx, PAD + FHT + 240);
+  const dd = new Date(), ds = `${dd.getFullYear()}.${String(dd.getMonth() + 1).padStart(2, '0')}.${String(dd.getDate()).padStart(2, '0')}`;
+  x.textAlign = 'left'; x.fillStyle = '#9aa0b4'; x.font = `600 26px ${FONT_K}`; x.fillText('citkorea.co.kr', PAD, PH - 46);
+  x.textAlign = 'right'; x.fillText(ds, PW - PAD, PH - 46);
+  openShot(c, '폴라로이드 기념사진', 'cit-sled-polaroid.jpg');
+}
 function openShot(c, title, name) {
   let url = ''; try { url = c.toDataURL('image/jpeg', 0.92); } catch (e) { }
   let file = null; try { const bin = atob(url.split(',')[1]), arr = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i); file = new File([arr], name, { type: 'image/jpeg' }); } catch (e) { }
-  const can = !!(file && navigator.canShare && navigator.canShare({ files: [file] })); G.shot = { file, can };
-  $('#shotTitle').textContent = title; $('#shotImg').src = url; $('#bSaveImg').href = url; $('#bSaveImg').download = name; $('#bShare').classList.toggle('hidden', !can);
-  $('#shotNote').textContent = can ? '공유하기를 누른 뒤 Instagram을 고르면 스토리나 피드에 올릴 수 있어요.' : '이 브라우저는 바로 공유를 지원하지 않아요. 이미지를 저장한 뒤 Instagram에 올려 주세요. 저장이 안 되면 이미지를 길게 누르거나 우클릭해 저장하세요.';
+  const can = !!(file && navigator.canShare && navigator.canShare({ files: [file] }));
+  const shot = G.shot = { file, can, url: '', data: url, name, title };
+  $('#shotTitle').textContent = title; $('#shotImg').src = url; $('#bSaveImg').href = url; $('#bSaveImg').download = name;
+  $('#bShare').classList.toggle('hidden', !can);
+  $('#shotNote').textContent = IS_IOS
+    ? (can ? '‘이미지 저장’을 누르면 공유 시트가 열려요. 공유 시트에서 ‘이미지 저장’을 고르면 사진 앱에 담겨요.' : '위 이미지를 길게 눌러 ‘사진에 저장’을 선택해 주세요.')
+    : (can ? '공유하기를 누르면 인스타그램 스토리·피드로 바로 올릴 수 있어요.' : '이미지를 저장한 뒤 인스타그램에 올려 주세요. 저장이 안 되면 이미지를 길게 눌러 저장하세요.');
   $('#shot').classList.remove('hidden');
+  // iOS Safari는 data: URL + download를 무시하므로 Blob URL로 바꿔 준다 (이전 URL은 해제)
+  try {
+    c.toBlob((blob) => {
+      if (!blob || G.shot !== shot) return;
+      if (_shotUrl) { try { URL.revokeObjectURL(_shotUrl); } catch (e) { } }
+      _shotUrl = URL.createObjectURL(blob);
+      shot.url = _shotUrl;
+      shot.file = new File([blob], name, { type: 'image/jpeg' });
+      shot.can = !!(navigator.canShare && navigator.canShare({ files: [shot.file] }));
+      $('#bSaveImg').href = _shotUrl;
+      $('#shotImg').src = _shotUrl;
+      $('#bShare').classList.toggle('hidden', !shot.can);
+    }, 'image/jpeg', 0.92);
+  } catch (e) { }
 }
 async function doShare() { const s = G.shot; if (!s || !s.can) return; try { await navigator.share({ files: [s.file], title: 'CiT 썰매대작전', text: 'CiT 썰매대작전에서 달렸어요! citkorea.co.kr' }); } catch (e) { if (e && e.name !== 'AbortError') $('#shotNote').textContent = '공유 창을 열지 못했어요. 이미지를 저장한 뒤 Instagram에 올려 주세요.'; } }
 function setResOpen(v) { G.resOpen = v; $('#result').classList.toggle('hidden', !v); $('#endbar').classList.toggle('hidden', v || G.state !== 'result'); }
@@ -1522,9 +1646,24 @@ function buildUI() {
   $('#nameIn').addEventListener('input', () => { if (G.updateResultRoster) G.updateResultRoster(); });
   $('#bResX').onclick = () => { setResOpen(false); G.autoSpin = true; toast('360도 파노라마 회전 중!', '화면 드래그나 방향키로도 조절할 수 있어요 👀'); };
   $('#bShot').onclick = $('#bShot2').onclick = () => sceneShot(); $('#bStory').onclick = () => shareCard('story');
+  const bp = document.getElementById('bPhoto'); if (bp) bp.onclick = () => takePolaroid();
   // Claude 게시 페이지에서는 일반 다운로드가 막혀 있어 downloads 기능으로 저장
   try { if (window.claude && window.claude.use) window.claude.use('downloads').then(d => { G.dl = d; }).catch(() => { }); } catch (e) { }
-  $('#bSaveImg').addEventListener('click', (e) => { if (!G.dl || !G.shot || !G.shot.file) return; e.preventDefault(); G.dl.save({ filename: $('#bSaveImg').download, data: G.shot.file }).then(() => { $('#shotNote').textContent = '이미지를 저장했어요. Instagram에서 스토리나 피드로 올려 보세요.'; }).catch((err) => { if (!err || err.code !== 'declined') $('#shotNote').textContent = '저장하지 못했어요. 이미지를 길게 누르거나 우클릭해 저장해 주세요.'; }); });
+  $('#bSaveImg').addEventListener('click', (e) => {
+    const s = G.shot; if (!s) { e.preventDefault(); return; }
+    if (G.dl && s.file) { // Claude 게시 페이지: downloads 기능으로 저장
+      e.preventDefault();
+      G.dl.save({ filename: s.name, data: s.file }).then(() => { $('#shotNote').textContent = '이미지를 저장했어요. Instagram에서 스토리나 피드로 올려 보세요.'; }).catch((err) => { if (!err || err.code !== 'declined') shotFallback(); });
+      return;
+    }
+    if (IS_IOS) { // iOS Safari: <a download> 대신 공유 시트(‘이미지 저장’) → 길게 눌러 저장
+      e.preventDefault();
+      if (s.can && s.file) navigator.share({ files: [s.file], title: 'CiT 썰매대작전', text: 'CiT 썰매대작전 기념사진' })
+        .then(() => { $('#shotNote').textContent = '공유 시트에서 ‘이미지 저장’을 고르면 사진 앱에 저장돼요.'; })
+        .catch((err) => { if (!err || err.name !== 'AbortError') shotFallback(); });
+      else shotFallback();
+    }
+  });
   $('#bShare').onclick = () => doShare(); $('#bShotX').onclick = () => $('#shot').classList.add('hidden'); $('#bResX').onclick = () => setResOpen(false); $('#bResOpen').onclick = () => { G.autoSpin = false; setResOpen(true); };
   const bSpin = document.getElementById('bSpinToggle');
   if (bSpin) bSpin.onclick = () => {
@@ -1555,9 +1694,9 @@ function buildUI() {
   };
   $('#bMenu').onclick = $('#bMenu2').onclick = () => whiteFade(() => { pause(false, true); toMenu(); });
   // 마지막 장면의 팻말·간판을 누르면 홈페이지로
-  const ray = new THREE.Raycaster(), nd = new THREE.Vector2(), hit = (e) => { if (G.state !== 'result') return false; nd.set(e.clientX / innerWidth * 2 - 1, -(e.clientY / innerHeight) * 2 + 1); ray.setFromCamera(nd, camera); return ray.intersectObjects(W.links, false).length > 0; };
-  $('#gl').addEventListener('click', (e) => { if (hit(e)) window.open(HOME, '_blank', 'noopener'); });
-  $('#gl').addEventListener('pointermove', (e) => { $('#gl').style.cursor = hit(e) ? 'pointer' : ''; });
+  const ray = new THREE.Raycaster(), nd = new THREE.Vector2(), hitOn = (e, list) => { if (G.state !== 'result' || !list || !list.length) return false; nd.set(e.clientX / innerWidth * 2 - 1, -(e.clientY / innerHeight) * 2 + 1); ray.setFromCamera(nd, camera); return ray.intersectObjects(list, false).length > 0; }, hit = (e) => hitOn(e, W.links), hitPhoto = (e) => hitOn(e, W.photoLinks);
+  $('#gl').addEventListener('click', (e) => { if (hitPhoto(e)) { takePolaroid(); return; } if (hit(e)) window.open(HOME, '_blank', 'noopener'); });
+  $('#gl').addEventListener('pointermove', (e) => { $('#gl').style.cursor = (hitPhoto(e) || hit(e)) ? 'pointer' : ''; });
 }
 function toggleHelp(v) { const h = $('#help'); const show = v === undefined ? h.classList.contains('hidden') : v; h.classList.toggle('hidden', !show); if (show && G.state === 'race') pause(true, true); }
 function whiteFade(fn) { const f = $('#fade'); f.classList.add('on'); setTimeout(() => { fn(); setTimeout(() => f.classList.remove('on'), 120); }, 360); }
@@ -1571,13 +1710,13 @@ function toMenu(first) {
 function startRace(again) {
   if (G.state !== 'menu' && !again) return; auInit(); if (AU.ctx && (AU.ctx.state === 'suspended' || AU.ctx.state === 'interrupted')) AU.ctx.resume(); SFX.click();
   setName($('#menuNameIn').value);
-  startOnlineSession();
+  startOnlineSession(); pickCarol();
   G.R = newRace(G.diff, 0, AUTO); resetWorld(); G.state = 'intro'; G.orbitYaw = 0; G.orbitPitch = 0; G.autoSpin = false; G.introT = again ? 1.0 : 0; G.countI = -1; G.finT = 0; G.acc = 0; G.jumpQ = false; G.hintT = 0;
   $('#menu').classList.add('out'); setTimeout(() => { if (G.state !== 'menu') $('#menu').classList.add('hidden'); }, 520);
   $('#hud').classList.remove('hidden'); requestAnimationFrame(() => $('#hud').classList.add('on')); $('#hint').style.opacity = 1; $('#pops').innerHTML = ''; hud(true);
 }
 function countdown(dt) { // 카메라 이동과 겹쳐서 3·2·1·GO
-  const i = Math.min(3, Math.floor((G.introT - 1.0) / 0.8)); if (i >= 0 && i !== G.countI) { G.countI = i; const c = $('#count'); c.textContent = i < 3 ? 3 - i : 'GO!'; c.classList.toggle('txt', i === 3); c.classList.remove('go'); void c.offsetWidth; c.classList.add('go'); SFX.beep(i === 3); if (i === 3) { G.state = 'race'; bgm(true); toast(SECTIONS[0].name, SECTIONS[0].sub); G.lastSec = 0; } }
+  const i = Math.min(3, Math.floor((G.introT - 1.0) / 0.8)); if (i >= 0 && i !== G.countI) { G.countI = i; const c = $('#count'); c.textContent = i < 3 ? 3 - i : 'GO!'; c.classList.toggle('txt', i === 3); c.classList.remove('go'); void c.offsetWidth; c.classList.add('go'); SFX.beep(i === 3); if (i === 3) { G.state = 'race'; bgm(true); toast(SECTIONS[0].name, SECTIONS[0].sub); pop('♪ ' + (AU.carol ? AU.carol.name : '캐럴'), 'gold'); G.lastSec = 0; } }
 }
 function hud(force) {
   const R = G.R, p = R.racers[0], rk = ranking(R), my = rk.indexOf(p) + 1;
@@ -1629,7 +1768,7 @@ function bindInput() {
   addEventListener('blur', () => { for (const k in keys) keys[k] = false; if (G.state === 'race' && !G.paused) pause(true); });
   const tb = (id, key) => { const el = $(id), on = (e) => { e.preventDefault(); if (key === 'j') { if (G.state === 'race') G.jumpQ = true; } else touch[key] = true; el.classList.add('on'); }, off = (e) => { e.preventDefault(); if (key !== 'j') touch[key] = false; el.classList.remove('on'); }; el.addEventListener('pointerdown', on); el.addEventListener('pointerup', off); el.addEventListener('pointercancel', off); el.addEventListener('pointerleave', off); };
   tb('#tL', 'l'); tb('#tR', 'r'); tb('#tB', 'b'); tb('#tJ', 'j');
-  document.addEventListener('contextmenu', e => e.preventDefault());
+  document.addEventListener('contextmenu', (e) => { if (e.target && e.target.id === 'shotImg') return; e.preventDefault(); });
 }
 const pin = { steer: 0, brake: false, push: false, jump: false, spin: 0 };
 function readInput() { const l = keys.ArrowLeft || keys.KeyA || touch.l, r = keys.ArrowRight || keys.KeyD || touch.r, st = (r ? 1 : 0) - (l ? 1 : 0), air = G.R.racers[0].air; pin.steer = air ? 0 : st; pin.spin = air ? st : 0; pin.brake = !!(keys.ArrowDown || keys.KeyS || touch.b); pin.push = !!(keys.ArrowUp || keys.KeyW); }
@@ -1673,8 +1812,8 @@ function frame_(dt) {
         const d = keys['ArrowDown'] || keys['KeyS'] || touch.b;
         if (l) { G.autoSpin = false; G.orbitYaw = (G.orbitYaw || 0) - dt * 2.2; }
         if (r) { G.autoSpin = false; G.orbitYaw = (G.orbitYaw || 0) + dt * 2.2; }
-        if (u) { G.autoSpin = false; G.orbitPitch = Math.min(0.65, (G.orbitPitch || 0) + dt * 1.5); }
-        if (d) { G.autoSpin = false; G.orbitPitch = Math.max(-0.4, (G.orbitPitch || 0) - dt * 1.5); }
+        if (u) { G.autoSpin = false; G.orbitPitch = Math.min(0.72, (G.orbitPitch || 0) + dt * 1.5); }
+        if (d) { G.autoSpin = false; G.orbitPitch = Math.max(-0.05, (G.orbitPitch || 0) - dt * 1.5); }
       }
     }
     // 눈 튀김 · 자국
@@ -1773,7 +1912,7 @@ boot().catch(e => { console.error(e); const l = $('#loading'); l.classList.remov
       const dx = e.clientX - dragX;
       const dy = e.clientY - dragY;
       G.orbitYaw = startYaw + dx * 0.008;
-      G.orbitPitch = Math.max(-0.4, Math.min(0.65, startPitch + dy * 0.006));
+      G.orbitPitch = Math.max(-0.05, Math.min(0.72, startPitch + dy * 0.006));
     }
   });
   window.addEventListener('pointerup', function() { isDrag = false; });
