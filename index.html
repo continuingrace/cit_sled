@@ -130,16 +130,16 @@ kbd{display:inline-block;min-width:26px;padding:1px 7px;margin:0 2px;border-radi
 #endbar{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);display:flex;gap:6px;flex-wrap:wrap;justify-content:center;max-width:calc(100vw - 20px);z-index:19;padding:6px;border-radius:20px;background:var(--bg);border:1px solid var(--line)}
 #turbo{position:absolute;left:50%;bottom:66px;width:170px;margin-left:-85px;padding:7px 14px 10px;border-radius:14px;background:var(--bg);font-size:12px;font-weight:800;color:var(--acc);text-align:center;letter-spacing:.14em;opacity:0;transition:opacity .2s}
 #turbo.on{opacity:1}#turbo i{display:block;height:5px;border-radius:3px;background:var(--acc);margin-top:6px;transform-origin:left center}
-.shotbox{text-align:center}.shotbox img{display:block;max-width:min(560px,84vw);max-height:54vh;border-radius:14px;margin:0 auto 14px;box-shadow:0 12px 30px rgba(0,0,0,.4)}
+.shotbox{text-align:center}.shotbox img,#shotPrev{display:block;width:auto;height:auto;max-width:min(560px,100%);border-radius:14px;margin:0 auto 14px;box-shadow:0 12px 30px rgba(0,0,0,.4)}
 #shotImg{pointer-events:auto;-webkit-touch-callout:default;user-select:auto;-webkit-user-select:auto;touch-action:auto}
-#shotPrev{display:block;max-width:min(560px,84vw);max-height:54vh;border-radius:14px;margin:0 auto 14px;box-shadow:0 12px 30px rgba(0,0,0,.4)}
+#shotPrev{width:auto;height:auto}
 .shotbox .note{margin:0 auto 14px;max-width:440px;line-height:1.65}
 #shotMsgRow{margin:0 auto 12px;max-width:min(430px,82vw);text-align:left}
 #shotMsgRow label{display:block;margin:0 0 6px 4px;font-size:12px;font-weight:700;letter-spacing:.04em;color:var(--sub)}
 #shotMsg{width:100%;padding:11px 13px;border-radius:12px;border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.08);color:#fff;font-family:var(--k);font-size:15px;font-weight:600;outline:none;user-select:text;-webkit-user-select:text;touch-action:auto}
 #shotMsg:focus{border-color:var(--acc);box-shadow:0 0 0 3px rgba(255,216,77,.16)}
 #shotMsg::placeholder{color:#8f99c2;font-weight:500}
-@media (max-width:520px){.shotbox img{max-height:44vh}#shotPrev{max-height:44vh}}
+@media (max-width:520px){.shotbox{padding:22px 18px 18px}}
 #fade{position:fixed;inset:0;background:#fff;opacity:0;pointer-events:none;transition:opacity .35s;z-index:40}#fade.on{opacity:1}
 #loading{position:fixed;inset:0;background:#101a4a;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;font-size:20px;font-weight:600;z-index:50;transition:opacity .6s}
 #loading.out{opacity:0;pointer-events:none}
