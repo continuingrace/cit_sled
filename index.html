@@ -1269,24 +1269,29 @@ function setPlaybackSession() {
   }
 }
 setPlaybackSession();
+function auResume() {
+  const c = AU.ctx; if (!c) return;
+  if (c.state === 'suspended' || c.state === 'interrupted') {
+    try { const p = c.resume(); if (p && p.catch) p.catch(() => { }); } catch (e) { }
+  }
+}
 ['touchstart', 'touchend', 'click', 'pointerdown'].forEach(evt => {
   window.addEventListener(evt, () => {
     setPlaybackSession();
-    if (AU.ctx && (AU.ctx.state === 'suspended' || AU.ctx.state === 'interrupted')) {
-      AU.ctx.resume();
-    }
+    auResume();
   }, { passive: true });
 });
 
 function auInit() {
   setPlaybackSession();
-  if (AU.ctx) { if (AU.ctx.state === 'suspended' || AU.ctx.state === 'interrupted') AU.ctx.resume(); return; }
+  if (AU.ctx) { auResume(); return; }
   const C = window.AudioContext || window.webkitAudioContext; if (!C) return;
   const c = AU.ctx = new C(); AU.master = c.createGain(); AU.master.gain.value = AU.muted ? 0 : 0.85; AU.master.connect(c.destination);
   const nb = c.createBuffer(1, c.sampleRate * 2, c.sampleRate), d = nb.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1; AU.noise = nb;
   const loop = (type, f, q) => { const src = c.createBufferSource(); src.buffer = nb; src.loop = true; const bq = c.createBiquadFilter(); bq.type = type; bq.frequency.value = f; bq.Q.value = q; const g = c.createGain(); g.gain.value = 0; src.connect(bq); bq.connect(g); g.connect(AU.master); src.start(); return { g, bq }; };
   AU.sled = loop('bandpass', 1100, 0.7); AU.wind = loop('lowpass', 420, 0.2);
-  AU.music = c.createGain(); AU.music.gain.value = 0.2; AU.music.connect(AU.master);
+  AU.music = c.createGain(); AU.music.gain.value = 0.55; AU.music.connect(AU.master);
+  auResume();
 }
 function auMute(m) { AU.muted = m; try { localStorage.setItem('sledMute', m ? '1' : '0'); } catch (e) { } if (AU.master) AU.master.gain.setTargetAtTime(m ? 0 : 0.85, AU.ctx.currentTime, 0.03); }
 function tone(f, t0, dur, type, vol, dest, f2) { const c = AU.ctx; if (!c) return; const o = c.createOscillator(), g = c.createGain(); o.type = type || 'sine'; o.frequency.setValueAtTime(f, t0); if (f2) o.frequency.exponentialRampToValueAtTime(f2, t0 + dur); g.gain.setValueAtTime(0.0001, t0); g.gain.exponentialRampToValueAtTime(vol, t0 + 0.012); g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur); o.connect(g); g.connect(dest || AU.master); o.start(t0); o.stop(t0 + dur + 0.05); }
@@ -1365,12 +1370,12 @@ function bgmTick(fast) {
     const [n, l] = mel[AU.idx % mel.length], t = AU.next, d = l * beat;
     tone(N[n], t, d * 0.92, 'triangle', 0.5, AU.music); tone(N[n] * 2, t, Math.min(0.25, d), 'sine', 0.16, AU.music); tone(N[n], t, Math.min(0.2, d), 'square', 0.08, AU.music);
     AU.beatPos = AU.beatPos || 0;
-    for (let b = Math.ceil(AU.beatPos * 2 - 1e-6) / 2; b < AU.beatPos + l - 1e-6; b += 0.5) { const tb = t + (b - AU.beatPos) * beat; nz(tb, 0.07, 7500, 4, b % 1 === 0 ? 0.16 : 0.08, 'bandpass', AU.music); nz(tb + 0.02, 0.05, 9500, 5, 0.07, 'bandpass', AU.music); if (b % 2 === 0) { const bar = (b / 4 | 0) % 16; tone(N[bass[bar % bass.length]] / 2 * (b % 4 === 2 ? 1.5 : 1), tb, beat * 1.6, 'triangle', 0.55, AU.music); } }
+    for (let b = Math.ceil(AU.beatPos * 2 - 1e-6) / 2; b < AU.beatPos + l - 1e-6; b += 0.5) { const tb = t + (b - AU.beatPos) * beat; nz(tb, 0.07, 7500, 4, b % 1 === 0 ? 0.16 : 0.08, 'bandpass', AU.music); nz(tb + 0.02, 0.05, 9500, 5, 0.07, 'bandpass', AU.music); if (b % 2 === 0) { const bar = (b / 4 | 0) % 16; tone(N[bass[bar % bass.length]] * (b % 4 === 2 ? 1.5 : 1), tb, beat * 1.6, 'triangle', 0.5, AU.music); } }
     AU.beatPos += l; if ((AU.idx + 1) % mel.length === 0) AU.beatPos = 0; AU.idx++; AU.next += d;
   }
 }
-function bgm(on) { AU.on = on; if (on) { setPlaybackSession(); if (AU.ctx && (AU.ctx.state === 'suspended' || AU.ctx.state === 'interrupted')) AU.ctx.resume(); AU.idx = 0; AU.beatPos = 0; AU.next = AU.ctx ? AU.ctx.currentTime + 0.05 : 0; } }
-function auEngine(v, ground, mute) { if (!AU.ctx) return; const t = AU.ctx.currentTime, k = mute ? 0 : 1; AU.sled.g.gain.setTargetAtTime(k * (ground ? Math.min(0.3, v / 110) : 0), t, 0.05); AU.sled.bq.frequency.setTargetAtTime(700 + v * 30, t, 0.1); AU.wind.g.gain.setTargetAtTime(k * Math.min(0.5, v * v / 3200), t, 0.1); AU.wind.bq.frequency.setTargetAtTime(300 + v * 14, t, 0.1); }
+function bgm(on) { AU.on = on; if (on) { setPlaybackSession(); auResume(); if (AU.music) AU.music.gain.setTargetAtTime(0.55, AU.ctx.currentTime, 0.02); AU.idx = 0; AU.beatPos = 0; AU.next = AU.ctx ? AU.ctx.currentTime + 0.05 : 0; } }
+function auEngine(v, ground, mute) { if (!AU.ctx) return; const t = AU.ctx.currentTime, k = mute ? 0 : 1; AU.sled.g.gain.setTargetAtTime(k * (ground ? Math.min(0.18, v / 183) : 0), t, 0.05); AU.sled.bq.frequency.setTargetAtTime(700 + v * 30, t, 0.1); AU.wind.g.gain.setTargetAtTime(k * Math.min(0.25, v * v / 6400), t, 0.1); AU.wind.bq.frequency.setTargetAtTime(300 + v * 14, t, 0.1); }
 
 // ===== 메인: 렌더 · 카메라 · UI · 게임 흐름 =====
 const Q = new URLSearchParams(location.search), SPEED = +Q.get('speed') || 1, AUTO = !!Q.get('auto');
@@ -1774,7 +1779,7 @@ function buildUI() {
   $('#bCam').onclick = () => { G.camMode = (G.camMode + 1) % 3; }; $('#bPause').onclick = () => pause();
   $('#bResume').onclick = () => pause(false); const doRetry = () => {
     auInit();
-    if (AU.ctx && (AU.ctx.state === 'suspended' || AU.ctx.state === 'interrupted')) AU.ctx.resume();
+    auResume();
     whiteFade(() => {
       pause(false, true);
       setResOpen(false);
@@ -1808,7 +1813,7 @@ function toMenu(first) {
   if (!first) setTimeout(() => { if (G.state === 'menu') $('#hud').classList.add('hidden'); }, 500); else $('#hud').classList.add('hidden');
 }
 function startRace(again) {
-  if (G.state !== 'menu' && !again) return; auInit(); if (AU.ctx && (AU.ctx.state === 'suspended' || AU.ctx.state === 'interrupted')) AU.ctx.resume(); SFX.click();
+  if (G.state !== 'menu' && !again) return; auInit(); auResume(); setPlaybackSession(); SFX.click();
   setName($('#menuNameIn').value);
   startOnlineSession(); pickCarol();
   G.R = newRace(G.diff, 0, AUTO); resetWorld(); G.state = 'intro'; G.orbitYaw = 0; G.orbitPitch = 0; G.autoSpin = false; G.introT = again ? 1.0 : 0; G.countI = -1; G.finT = 0; G.acc = 0; G.jumpQ = false; G.hintT = 0;
