@@ -1572,8 +1572,8 @@ function takePolaroid() { // 오두막 앞에 네 캐릭터를 모아 한 장 �
     const th = trk(2069.4).th, spots = [[-3.5, 0], [-1.15, 0.5], [1.15, 0.5], [3.5, 0]];
     meshes.forEach((m, i) => { const [u, ds] = spots[i] || [0, 0]; wpos(2069.4 + ds, u, 0.02, m.position); m.rotation.set(0, -th + (i === 0 ? 0.08 : i === 3 ? -0.08 : 0), 0); });
     const cp = new THREE.Vector3(), cl = new THREE.Vector3();
-    wpos(2061.6, 1.4, 3.1, cp); wpos(2073.4, -0.7, 2.4, cl);
-    camera.position.copy(cp); camera.lookAt(cl); camera.fov = 52;
+    wpos(2061.6, 1.4, 3.55, cp); wpos(2073.4, -0.7, 3.1, cl);
+    camera.position.copy(cp); camera.lookAt(cl); camera.fov = 54;
     src = grab(1536, 1152)[0];
   } catch (e) { src = null; }
   finally {
