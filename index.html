@@ -3,6 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'none'; object-src 'none'; form-action 'none'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://cit-sled-api.continuingrace.workers.dev https://challenges.cloudflare.com; frame-src https://challenges.cloudflare.com; worker-src 'self' blob:">
 <title>CiT 썰매대작전</title>
 
 <style>
@@ -127,6 +129,10 @@ kbd{display:inline-block;min-width:26px;padding:1px 7px;margin:0 2px;border-radi
 .note{margin:12px 0 0;text-align:center;font-size:13px;font-weight:500;color:var(--sub)}
 .x{position:absolute;right:14px;top:14px;width:36px;height:36px;border-radius:50%;border:0;background:rgba(255,255,255,.1);color:#fff;font-size:22px;font-weight:500;line-height:1;cursor:pointer;padding:0}
 .x:hover{background:rgba(255,255,255,.2)}
+#bResX{right:14px;top:12px;width:auto;height:34px;padding:0 13px 0 11px;border-radius:17px;border:1px solid rgba(255,255,255,.42);background:rgba(255,255,255,.22);color:#fff;display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:800;letter-spacing:.02em;line-height:1;box-shadow:0 6px 18px rgba(0,0,0,.32);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+#bResX b{font-size:15px;font-weight:700;line-height:1}
+#bResX:hover{background:rgba(255,255,255,.34);border-color:rgba(255,255,255,.62)}
+#result .rhead{padding-right:92px}
 #endbar{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);display:flex;gap:6px;flex-wrap:wrap;justify-content:center;max-width:calc(100vw - 20px);z-index:19;padding:6px;border-radius:20px;background:var(--bg);border:1px solid var(--line)}
 #turbo{position:absolute;left:50%;bottom:66px;width:170px;margin-left:-85px;padding:7px 14px 10px;border-radius:14px;background:var(--bg);font-size:12px;font-weight:800;color:var(--acc);text-align:center;letter-spacing:.14em;opacity:0;transition:opacity .2s}
 #turbo.on{opacity:1}#turbo i{display:block;height:5px;border-radius:3px;background:var(--acc);margin-top:6px;transform-origin:left center}
@@ -202,7 +208,7 @@ body.paused *{animation-play-state:paused!important}
 </div>
 <div id="pause" class="modal hidden"><div class="panel" style="text-align:center;min-width:280px"><h2>일시정지</h2><div style="display:flex;flex-direction:column;gap:10px"><button class="btn" id="bResume">계속 달리기</button><button class="btn sub" id="bShot">장면 캡처</button><button class="btn sub" id="bRetry2">처음부터</button><button class="btn sub" id="bMenu2">메인으로</button></div></div></div>
 <div id="result" class="modal side hidden"><div class="panel">
-  <button class="x" id="bResX" title="닫고 풍경 보기" aria-label="닫기">×</button>
+  <button class="x" id="bResX" title="닫고 풍경 보기" aria-label="결과 창 닫기"><b>✕</b><span>닫기</span></button>
   <div class="rhead"><b id="rRank">1</b><span>위</span><em id="rMsg"></em></div>
   <ol class="rlist" id="rList"></ol>
   <div class="stats" id="rStats"></div>
@@ -212,7 +218,7 @@ body.paused *{animation-play-state:paused!important}
   <button class="btn" id="bLookAround" style="background:rgba(255,216,77,.22);border:1px solid #ffd84d;color:#ffd84d;font-weight:700;margin-bottom:6px">주변 풍경 둘러보기 👀 (360도 회전)</button>
   <div class="row"><button class="btn" id="bRetry">한 번 더</button><button class="btn sub" id="bMenu">메인으로</button><button class="btn sub" id="bBoard2">순위표</button></div>
   <div class="row"><button class="btn sub" id="bStory">스토리로 공유</button></div>
-  <a class="btn link" id="bHome" href="https://www.citkorea.co.kr/03_08_02/677" target="_blank" rel="noopener">CiT 장학이벤트 보기 ↗</a>
+  <a class="btn link" id="bHome" href="https://www.citkorea.co.kr/03_08_02/677" target="_blank" rel="noopener noreferrer">CiT 장학이벤트 보기 ↗</a>
 </div></div>
 <div id="help" class="modal hidden"><div class="panel">
   <h2>조작법</h2>
@@ -873,8 +879,8 @@ function raceStep(R, pin, dt) {
   for (let i = 0; i < rs.length; i++) { const r = rs[i]; let inp = r.ai ? aiControl(R, r) : pin; if (!r.ai && r.fin) inp = { steer: clamp(-r.psi * 3, -1, 1), brake: true, spin: 0 }; stepRacer(R, r, inp, dt); }
   // 썰매끼리 충돌: 서로 튕기되 플레이어는 덜 튕김
   for (let i = 0; i < rs.length; i++) for (let j = i + 1; j < rs.length; j++) {
-    const a = rs[i], b = rs[j]; if (a.air || b.air) continue; const ds = b.s - a.s, du = b.u - a.u;
-    if (Math.abs(ds) < 1.7 && Math.abs(du) < 1.15) { const push = (1.15 - Math.abs(du)) * (du >= 0 ? 1 : -1), wa = a.isPlayer ? (a.turboT > 0 ? 0 : 0.3) : 1, wb = b.isPlayer ? (b.turboT > 0 ? 0 : 0.3) : 1; a.u -= push * 0.5 * wa; b.u += push * 0.5 * wb; a.phi -= 0.12 * wa * Math.sign(push); b.phi += 0.12 * wb * Math.sign(push); const sp = (a.v + b.v) / 2; a.v = lerp(a.v, sp, 0.3 * wa); b.v = lerp(b.v, sp, 0.3 * wb); if ((a.isPlayer || b.isPlayer) && a.hitT <= 0 && b.hitT <= 0) { a.hitT = b.hitT = 0.5; R.events.push({ t: 'bump' }); } }
+    const a = rs[i], b = rs[j]; if (a.air || b.air || a.fin || b.fin) continue; const ds = b.s - a.s, du = b.u - a.u;
+    if (Math.abs(ds) < 1.7 && Math.abs(du) < 1.15) { const push = (1.15 - Math.abs(du)) * (du >= 0 ? 1 : -1), wa = a.isPlayer ? (a.turboT > 0 ? 0 : 0.3) : 1, wb = b.isPlayer ? (b.turboT > 0 ? 0 : 0.3) : 1; a.u -= push * 0.5 * wa; b.u += push * 0.5 * wb; a.phi -= 0.12 * wa * Math.sign(push); b.phi += 0.12 * wb * Math.sign(push); const sp = (a.v + b.v) / 2; a.v = lerp(a.v, sp, 0.3 * wa); b.v = lerp(b.v, sp, 0.3 * wb); if ((a.isPlayer || b.isPlayer) && a.hitT <= 0 && b.hitT <= 0 && G.state === 'race') { a.hitT = b.hitT = 0.5; R.events.push({ t: 'bump' }); } }
   }
 }
 function ranking(R) { return R.racers.slice().sort((a, b) => (a.fin && b.fin) ? a.time - b.time : a.fin ? -1 : b.fin ? 1 : b.s - a.s); }
@@ -1014,11 +1020,11 @@ function buildWorld(scene) {
   for (let s = 408; s < 790; s += 38) for (const sd of [-1, 1]) house(s + r() * 12, sd * (23 + r() * 6), { w: 5 + r() * 2, h: 3.3, d: 5, wall: '#b9773f', roof: '#8a4f2c', ginger: true, rh: 3.4 });
   for (let s = 400, i = 0; s < 790; s += 31, i++) { const sd = i % 2 ? 1 : -1, rad = 1.1 + r() * 0.9, F = frame(s, sd * (17.5 + r() * 2.5)); B.orn.add(L(F, MX(0, rad * 0.92, 0, rad)), ['#e2463f', '#f4b63a', '#3b7fe6', '#2fa36b', '#c44fd0'][i % 5]); }
   for (let s = 386, i = 0; s < 796; s += 8, i++) { const sd = i % 2 ? 1 : -1; B.cane.add(L(frame(s, sd * 11.2), MX(0, -0.2, 0, 1.1, 1.1, 1.1, 0, sd > 0 ? Math.PI : 0, 0))); }
-  for (let s = 402, i = 0; s < 792; s += 22, i++) { // 트랙을 가로지르는 전구 줄 / 삼각 깃발
-    if (Math.abs(s - 590) < 9 || Math.abs(s - 745) < 9) continue;
+  for (let s = 402, i = 0; s < 792; s += 46, i++) { // 트랙을 가로지르는 전구 줄(현수막 구간은 비워 둔다)
+    if (Math.abs(s - 590) < 34 || Math.abs(s - 745) < 34) continue;
     const F = frame(s, 0), n = 19; let prev = null;
     [-1, 1].forEach(k => B.gpole.add(L(F, MX(k * 11.4, 6.6, 0, 1.6, 8.4, 1.6)), '#f3f3f7'));
-    for (let j = 0; j <= n; j++) { const t = j / n, p = PT(F, lerp(-11.4, 11.4, t), 10.6 - 2.3 * (1 - (2 * t - 1) ** 2), 0); if (prev) lines.push(prev.x, prev.y, prev.z, p.x, p.y, p.z); prev = p; if (j === 0 || j === n) continue; if (i % 2) B.flag.add(new THREE.Matrix4().makeRotationY(-trk(s).th).setPosition(p.x, p.y, p.z).multiply(MX(0.41, 0, 0, 1.2, 1.1, 1, 0, 0, -Math.PI / 2)), BULBC[j % 6]); else bulb(p, BULBC[(j + i) % 6]); }
+    for (let j = 0; j <= n; j++) { const t = j / n, p = PT(F, lerp(-11.4, 11.4, t), 10.6 - 2.3 * (1 - (2 * t - 1) ** 2), 0); if (prev) lines.push(prev.x, prev.y, prev.z, p.x, p.y, p.z); prev = p; if (j === 0 || j === n) continue; bulb(p, BULBC[(j + i) % 6]); }
   }
   // ---------- 3. 얼음 호수 ----------
   for (let s = 815; s < 1195; s += 6) for (const sd of [-1, 1]) { if (r() < 0.45) continue; const u = sd * (10.6 + r() * 5), n = 1 + (r() * 3 | 0); for (let k = 0; k < n; k++) { const sc = 0.5 + r() * 1.3; B.crystal.add(L(frame(s + r() * 3, u + r() * 2), MX(0, sc * 0.9, 0, sc * 0.45, sc * 1.5, sc * 0.45, (r() - 0.5) * 0.7, r() * 6, (r() - 0.5) * 0.7))); } }
@@ -1259,9 +1265,36 @@ function makeVillager(o) {
   return g;
 }
 
-// ===== 사운드 (Web Audio 직접 합성) =====
-const AU = { ctx: null, muted: false, next: 0, idx: 0, on: false };
+// ===== 사운드 (효과음: Web Audio 직접 합성 / BGM: 실제 캐럴 MP3) =====
+const AU = { ctx: null, muted: false, next: 0, idx: 0, on: false, synth: false };
 try { AU.muted = localStorage.getItem('sledMute') === '1'; } catch (e) { }
+
+// 캐럴 녹음 파일 (모두 퍼블릭 도메인/CC0 — audio/LICENSES.md 참고)
+const TRACKS = [
+  { ko: '징글벨', name: 'Jingle Bells', file: './audio/jingle-bells.mp3' },
+  { ko: '덱 더 홀스', name: 'Deck the Halls', file: './audio/deck-the-halls.mp3' },
+  { ko: '메리 크리스마스', name: 'We Wish You a Merry Christmas', file: './audio/we-wish.mp3' },
+  { ko: '오 홀리 나이트', name: 'O Holy Night', file: './audio/o-holy-night.mp3' },
+  { ko: '고요한 밤', name: 'Silent Night', file: './audio/silent-night.mp3' },
+  { ko: '저 들 밖에 한밤중에', name: 'The First Noel', file: './audio/the-first-noel.mp3' }
+];
+const BGA = new Audio();
+BGA.loop = true; BGA.preload = 'auto'; BGA.volume = 0.68;
+BGA.setAttribute('playsinline', ''); BGA.setAttribute('webkit-playsinline', '');
+let bgaUnlocked = false;
+BGA.addEventListener('error', () => { if (AU.on) { AU.synth = true; AU.idx = 0; AU.beatPos = 0; AU.next = AU.ctx ? AU.ctx.currentTime + 0.05 : 0; } });
+function bgmTrack() { return AU.carol || TRACKS[0]; }
+function bgmSrc(tr) { return new URL(tr.file, location.href).href; }
+// iOS 사파리는 사용자 제스처 안에서 한 번 재생해 둔 <audio>만 이후 자동 재생을 허용한다.
+function bgmUnlock() {
+  if (bgaUnlocked) return;
+  try {
+    if (!BGA.src) BGA.src = bgmSrc(bgmTrack());
+    BGA.muted = true;
+    const p = BGA.play();
+    if (p && p.then) p.then(() => { try { if (!AU.on) { BGA.pause(); BGA.currentTime = 0; } } catch (e) { } BGA.muted = AU.muted; bgaUnlocked = true; }).catch(() => { BGA.muted = AU.muted; });
+  } catch (e) { BGA.muted = AU.muted; }
+}
 
 function setPlaybackSession() {
   if ('audioSession' in navigator) {
@@ -1281,9 +1314,14 @@ function auResume() {
     auResume();
   }, { passive: true });
 });
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) { try { BGA.pause(); } catch (e) { } }
+  else if (AU.on) { try { const p = BGA.play(); if (p && p.catch) p.catch(() => { }); } catch (e) { } }
+});
 
 function auInit() {
   setPlaybackSession();
+  bgmUnlock();
   if (AU.ctx) { auResume(); return; }
   const C = window.AudioContext || window.webkitAudioContext; if (!C) return;
   const c = AU.ctx = new C(); AU.master = c.createGain(); AU.master.gain.value = AU.muted ? 0 : 0.85; AU.master.connect(c.destination);
@@ -1293,7 +1331,7 @@ function auInit() {
   AU.music = c.createGain(); AU.music.gain.value = 0.55; AU.music.connect(AU.master);
   auResume();
 }
-function auMute(m) { AU.muted = m; try { localStorage.setItem('sledMute', m ? '1' : '0'); } catch (e) { } if (AU.master) AU.master.gain.setTargetAtTime(m ? 0 : 0.85, AU.ctx.currentTime, 0.03); }
+function auMute(m) { AU.muted = m; BGA.muted = m; try { localStorage.setItem('sledMute', m ? '1' : '0'); } catch (e) { } if (AU.master) AU.master.gain.setTargetAtTime(m ? 0 : 0.85, AU.ctx.currentTime, 0.03); }
 function tone(f, t0, dur, type, vol, dest, f2) { const c = AU.ctx; if (!c) return; const o = c.createOscillator(), g = c.createGain(); o.type = type || 'sine'; o.frequency.setValueAtTime(f, t0); if (f2) o.frequency.exponentialRampToValueAtTime(f2, t0 + dur); g.gain.setValueAtTime(0.0001, t0); g.gain.exponentialRampToValueAtTime(vol, t0 + 0.012); g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur); o.connect(g); g.connect(dest || AU.master); o.start(t0); o.stop(t0 + dur + 0.05); }
 function nz(t0, dur, f, q, vol, type, dest) { const c = AU.ctx; if (!c) return; const s = c.createBufferSource(); s.buffer = AU.noise; s.loop = true; const b = c.createBiquadFilter(); b.type = type || 'bandpass'; b.frequency.value = f; b.Q.value = q; const g = c.createGain(); g.gain.setValueAtTime(vol, t0); g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur); s.connect(b); b.connect(g); g.connect(dest || AU.master); s.start(t0, Math.random()); s.stop(t0 + dur + 0.05); }
 const SFX = {
@@ -1358,13 +1396,13 @@ const CAROLS = [
   }
 ];
 function pickCarol() {
-  const n = CAROLS.length;
+  const n = TRACKS.length;
   G.carolI = G.carolI == null ? (Math.random() * n | 0) : (G.carolI + 1) % n;
-  AU.carol = CAROLS[G.carolI];
+  AU.carol = TRACKS[G.carolI];
   return AU.carol;
 }
 function bgmTick(fast) {
-  const c = AU.ctx; if (!c || !AU.on) return; const S = AU.carol || CAROLS[0], mel = S.mel, bass = S.bass; const beat = (S.beat || 0.42) * (fast ? 0.86 : 1);
+  const c = AU.ctx; if (!c || !AU.on || !AU.synth) return; const S = (AU.carol && AU.carol.mel) ? AU.carol : CAROLS[0], mel = S.mel, bass = S.bass; if (!mel || !bass) return; const beat = (S.beat || 0.42) * (fast ? 0.86 : 1);
   if (AU.next < c.currentTime) { AU.next = c.currentTime + 0.05; }
   while (AU.next < c.currentTime + 0.3) {
     const [n, l] = mel[AU.idx % mel.length], t = AU.next, d = l * beat;
@@ -1374,7 +1412,23 @@ function bgmTick(fast) {
     AU.beatPos += l; if ((AU.idx + 1) % mel.length === 0) AU.beatPos = 0; AU.idx++; AU.next += d;
   }
 }
-function bgm(on) { AU.on = on; if (on) { setPlaybackSession(); auResume(); if (AU.music) AU.music.gain.setTargetAtTime(0.55, AU.ctx.currentTime, 0.02); AU.idx = 0; AU.beatPos = 0; AU.next = AU.ctx ? AU.ctx.currentTime + 0.05 : 0; } }
+function bgm(on) {
+  AU.on = on;
+  if (!on) { try { BGA.pause(); } catch (e) { } return; }
+  setPlaybackSession(); auResume();
+  const tr = bgmTrack();
+  try {
+    const want = bgmSrc(tr);
+    if (BGA.src !== want) BGA.src = want;
+    BGA.muted = AU.muted; BGA.volume = 0.68;
+    try { BGA.currentTime = 0; } catch (e) { }
+    const p = BGA.play();
+    if (p && p.catch) p.catch(() => {
+      // 파일 재생이 막히면(코드 미지원·차단) 합성 멜로디로 내려간다
+      AU.synth = true; AU.idx = 0; AU.beatPos = 0; AU.next = AU.ctx ? AU.ctx.currentTime + 0.05 : 0;
+    });
+  } catch (e) { AU.synth = true; }
+}
 function auEngine(v, ground, mute) { if (!AU.ctx) return; const t = AU.ctx.currentTime, k = mute ? 0 : 1; AU.sled.g.gain.setTargetAtTime(k * (ground ? Math.min(0.18, v / 183) : 0), t, 0.05); AU.sled.bq.frequency.setTargetAtTime(700 + v * 30, t, 0.1); AU.wind.g.gain.setTargetAtTime(k * Math.min(0.25, v * v / 6400), t, 0.1); AU.wind.bq.frequency.setTargetAtTime(300 + v * 14, t, 0.1); }
 
 // ===== 메인: 렌더 · 카메라 · UI · 게임 흐름 =====
@@ -1403,7 +1457,7 @@ async function boot() {
   renderer = new THREE.WebGLRenderer({ canvas: $('#gl'), antialias: true, powerPreference: 'high-performance' });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.75)); renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   scene = new THREE.Scene(); camera = new THREE.PerspectiveCamera(60, 1, 0.3, 3200);
-  makeTextures(); W = buildWorld(scene); W.onFirework = () => { if (G.state === 'finish' || G.state === 'result') SFX.firework(); };
+  makeTextures(); W = buildWorld(scene); W.onFirework = () => { if (G.state === 'finish') SFX.firework(); };
   ROSTER.forEach((q, i) => { const m = makeRacer(THREE, CAST[q.key]); m.scale.setScalar(1.12); m.rotation.order = 'YXZ'; m.traverse(o => { if (o.isMesh) o.frustumCulled = false; }); scene.add(m); meshes.push(m); trails.push(new Trail(scene)); });
   makeThumbs(); resize(); window.addEventListener('resize', resize);
   G.R = newRace(G.diff, 1); W.setTime(0); placeAll(0); setCam(0, true);
@@ -1821,7 +1875,7 @@ function startRace(again) {
   $('#hud').classList.remove('hidden'); requestAnimationFrame(() => $('#hud').classList.add('on')); $('#hint').style.opacity = 1; $('#pops').innerHTML = ''; hud(true);
 }
 function countdown(dt) { // 카메라 이동과 겹쳐서 3·2·1·GO
-  const i = Math.min(3, Math.floor((G.introT - 1.0) / 0.8)); if (i >= 0 && i !== G.countI) { G.countI = i; const c = $('#count'); c.textContent = i < 3 ? 3 - i : 'GO!'; c.classList.toggle('txt', i === 3); c.classList.remove('go'); void c.offsetWidth; c.classList.add('go'); SFX.beep(i === 3); if (i === 3) { G.state = 'race'; bgm(true); toast(SECTIONS[0].name, SECTIONS[0].sub); pop('♪ ' + (AU.carol ? AU.carol.name : '캐럴'), 'gold'); G.lastSec = 0; } }
+  const i = Math.min(3, Math.floor((G.introT - 1.0) / 0.8)); if (i >= 0 && i !== G.countI) { G.countI = i; const c = $('#count'); c.textContent = i < 3 ? 3 - i : 'GO!'; c.classList.toggle('txt', i === 3); c.classList.remove('go'); void c.offsetWidth; c.classList.add('go'); SFX.beep(i === 3); if (i === 3) { G.state = 'race'; bgm(true); toast(SECTIONS[0].name, SECTIONS[0].sub); pop('♪ ' + (AU.carol ? (AU.carol.ko || AU.carol.name) : '캐럴'), 'gold'); G.lastSec = 0; } }
 }
 function hud(force) {
   const R = G.R, p = R.racers[0], rk = ranking(R), my = rk.indexOf(p) + 1;
