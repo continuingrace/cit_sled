@@ -1598,7 +1598,7 @@ function showResult() {
       const isMe = !r.id;
       let displayName = ch(r.id).name;
       if (isMe && savedName) displayName = `${ch(r.id).name} (${savedName})`;
-      return `<li class="${isMe ? 'me' : ''}"><em>${k + 1}</em><i style="background:${ch(r.id).col}"></i><span>${displayName}</span><b>${fmt(r.time)}</b></li>`;
+      return `<li class="${isMe ? 'me' : ''}"><em>${k + 1}</em><i style="background:${ch(r.id).col}"></i><span>${esc(displayName)}</span><b>${fmt(r.time)}</b></li>`;
     }).join('');
   };
   G.updateResultRoster = updateResultRoster;
@@ -1703,7 +1703,7 @@ function devShot(v) { // 개발용: ?shot=<s|result>
   if (v === 'result') { R.racers[0].gifts = 21; R.racers[0].gates = 13; R.racers[0].tricks = 4; R.racers[0].trickPts = 800; }
   if (Q.get('freeze')) { const st = raceStep; setTimeout(() => { G.paused = true; }, +Q.get('freeze')); }
 }
-boot().catch(e => { console.error(e); const l = $('#loading'); l.classList.remove('out', 'hidden'); l.innerHTML = '<span>오류: ' + (e && e.message) + '</span>'; });
+boot().catch(e => { console.error(e); const l = $('#loading'); l.classList.remove('out', 'hidden'); l.innerHTML = '<span>오류: ' + esc(e && e.message) + '</span>'; });
 
 
 </script>
