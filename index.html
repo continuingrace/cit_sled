@@ -1675,7 +1675,7 @@ let _polCanvas = null, _polarLast = null, _polarTimer2 = 0;
 function showPolaroidPreview() { if (!_polCanvas) return; _polCanvas.classList.remove('hidden'); $('#shotImg').classList.add('hidden'); }
 function hidePolaroidPreview() { if (_polCanvas) _polCanvas.classList.add('hidden'); $('#shotImg').classList.remove('hidden'); }
 function polaroidCanvas(raw, customText) { // 3D 원본 장면 + 흰 폴라로이드 틀 + Pretendard 문구 합성
-  const PW = 1280, PAD = 64, FWD = PW - PAD * 2, FHT = Math.round(FWD * 1152 / 1536), PH = PAD + FHT + 404;
+  const PW = 1280, PAD = 64, FWD = PW - PAD * 2, FHT = Math.round(FWD * 1152 / 1536), PH = PAD + FHT + 344;
   const c = _polCanvas || (_polCanvas = document.createElement('canvas'));
   if (!c.id) { c.id = 'shotPrev'; c.className = 'hidden'; c.setAttribute('aria-hidden', 'true'); try { const im = $('#shotImg'); im.parentNode.insertBefore(c, im.nextSibling); } catch (e) { } }
   if (c.width !== PW || c.height !== PH) { c.width = PW; c.height = PH; }
@@ -1698,10 +1698,9 @@ function polaroidCanvas(raw, customText) { // 3D 원본 장면 + 흰 폴라로�
   x.restore();
   x.strokeStyle = 'rgba(24,28,54,.14)'; x.lineWidth = 2; x.strokeRect(PAD, PAD, FWD, FHT);
   const cx = PW / 2, B = PAD + FHT; x.textAlign = 'center'; x.textBaseline = 'middle';
-  x.fillStyle = '#171d3d'; x.font = `800 54px ${FONT_P}`; x.fillText('CiT코칭연구소 · 2026 크리스마스', cx, B + 106, FWD);  // 제목: Pretendard Bold
-  x.fillStyle = '#5d6480'; x.font = `500 36px ${FONT_P}`; x.fillText('정영 · HR둥이 · 이환승 · 이코칭', cx, B + 180, FWD);
+  x.fillStyle = '#171d3d'; x.font = `800 54px ${FONT_P}`; x.fillText('CiT코칭연구소 · 2026 크리스마스', cx, B + 116, FWD);  // 제목: Pretendard Bold
   x.fillStyle = '#20264a'; x.font = `700 44px ${FONT_P}`;                                                              // 사용자가 입력한 문구
-  wrapLines(x, customText, FWD - 60, 2).forEach((ln, i) => x.fillText(ln, cx, B + 244 + i * 54, FWD - 60));
+  wrapLines(x, customText, FWD - 60, 2).forEach((ln, i) => x.fillText(ln, cx, B + 206 + i * 54, FWD - 60));
   const dd = new Date(), ds = `${dd.getFullYear()}.${String(dd.getMonth() + 1).padStart(2, '0')}.${String(dd.getDate()).padStart(2, '0')}`;
   x.textAlign = 'left'; x.fillStyle = '#9aa0b4'; x.font = `500 26px ${FONT_P}`; x.fillText('citkorea.co.kr', PAD, PH - 46);
   x.textAlign = 'right'; x.fillText(ds, PW - PAD, PH - 46);
@@ -1710,7 +1709,7 @@ function polaroidCanvas(raw, customText) { // 3D 원본 장면 + 흰 폴라로�
 async function takePolaroid() { // 오두막 앞에 네 캐릭터를 모아 한 장 찍고 폴라로이드 틀에 담는다
   if (G.state !== 'finish' && G.state !== 'result') return;
   SFX.click();
-  try { await Promise.race([Promise.all([`800 54px ${FONT_P}`, `700 44px ${FONT_P}`, `500 36px ${FONT_P}`].map(f => document.fonts.load(f, '가A1').catch(() => null))), new Promise(r => setTimeout(r, 1200))]); } catch (e) { }
+  try { await Promise.race([Promise.all([`800 54px ${FONT_P}`, `700 44px ${FONT_P}`].map(f => document.fonts.load(f, '가A1').catch(() => null))), new Promise(r => setTimeout(r, 1200))]); } catch (e) { }
   const saved = meshes.map(m => ({ p: m.position.clone(), q: m.quaternion.clone() }));
   const camP = camera.position.clone(), camQ = camera.quaternion.clone(), camFov = camera.fov;
   let src = null;
