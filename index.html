@@ -1285,6 +1285,7 @@ let bgaUnlocked = false;
 BGA.addEventListener('error', () => { if (AU.on) { AU.synth = true; AU.idx = 0; AU.beatPos = 0; AU.next = AU.ctx ? AU.ctx.currentTime + 0.05 : 0; } });
 function bgmTrack() { return AU.carol || TRACKS[0]; }
 function bgmSrc(tr) { return new URL(tr.file, location.href).href; }
+window.AU = AU; window.BGA = BGA; window.TRACKS = TRACKS; // 진단용(개발자 도구에서 상태 확인)
 // iOS 사파리는 사용자 제스처 안에서 한 번 재생해 둔 <audio>만 이후 자동 재생을 허용한다.
 function bgmUnlock() {
   if (bgaUnlocked) return;
