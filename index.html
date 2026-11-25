@@ -104,7 +104,7 @@ kbd{display:inline-block;min-width:26px;padding:1px 7px;margin:0 2px;border-radi
 .rlist{list-style:none;margin:0;padding:0;font-size:14px;display:grid;grid-template-columns:1fr 1fr;gap:4px}
 .rlist li{display:flex;gap:7px;align-items:center;padding:7px 10px;border-radius:10px;background:rgba(255,255,255,.06)}.rlist li.me{background:rgba(255,255,255,.16)}.rlist li i{width:9px;height:9px;border-radius:50%;flex:none}.rlist li span{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.rlist li b{font-weight:800;font-variant-numeric:tabular-nums}.rlist li em{font-style:normal;font-weight:800;color:var(--sub)}
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:4px}
-.stats div{background:rgba(255,255,255,.06);border-radius:10px;padding:8px 4px 9px;text-align:center;font-size:12px;font-weight:600;color:var(--sub)}.stats b{display:block;font-weight:800;font-size:17px;color:#fff;font-variant-numeric:tabular-nums}
+.stats div{background:rgba(255,255,255,.06);border-radius:10px;padding:8px 4px 9px;text-align:center;font-size:12px;font-weight:600;color:var(--sub)}.stats b{display:block;font-weight:800;font-size:17px;color:#fff;font-variant-numeric:tabular-nums}#rStats div:last-child:nth-child(3n+1){grid-column:1/-1}
 .total{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;border-radius:14px;background:rgba(255,216,77,.13);font-size:16px;font-weight:700}.total b{font-weight:900;font-size:32px;line-height:1.2;color:var(--acc);font-variant-numeric:tabular-nums}
 .namerow{display:flex;gap:8px;margin:0}
 .namerow input{flex:1;min-width:0;font-size:16px;font-weight:600;color:#fff;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.22);border-radius:14px;padding:12px 14px;outline:none;user-select:text;-webkit-user-select:text;touch-action:auto}
@@ -846,13 +846,14 @@ function raceStep(R, pin, dt) {
   }
 }
 function ranking(R) { return R.racers.slice().sort((a, b) => (a.fin && b.fin) ? a.time - b.time : a.fin ? -1 : b.fin ? 1 : b.s - a.s); }
-function scoreOf(r, rank) { const bonus = [500, 300, 150, 50][rank] || 0; return { gifts: r.gifts * 50, gates: r.gates * 30, tricks: r.trickPts, bonus, time: Math.max(0, Math.round((95 - r.time) * 10)), total: r.gifts * 50 + r.gates * 30 + r.trickPts + bonus + Math.max(0, Math.round((95 - r.time) * 10)) }; }
+const DIFF_BONUS = { easy: 0, normal: 250, hard: 700 };
+function scoreOf(r, rank, diff) { const bonus = [500, 300, 150, 50][rank] || 0, diffBonus = DIFF_BONUS[diff || G.diff] || 0; return { gifts: r.gifts * 50, gates: r.gates * 30, tricks: r.trickPts, bonus, diffBonus, time: Math.max(0, Math.round((95 - r.time) * 10)), total: r.gifts * 50 + r.gates * 30 + r.trickPts + bonus + Math.max(0, Math.round((95 - r.time) * 10)) + diffBonus }; }
 // 자동 조종 검증 (렌더 없이 끝까지 달림)
 function simulate(diffKey, seed) {
   const R = newRace(diffKey, seed, true), dt = 1 / PH.HZ; let n = 0, pFin = 0;
   while (n++ < PH.HZ * 400 && !R.racers.every(r => r.fin)) { raceStep(R, null, dt); R.events.length = 0; }
   const rk = ranking(R), p = R.racers[0];
-  return { diff: diffKey, playerTime: +p.time.toFixed(2), playerRank: rk.indexOf(p) + 1, vmaxKmh: Math.round(p.vmax * 3.6), gifts: p.gifts + '/' + COURSE.gifts.length, gates: p.gates + '/' + COURSE.gates.length, tricks: p.tricks, stars: p.stars + '/' + COURSE.stars.length, score: scoreOf(p, rk.indexOf(p)).total, ai: R.racers.slice(1).map(r => +r.time.toFixed(1)) };
+  return { diff: diffKey, playerTime: +p.time.toFixed(2), playerRank: rk.indexOf(p) + 1, vmaxKmh: Math.round(p.vmax * 3.6), gifts: p.gifts + '/' + COURSE.gifts.length, gates: p.gates + '/' + COURSE.gates.length, tricks: p.tricks, stars: p.stars + '/' + COURSE.stars.length, score: scoreOf(p, rk.indexOf(p), diffKey).total, ai: R.racers.slice(1).map(r => +r.time.toFixed(1)) };
 }
 
 // ===== 월드: 지형 · 배경 · 조명 · 이펙트 =====
@@ -1284,7 +1285,7 @@ function auEngine(v, ground, mute) { if (!AU.ctx) return; const t = AU.ctx.curre
 // ===== 메인: 렌더 · 카메라 · UI · 게임 흐름 =====
 const Q = new URLSearchParams(location.search), SPEED = +Q.get('speed') || 1, AUTO = !!Q.get('auto');
 const ROSTER = [{ key: 'kapi', name: '정영', col: '#e2463f' }, { key: 'hr', name: 'HR둥이', col: '#f4b63a' }, { key: 'hwan', name: '이환승', col: '#3b7fe6' }, { key: 'coach', name: '이코칭', col: '#f07aa5' }];
-const DIFF_DESC = { easy: '친구들이 느긋하게 달려요. 처음이라면 여기서!', normal: '적당히 겨루는 기본 난이도예요.', hard: '친구들이 빠르고 장애물도 잘 피해요.' };
+const DIFF_DESC = { easy: '친구들이 느긋하게 달려요. 처음이라면 여기서!', normal: '적당히 겨루는 기본 난이도예요. (가산점 +250점)', hard: '친구들이 빠르고 장애물도 잘 피해요. (가산점 +700점)' };
 const HOME = 'https://www.citkorea.co.kr/03_08_02/677';
 const G = { state: 'boot', diff: 'normal', pick: 0, order: [0, 1, 2, 3], thumbs: [], R: null, time: 0, camMode: 0, introT: 0, finT: 0, offR: 0, resOpen: false, shot: null, lastSec: -1, acc: 0, jumpQ: false, paused: false, countI: -1, last: null, saved: 0, pname: '' };
 window.G = G;
@@ -1590,7 +1591,7 @@ function hud(force) {
 }
 function showResult() {
   const R = G.R, dt = 1 / PH.HZ; let n = 0; while (n++ < PH.HZ * 300 && !R.racers.every(r => r.fin)) { raceStep(R, null, dt); R.events.length = 0; }
-  const rk = ranking(R), p = R.racers[0], my = rk.indexOf(p), sc = scoreOf(p, my);
+  const rk = ranking(R), p = R.racers[0], my = rk.indexOf(p), sc = scoreOf(p, my, G.diff);
   $('#rRank').textContent = my + 1; $('#rMsg').textContent = ['완벽한 질주였어요!', '아깝다, 한 끗 차이!', '다음엔 더 빠르게!', '끝까지 달렸어요!'][my];
   const updateResultRoster = () => {
     const savedName = G.mine?.n || $('#nameIn')?.value?.trim() || (localStorage.getItem('sledName') || '').trim();
@@ -1603,7 +1604,7 @@ function showResult() {
   };
   G.updateResultRoster = updateResultRoster;
   updateResultRoster();
-  $('#rStats').innerHTML = [['시간', fmt(p.time)], ['선물', p.gifts + '개'], ['기문', p.gates + '/' + COURSE.gates.length], ['트릭', p.tricks + '회'], ['최고속도', Math.round(p.vmax * 3.6) + 'km/h'], ['순위 보너스', '+' + sc.bonus]].map(([a, b]) => `<div>${a}<b>${b}</b></div>`).join('');
+  $('#rStats').innerHTML = [['시간', fmt(p.time)], ['선물', p.gifts + '개'], ['기문', p.gates + '/' + COURSE.gates.length], ['트릭', p.tricks + '회'], ['최고속도', Math.round(p.vmax * 3.6) + 'km/h'], ['순위 보너스', '+' + sc.bonus], ['난이도 보너스', '+' + sc.diffBonus]].map(([a, b]) => `<div>${a}<b>${b}</b></div>`).join('');
   $('#rTotal').textContent = sc.total; const b = getBest(); let msg;
   if (!b || sc.total > b.score) { try { localStorage.setItem('sledBest', JSON.stringify({ score: sc.total, time: p.time, diff: G.diff })); } catch (e) { } msg = '내 최고 기록을 새로 썼어요. 이름을 남겨 보세요.'; } else msg = `내 최고 기록 <span class="num">${b.score}</span>점 · 이름을 남기면 순위표에 올라가요.`;
   $('#rBest').innerHTML = msg; G.last = { score: sc.total, time: p.time }; G.saved = 0;
