@@ -132,13 +132,14 @@ kbd{display:inline-block;min-width:26px;padding:1px 7px;margin:0 2px;border-radi
 #turbo.on{opacity:1}#turbo i{display:block;height:5px;border-radius:3px;background:var(--acc);margin-top:6px;transform-origin:left center}
 .shotbox{text-align:center}.shotbox img{display:block;max-width:min(560px,84vw);max-height:54vh;border-radius:14px;margin:0 auto 14px;box-shadow:0 12px 30px rgba(0,0,0,.4)}
 #shotImg{pointer-events:auto;-webkit-touch-callout:default;user-select:auto;-webkit-user-select:auto;touch-action:auto}
+#shotPrev{display:block;max-width:min(560px,84vw);max-height:54vh;border-radius:14px;margin:0 auto 14px;box-shadow:0 12px 30px rgba(0,0,0,.4)}
 .shotbox .note{margin:0 auto 14px;max-width:440px;line-height:1.65}
 #shotMsgRow{margin:0 auto 12px;max-width:min(430px,82vw);text-align:left}
 #shotMsgRow label{display:block;margin:0 0 6px 4px;font-size:12px;font-weight:700;letter-spacing:.04em;color:var(--sub)}
 #shotMsg{width:100%;padding:11px 13px;border-radius:12px;border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.08);color:#fff;font-family:var(--k);font-size:15px;font-weight:600;outline:none;user-select:text;-webkit-user-select:text;touch-action:auto}
 #shotMsg:focus{border-color:var(--acc);box-shadow:0 0 0 3px rgba(255,216,77,.16)}
 #shotMsg::placeholder{color:#8f99c2;font-weight:500}
-@media (max-width:520px){.shotbox img{max-height:44vh}}
+@media (max-width:520px){.shotbox img{max-height:44vh}#shotPrev{max-height:44vh}}
 #fade{position:fixed;inset:0;background:#fff;opacity:0;pointer-events:none;transition:opacity .35s;z-index:40}#fade.on{opacity:1}
 #loading{position:fixed;inset:0;background:#101a4a;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;font-size:20px;font-weight:600;z-index:50;transition:opacity .6s}
 #loading.out{opacity:0;pointer-events:none}
@@ -1609,10 +1610,15 @@ function wrapLines(x, text, maxW, maxLines) { // 캔버스 폭에 맞춰 최대 
   }
   return out;
 }
-let _polCanvas = null, _polarLast = null;
+let _polCanvas = null, _polarLast = null, _polarTimer2 = 0;
+// 문구를 고치는 동안에는 캔버스를 그대로 보여 주고(인코딩 없음), 입력이 멈추면 저장용 JPEG로 바꾼다
+function showPolaroidPreview() { if (!_polCanvas) return; _polCanvas.classList.remove('hidden'); $('#shotImg').classList.add('hidden'); }
+function hidePolaroidPreview() { if (_polCanvas) _polCanvas.classList.add('hidden'); $('#shotImg').classList.remove('hidden'); }
 function polaroidCanvas(raw, customText) { // 3D 원본 장면 + 흰 폴라로이드 틀 + Pretendard 문구 합성
   const PW = 1280, PAD = 64, FWD = PW - PAD * 2, FHT = Math.round(FWD * 1152 / 1536), PH = PAD + FHT + 430;
-  const c = _polCanvas || (_polCanvas = document.createElement('canvas')); if (c.width !== PW || c.height !== PH) { c.width = PW; c.height = PH; }
+  const c = _polCanvas || (_polCanvas = document.createElement('canvas'));
+  if (!c.id) { c.id = 'shotPrev'; c.className = 'hidden'; c.setAttribute('aria-hidden', 'true'); try { const im = $('#shotImg'); im.parentNode.insertBefore(c, im.nextSibling); } catch (e) { } }
+  if (c.width !== PW || c.height !== PH) { c.width = PW; c.height = PH; }
   const x = c.getContext('2d'); x.clearRect(0, 0, PW, PH);
   x.fillStyle = '#fbf9f4'; x.fillRect(0, 0, PW, PH);
   for (let i = 0; i < 1100; i++) { x.fillStyle = `rgba(120,108,86,${0.012 + Math.random() * 0.02})`; x.fillRect(Math.random() * PW, Math.random() * PH, 1 + Math.random() * 2, 1); }
@@ -1659,7 +1665,7 @@ async function takePolaroid() { // 오두막 앞에 네 캐릭터를 모아 한 
   const inp = $('#shotMsg'); if (inp) inp.value = _polarMsg;
   openShot(polaroidCanvas(_polarRaw, _polarMsg), '폴라로이드 기념사진', 'cit-sled-polaroid.jpg', true);
 }
-function applyShotCanvas(c) { // 다시 그린 폴라로이드를 미리보기·저장·공유 값에 반영 (3D 재렌더 없음)
+function applyShotCanvas(c, swap) { // 다시 그린 폴라로이드를 미리보기·저장·공유 값에 반영 (3D 재렌더 없음)
   const s = G.shot; if (!s) return;
   const seq = ++_shotSeq;
   try {
@@ -1672,6 +1678,7 @@ function applyShotCanvas(c) { // 다시 그린 폴라로이드를 미리보기·
       if (seq !== _shotSeq) return;
       $('#bSaveImg').href = _shotUrl; $('#shotImg').src = _shotUrl;
       $('#bShare').classList.toggle('hidden', !s.can);
+      if (swap) hidePolaroidPreview();
     }, 'image/jpeg', 0.92);
   } catch (e) { }
 }
@@ -1681,6 +1688,7 @@ function openShot(c, title, name, polaroid) {
   $('#shotTitle').textContent = title; $('#shotImg').src = url; $('#bSaveImg').href = url; $('#bSaveImg').download = name;
   $('#bShare').classList.add('hidden');
   const row = $('#shotMsgRow'); if (row) row.classList.toggle('hidden', !polaroid);
+  hidePolaroidPreview();
   $('#shotNote').textContent = IS_IOS
     ? (polaroid ? '문구를 고치면 사진에 바로 반영돼요. ‘이미지 저장’을 누르면 공유 시트에서 사진 앱에 담을 수 있어요.' : '위 이미지를 길게 눌러 ‘사진에 저장’을 선택해 주세요.')
     : (polaroid ? '문구를 고치면 사진에 바로 반영돼요. 저장한 뒤 인스타그램에 올려 보세요.' : '이미지를 저장한 뒤 인스타그램에 올려 주세요. 저장이 안 되면 이미지를 길게 눌러 저장하세요.');
@@ -1715,13 +1723,19 @@ function buildUI() {
   if (smi) {
     smi.addEventListener('input', () => {
       _polarMsg = smi.value;
-      clearTimeout(_polarTimer);
+      clearTimeout(_polarTimer); clearTimeout(_polarTimer2);
       _polarTimer = setTimeout(() => {
         if (!_polarRaw || !G.shot || _polarLast === _polarMsg) return;
         _polarLast = _polarMsg;
-        applyShotCanvas(polaroidCanvas(_polarRaw, _polarMsg));
-      }, 220);
+        polaroidCanvas(_polarRaw, _polarMsg);   // 캔버스만 다시 그림 (JPEG 인코딩 없음)
+        showPolaroidPreview();
+        _polarTimer2 = setTimeout(() => {        // 입력이 멈추면 저장·공유용 JPEG로 교체
+          if (_polarLast !== _polarMsg || !G.shot) return;
+          applyShotCanvas(_polCanvas, true);
+        }, 480);
+      }, 130);
     });
+    smi.addEventListener('blur', () => { if (_polarRaw && G.shot && _polarLast !== _polarMsg) { _polarLast = _polarMsg; polaroidCanvas(_polarRaw, _polarMsg); applyShotCanvas(_polCanvas, true); } });
     smi.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); smi.blur(); } });
   }
   // Claude 게시 페이지에서는 일반 다운로드가 막혀 있어 downloads 기능으로 저장
