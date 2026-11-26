@@ -109,7 +109,7 @@ kbd{display:inline-block;min-width:26px;padding:1px 7px;margin:0 2px;border-radi
 .center{text-align:center;margin-top:18px}
 .rhead{display:flex;align-items:baseline;gap:4px}.rhead b{font-size:54px;font-weight:900;line-height:1.05;color:var(--acc)}.rhead span{font-size:24px;font-weight:800}.rhead em{font-style:normal;font-size:15px;font-weight:500;color:var(--sub);margin-left:10px}
 .rlist{list-style:none;margin:0;padding:0;font-size:14px;display:grid;grid-template-columns:1fr 1fr;gap:4px}
-.rlist li{display:flex;gap:7px;align-items:center;padding:7px 10px;border-radius:10px;background:rgba(255,255,255,.06)}.rlist li.me{background:rgba(255,255,255,.16)}.rlist li i{width:9px;height:9px;border-radius:50%;flex:none}.rlist li span{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.rlist li b{font-weight:800;font-variant-numeric:tabular-nums}.rlist li em{font-style:normal;font-weight:800;color:var(--sub)}
+.rlist li{display:flex;min-width:0;gap:7px;align-items:center;padding:7px 10px;border-radius:10px;background:rgba(255,255,255,.06)}.rlist li.me{background:rgba(255,255,255,.16)}.rlist li i{width:9px;height:9px;border-radius:50%;flex:none}.rlist li span{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.rlist li b{font-weight:800;font-variant-numeric:tabular-nums;flex:none;white-space:nowrap}.rlist li em{font-style:normal;font-weight:800;color:var(--sub)}
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:4px}
 .stats div{background:rgba(255,255,255,.06);border-radius:10px;padding:8px 4px 9px;text-align:center;font-size:12px;font-weight:600;color:var(--sub)}.stats b{display:block;font-weight:800;font-size:17px;color:#fff;font-variant-numeric:tabular-nums}#rStats div:last-child:nth-child(3n+1){grid-column:1/-1}
 .total{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;border-radius:14px;background:rgba(255,216,77,.13);font-size:16px;font-weight:700}.total b{font-weight:900;font-size:32px;line-height:1.2;color:var(--acc);font-variant-numeric:tabular-nums}
@@ -131,7 +131,7 @@ kbd{display:inline-block;min-width:26px;padding:1px 7px;margin:0 2px;border-radi
 .note{margin:12px 0 0;text-align:center;font-size:13px;font-weight:500;color:var(--sub)}
 .x{position:absolute;right:14px;top:14px;width:36px;height:36px;border-radius:50%;border:0;background:rgba(255,255,255,.1);color:#fff;font-size:22px;font-weight:500;line-height:1;cursor:pointer;padding:0}
 .x:hover{background:rgba(255,255,255,.2)}
-#bResX{right:14px;top:12px;width:auto;height:34px;padding:0 13px 0 11px;border-radius:17px;border:1px solid rgba(255,255,255,.42);background:rgba(255,255,255,.22);color:#fff;display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:800;letter-spacing:.02em;line-height:1;box-shadow:0 6px 18px rgba(0,0,0,.32);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+#bResX{right:22px;top:24px;width:auto;height:34px;padding:0 13px 0 11px;border-radius:17px;border:1px solid rgba(255,255,255,.42);background:rgba(255,255,255,.22);color:#fff;display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:800;letter-spacing:.02em;line-height:1;box-shadow:0 6px 18px rgba(0,0,0,.32);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
 #bResX b{font-size:15px;font-weight:700;line-height:1}
 #bResX:hover{background:rgba(255,255,255,.34);border-color:rgba(255,255,255,.62)}
 #result .rhead{padding-right:92px}
