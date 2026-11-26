@@ -2021,7 +2021,7 @@ function renderCardPreview() {
   pv.style.setProperty('--pv-edge', th.edge);
   pv.style.setProperty('--pv-line', th.dark ? 'rgba(250,244,230,.28)' : 'rgba(60,45,30,.14)');
   pv.style.setProperty('--pv-soft', th.dark ? 'rgba(250,244,230,.86)' : 'rgba(38,29,22,.66)');
-  pv.style.setProperty('--pv-mark', th.dark ? 'rgba(242,224,180,.60)' : 'rgba(124,35,41,.55)'));
+  pv.style.setProperty('--pv-mark', th.dark ? 'rgba(242,224,180,.60)' : 'rgba(124,35,41,.55)');
   pv.classList.toggle('dark', !!th.dark);
   const m = $('#vpMsg'); m.textContent = msg || '따뜻한 한마디를 적으면 이 엽서에 그대로 담겨요.'; m.classList.toggle('empty', !msg);
   const to = ($('#cardToIn').value || '').trim();
