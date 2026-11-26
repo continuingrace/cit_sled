@@ -197,7 +197,7 @@ body.paused *{animation-play-state:paused!important}
 @font-face{font-family:'TypewriterKR';src:url('./fonts/typewriter-kr.woff2') format('woff2');font-weight:400;font-style:normal;font-display:swap}
 @font-face{font-family:'TypewriterKR';src:url('./fonts/typewriter-kr-bold.woff2') format('woff2');font-weight:700;font-style:normal;font-display:swap}
 /* ===== 빈티지 크리스마스 카드 (트리에 거는 엽서) — 에디토리얼 홀리데이 팔레트 ===== */
-#cards{--iv-bg:#fbf7ef;--iv-surface:#fffdf8;--iv-ink:#221a14;--iv-sub:#7b7166;--iv-line:rgba(60,45,30,.13);--iv-burgundy:#6f2b30;--iv-green:#23483a;--iv-brass:#9c7a4a;--iv-noise:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.085'/%3E%3C/svg%3E");--iv-fiber:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.012 0.55' numOctaves='2' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23f)' opacity='0.05'/%3E%3C/svg%3E")}
+#cards{--iv-bg:#fbf7ef;--iv-surface:#fffdf8;--iv-ink:#221a14;--iv-sub:#7b7166;--iv-line:rgba(60,45,30,.13);--iv-burgundy:#6f2b30;--iv-green:#23483a;--iv-brass:#9c7a4a;--iv-noise:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.14'/%3E%3C/svg%3E");--iv-fiber:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.012 0.55' numOctaves='2' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23f)' opacity='0.1'/%3E%3C/svg%3E")}}
 #cards .panel.vint{width:min(680px,96vw);max-width:min(680px,96vw);max-height:94vh;overflow:auto;padding:0;background:transparent;border:0;box-shadow:none;scrollbar-width:none}
 #cards .panel.vint::-webkit-scrollbar{width:0;height:0}
 #cards .vint-sheet{position:relative;color:var(--iv-ink);border:1px solid var(--iv-line);border-radius:20px;padding:26px 26px 22px;background-color:var(--iv-bg);background-image:var(--iv-noise),var(--iv-fiber);background-size:160px 160px,220px 220px;box-shadow:0 26px 64px rgba(5,9,30,.42),inset 0 0 60px rgba(120,95,60,.07),inset 0 1px 0 rgba(255,255,255,.6)}
@@ -218,7 +218,7 @@ body.paused *{animation-play-state:paused!important}
 #cards .vin-preview{position:relative;margin-top:18px;border-radius:14px;padding:18px 18px 13px;display:flex;flex-direction:column;gap:11px;border:1px solid var(--pv-edge,#e2d7c4);background-color:var(--pv-bg,#f8f2e6);background-image:var(--iv-noise),var(--iv-fiber),radial-gradient(120% 100% at 50% 0%,rgba(255,255,255,.28),rgba(255,255,255,0) 62%);background-size:160px 160px,220px 220px,auto;color:var(--pv-ink,#2b221a);box-shadow:0 12px 30px rgba(45,30,15,.09);transition:background-color .18s ease,color .18s ease,border-color .18s ease}
 #cards .vin-preview:before{content:'';position:absolute;inset:5px;border:1px solid rgba(255,255,255,.5);border-radius:10px;pointer-events:none}
 #cards .vp-top{position:relative;display:flex;justify-content:flex-end;align-items:flex-start;min-height:114px}
-#cards .vp-post{position:absolute;left:16px;top:12px;width:152px;height:94px;background-color:var(--pv-mark,rgba(124,35,41,.62));-webkit-mask-image:var(--postmark-mask);mask-image:var(--postmark-mask);-webkit-mask-size:100% 100%;mask-size:100% 100%;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-position:center;mask-position:center;transform:rotate(-6deg);transform-origin:left top;opacity:.62;pointer-events:none;mix-blend-mode:multiply}
+#cards .vp-post{position:absolute;left:16px;top:12px;width:152px;height:94px;color:var(--pv-mark,rgba(124,35,41,.72));transform:rotate(-6deg);transform-origin:left top;opacity:.78;pointer-events:none;mix-blend-mode:multiply;overflow:visible}
 #cards .vp-stamp{position:relative;width:56px;height:70px;padding:6px;box-sizing:border-box;background:#fffdf8;transform:rotate(2.2deg);filter:drop-shadow(0 2px 4px rgba(45,30,15,.24));-webkit-mask-image:var(--stamp-mask);mask-image:var(--stamp-mask);-webkit-mask-size:100% 100%;mask-size:100% 100%;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-position:center;mask-position:center}
 #cards .vp-stamp i{display:block;width:100%;height:100%;background-size:cover;background-position:center;box-shadow:inset 0 0 0 1px rgba(60,45,30,.2)}
 #cards .vp-msg,#cards .vp-foot,#cards .vp-name,#cards .vp-to,#cards .vcard .vc-msg,#cards .vcard .vc-foot{font-family:'TypewriterKR','Courier New',ui-monospace,'AppleMyungjo',serif;letter-spacing:.02em;line-height:1.65}
@@ -389,7 +389,30 @@ body.paused *{animation-play-state:paused!important}
     <p class="vin-count" id="cardCount">트리에 <b>0</b>장의 카드가 걸려 있어요</p>
   </div>
   <div class="vin-preview" id="cardPreview">
-    <div class="vp-top"><div class="vp-post" id="vpPost" aria-hidden="true"></div><div class="vp-stamp" id="vpStamp" role="img" aria-label="빈티지 우표"><i id="vpStampImg"></i></div></div>
+    <div class="vp-top"><svg class="vp-post" id="vpPost" viewBox="0 0 304 188" aria-hidden="true" focusable="false">
+      <defs><filter id="pmInk" x="-14%" y="-14%" width="128%" height="128%" color-interpolation-filters="sRGB">
+        <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" seed="8" result="n1"/>
+        <feDisplacementMap in="SourceGraphic" in2="n1" scale="2.6" xChannelSelector="R" yChannelSelector="G" result="d"/>
+        <feTurbulence type="fractalNoise" baseFrequency="0.1" numOctaves="2" seed="4" result="n2"/>
+        <feColorMatrix in="n2" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  1.35 0 0 0 0.02" result="wear"/>
+        <feComposite in="d" in2="wear" operator="in" result="worn"/>
+        <feGaussianBlur in="worn" stdDeviation="0.3"/>
+      </filter></defs>
+      <g filter="url(#pmInk)">
+        <g fill="none" stroke="currentColor" stroke-width="6"><circle cx="94" cy="94" r="90"/></g>
+        <g fill="none" stroke="currentColor" stroke-width="2"><circle cx="94" cy="94" r="76"/></g>
+        <g fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round">
+          <path d="M192 78 q10 -7 20 0 t20 0 t20 0 t20 0 t20 0"/>
+          <path d="M192 94 q10 -7 20 0 t20 0 t20 0 t20 0 t20 0"/>
+          <path d="M192 110 q10 -7 20 0 t20 0 t20 0 t20 0 t20 0"/>
+        </g>
+        <g fill="currentColor" stroke="none" font-family="Helvetica,Arial,sans-serif" font-weight="700" text-anchor="middle">
+          <text x="94" y="70" font-size="11" letter-spacing="0.6">CHRISTMAS POST</text>
+          <text x="94" y="96" font-size="14" letter-spacing="0.4">DEC 25 &#183; 2026</text>
+          <text x="94" y="116" font-size="10.5" letter-spacing="2.2">CiT WINTER</text>
+        </g>
+      </g>
+    </svg><div class="vp-stamp" id="vpStamp" role="img" aria-label="빈티지 우표"><i id="vpStampImg"></i></div></div>
     <p class="vp-msg empty" id="vpMsg">크리스마스를 함께 보내고 싶은 분에게 한마디를 남겨 보세요.</p>
     <div class="vp-foot"><span class="vp-name" id="vpName">From. 익명</span><span class="vp-to" id="vpTo">To. 모두에게</span></div>
   </div>
