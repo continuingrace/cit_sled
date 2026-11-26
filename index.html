@@ -92,7 +92,7 @@ kbd{display:inline-block;min-width:26px;padding:1px 7px;margin:0 2px;border-radi
 #count.go{animation:cnt .8s ease-out}
 @keyframes cnt{0%{opacity:0;transform:scale(1.5)}20%{opacity:1;transform:scale(1)}75%{opacity:1}100%{opacity:0;transform:scale(.85)}}
 #touch{position:absolute;left:0;right:0;bottom:0;height:150px;display:none;pointer-events:none}
-#touch .tb{position:absolute;bottom:22px;width:72px;height:72px;border-radius:50%;font-size:24px;font-weight:700;color:#fff;background:rgba(15,21,46,.62);border:2px solid rgba(255,255,255,.55);pointer-events:auto;display:flex;align-items:center;justify-content:center}
+#touch .tb{position:absolute;bottom:max(42px,calc(16px + env(safe-area-inset-bottom)));width:72px;height:72px;border-radius:50%;font-size:24px;font-weight:700;color:#fff;background:rgba(15,21,46,.62);border:2px solid rgba(255,255,255,.55);pointer-events:auto;display:flex;align-items:center;justify-content:center}
 #touch .tb.on{background:var(--acc);color:var(--ink);border-color:var(--acc)}
 #tL{left:calc(50% - 159px)}#tR{left:calc(50% + 87px)}#tB{left:calc(50% - 79px);font-size:14px!important}#tJ{left:calc(50% + 7px);background:rgba(229,72,77,.8)!important;font-size:16px!important}
 /* 모달 */
