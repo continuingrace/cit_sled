@@ -147,19 +147,25 @@ kbd{display:inline-block;min-width:26px;padding:1px 7px;margin:0 2px;border-radi
 #bResX b{font-size:15px;font-weight:700;line-height:1}
 #bResX:hover{background:rgba(255,255,255,.34);border-color:rgba(255,255,255,.62)}
 #result .rhead{padding-right:92px}
-#endbar{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);display:grid;grid-template-columns:repeat(6,1fr);gap:6px;width:min(430px,calc(100vw - 24px));z-index:19;padding:8px;border-radius:18px;background:rgba(13,19,42,.82);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid rgba(255,255,255,.14);box-shadow:0 18px 44px rgba(4,8,26,.45)}
-#endbar button{white-space:nowrap;font-size:12.5px;font-weight:700;padding:10px 4px;border-radius:12px;letter-spacing:-.01em}
+#endbar{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;width:min(92vw,370px);box-sizing:border-box;z-index:19;padding:10px;border-radius:20px;background:rgba(13,19,42,.78);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid rgba(255,255,255,.14);box-shadow:0 18px 44px rgba(4,8,26,.45)}
+#endbar button{white-space:nowrap;font-size:12.5px;font-weight:700;padding:11px 6px;border-radius:13px;letter-spacing:-.01em;min-width:0;overflow:hidden;text-overflow:ellipsis;line-height:1.25}
 #endbar #bSpinToggle,#endbar #bPhoto{grid-column:span 3}
 #endbar #bResOpen,#endbar #bShot2,#endbar #bRetry3{grid-column:span 2}
-#endbar #bSpinToggle{background:rgba(232,208,150,.16);border:1px solid rgba(232,208,150,.45);color:#f0dcaa}
-#endbar #bPhoto{background:linear-gradient(180deg,#ead9ad,#cdb276);color:#161b33;border:0}
-#endbar #bResOpen{background:rgba(255,255,255,.12)}
+#endbar #bSpinToggle{background:rgba(232,208,150,.10);border:1px solid rgba(232,208,150,.42);color:#f0dfb5;box-shadow:inset 0 1px 0 rgba(255,255,255,.07)}
+#endbar #bSpinToggle:hover{background:rgba(232,208,150,.18)}
+#endbar #bPhoto{background:linear-gradient(180deg,#f0e2ba 0%,#cdb276 100%);color:#161b33;border:0;box-shadow:0 6px 18px rgba(205,178,118,.28),inset 0 1px 0 rgba(255,255,255,.55)}
+#endbar #bPhoto:hover{background:linear-gradient(180deg,#f6eac6 0%,#d4b981 100%)}
+#endbar #bResOpen,#endbar #bShot2,#endbar #bRetry3{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13);color:rgba(255,255,255,.88)}
+#endbar #bResOpen:hover,#endbar #bShot2:hover,#endbar #bRetry3:hover{background:rgba(255,255,255,.14)}
+#orbitHint{position:fixed;left:50%;bottom:136px;transform:translateX(-50%) translateY(6px);z-index:18;padding:8px 15px;border-radius:999px;background:rgba(13,19,42,.6);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.16);color:#efe6cd;font-size:12px;font-weight:700;letter-spacing:-.01em;white-space:nowrap;pointer-events:none;opacity:0;transition:opacity .5s ease,transform .5s ease}
+#orbitHint.on{opacity:1;transform:translateX(-50%) translateY(0);animation:ogPulse 2.6s ease-in-out 1.2s 2}
+@keyframes ogPulse{0%,100%{opacity:1}50%{opacity:.6}}
 #turbo{position:absolute;left:50%;bottom:66px;width:170px;margin-left:-85px;padding:7px 14px 10px;border-radius:14px;background:var(--bg);font-size:12px;font-weight:800;color:var(--acc);text-align:center;letter-spacing:.14em;opacity:0;transition:opacity .2s}
 #turbo.on{opacity:1}#turbo i{display:block;height:5px;border-radius:3px;background:var(--acc);margin-top:6px;transform-origin:left center}
 .shotbox{text-align:center}.shotbox img,#shotPrev{display:block;width:auto;height:auto;max-width:min(560px,100%);border-radius:14px;margin:0 auto 14px;box-shadow:0 12px 30px rgba(0,0,0,.4)}
 #shotImg{pointer-events:auto;-webkit-touch-callout:default;user-select:auto;-webkit-user-select:auto;touch-action:auto}
 #shotPrev{width:auto;height:auto}
-.shotbox .note{margin:0 auto 14px;max-width:440px;line-height:1.65}
+.shotbox .note{margin:0 auto 14px;max-width:440px;line-height:1.55;text-align:center;word-break:keep-all;padding:0 4px}
 #shotMsgRow{margin:0 auto 12px;max-width:min(430px,82vw);text-align:left}
 #shotMsgRow label{display:block;margin:0 0 6px 4px;font-size:12px;font-weight:700;letter-spacing:.04em;color:var(--sub)}
 #shotMsg{width:100%;padding:11px 13px;border-radius:12px;border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.08);color:#fff;font-family:var(--k);font-size:15px;font-weight:600;outline:none;user-select:text;-webkit-user-select:text;touch-action:auto}
@@ -184,14 +190,17 @@ body.paused *{animation-play-state:paused!important}
 @media (max-aspect-ratio:1/1){#menu{align-items:flex-end;justify-content:center;padding:0;background:linear-gradient(0deg,rgba(9,14,34,.62),rgba(9,14,34,.14) 42%,rgba(9,14,34,0) 70%)}#menu .mcol{width:100%;max-width:none;gap:12px;padding:0;max-height:100vh}#menu .brand{padding:0 20px 2px}#menu .card{width:100%;border-radius:26px 26px 0 0;border-left:0;border-right:0;border-bottom:0;padding:20px 20px calc(22px + env(safe-area-inset-bottom,0px));box-shadow:0 -12px 36px rgba(4,8,26,.26)}.modal.side{justify-content:center;align-items:flex-end;padding:10px}}
 @media (max-height:520px){.logo{font-size:26px}.mcol{gap:8px;width:min(380px,58vw)}.lbl,#diffDesc,.best{display:none}.card{gap:8px;padding:12px}.char img{aspect-ratio:1.7}.char span{padding:4px 2px 5px;font-size:12px}.btn.big{font-size:17px;padding:10px}.btn.sub{padding:8px 6px;font-size:13px}.diff{padding:7px 4px;font-size:13px}.modal.side .panel{gap:8px;padding:14px}}
 
+/* 한글 활자체(TypewriterKR = 고운바탕, SIL OFL) — iOS의 monospace 폴백이 한글을 고딕으로 그리는 문제 방지 */
+@font-face{font-family:'TypewriterKR';src:url('./fonts/typewriter-kr.woff2') format('woff2');font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:'TypewriterKR';src:url('./fonts/typewriter-kr-bold.woff2') format('woff2');font-weight:700;font-style:normal;font-display:swap}
 /* ===== 빈티지 크리스마스 카드 (트리에 거는 엽서) — 에디토리얼 홀리데이 팔레트 ===== */
 #cards{--iv-bg:#fbf7ef;--iv-surface:#fffdf8;--iv-ink:#221a14;--iv-sub:#7b7166;--iv-line:rgba(60,45,30,.13);--iv-burgundy:#6f2b30;--iv-green:#23483a;--iv-brass:#9c7a4a;--iv-noise:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.085'/%3E%3C/svg%3E");--iv-fiber:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.012 0.55' numOctaves='2' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23f)' opacity='0.05'/%3E%3C/svg%3E")}
 #cards .panel.vint{width:min(680px,96vw);max-width:min(680px,96vw);max-height:94vh;overflow:auto;padding:0;background:transparent;border:0;box-shadow:none;scrollbar-width:none}
 #cards .panel.vint::-webkit-scrollbar{width:0;height:0}
 #cards .vint-sheet{position:relative;color:var(--iv-ink);border:1px solid var(--iv-line);border-radius:20px;padding:26px 26px 22px;background-color:var(--iv-bg);background-image:var(--iv-noise),var(--iv-fiber);background-size:160px 160px,220px 220px;box-shadow:0 26px 64px rgba(5,9,30,.42),inset 0 0 60px rgba(120,95,60,.07),inset 0 1px 0 rgba(255,255,255,.6)}
 #cards .vin-head{position:relative;padding:0 44px 0 0;text-align:left}
-#cards .vin-head .vin-eyebrow,#cards .vin-head .vin-title,#cards .vin-head .vin-count{text-align:left;margin-left:0}
-#cards .vin-eyebrow{display:block;font-size:10px;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:var(--iv-brass)}
+#cards .vin-head .vin-eyebrow,#cards .vin-head .vin-title,#cards .vin-head .vin-count{text-align:left;margin-left:0;padding-left:0}
+#cards .vin-eyebrow{display:block;margin:0;padding:0;text-indent:-1px;font-size:10px;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:var(--iv-brass)}
 #cards h2.vin-title{margin:0 0 6px;padding:0;font-size:21px;font-weight:800;line-height:1.32;letter-spacing:-.012em;text-align:left!important;color:var(--iv-burgundy)}
 #cards .vin-count{margin:0;font-size:12.5px;font-weight:500;color:var(--iv-sub);letter-spacing:-.005em}
 #cards .vin-count b{font-weight:800;color:var(--iv-green)}
@@ -200,12 +209,12 @@ body.paused *{animation-play-state:paused!important}
 /* 실시간 미리보기 엽서 */
 #cards .vin-preview{position:relative;margin-top:18px;border-radius:14px;padding:18px 18px 13px;display:flex;flex-direction:column;gap:11px;border:1px solid var(--pv-edge,#e2d7c4);background-color:var(--pv-bg,#f8f2e6);background-image:var(--iv-noise),var(--iv-fiber),radial-gradient(120% 100% at 50% 0%,rgba(255,255,255,.28),rgba(255,255,255,0) 62%);background-size:160px 160px,220px 220px,auto;color:var(--pv-ink,#2b221a);box-shadow:0 12px 30px rgba(45,30,15,.09);transition:background-color .18s ease,color .18s ease,border-color .18s ease}
 #cards .vin-preview:before{content:'';position:absolute;inset:5px;border:1px solid rgba(255,255,255,.5);border-radius:10px;pointer-events:none}
-#cards .vp-top{position:relative;display:flex;justify-content:flex-end;align-items:flex-start;min-height:72px}
-#cards .vp-post{position:absolute;right:72px;top:10px;width:126px;height:54px;background-color:var(--pv-mark,rgba(124,35,41,.55));-webkit-mask:var(--postmark-mask) center/100% 100% no-repeat;mask:var(--postmark-mask) center/100% 100% no-repeat;transform:rotate(-7deg);opacity:.42;pointer-events:none}
-#cards .vp-stamp{position:relative;width:58px;height:70px;padding:5px;background:#fffdf8;transform:rotate(2.2deg);filter:drop-shadow(0 2px 4px rgba(45,30,15,.22));-webkit-mask:var(--stamp-mask) center/100% 100% no-repeat;mask:var(--stamp-mask) center/100% 100% no-repeat}
+#cards .vp-top{position:relative;display:flex;justify-content:flex-end;align-items:flex-start;min-height:104px}
+#cards .vp-post{position:absolute;left:16px;top:14px;width:130px;height:80px;background-color:var(--pv-mark,rgba(124,35,41,.62));-webkit-mask-image:var(--postmark-mask);mask-image:var(--postmark-mask);-webkit-mask-size:100% 100%;mask-size:100% 100%;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-position:center;mask-position:center;transform:rotate(-6deg);transform-origin:left top;opacity:.62;pointer-events:none;mix-blend-mode:multiply}
+#cards .vp-stamp{position:relative;width:56px;height:70px;padding:4px;box-sizing:border-box;background:#fffdf8;transform:rotate(2.2deg);filter:drop-shadow(0 2px 4px rgba(45,30,15,.22));-webkit-mask-image:var(--stamp-mask);mask-image:var(--stamp-mask);-webkit-mask-size:100% 100%;mask-size:100% 100%;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-position:center;mask-position:center}
 #cards .vp-stamp i{display:block;width:100%;height:100%;background-size:cover;background-position:center;box-shadow:inset 0 0 0 1px rgba(60,45,30,.2)}
-#cards .vp-msg,#cards .vp-foot,#cards .vp-name,#cards .vp-to,#cards .vcard .vc-msg,#cards .vcard .vc-foot{font-family:'Courier New',ui-monospace,'D2Coding','AppleMyungjo','Batang',monospace;letter-spacing:.02em;line-height:1.65}
-#cards .vp-msg{margin:0;flex:1;min-height:38px;font-size:13.5px;font-weight:500;line-height:1.68;letter-spacing:-.005em;white-space:pre-wrap;word-break:break-word;color:inherit}
+#cards .vp-msg,#cards .vp-foot,#cards .vp-name,#cards .vp-to,#cards .vcard .vc-msg,#cards .vcard .vc-foot{font-family:'TypewriterKR','Courier New',ui-monospace,'AppleMyungjo',serif;letter-spacing:.02em;line-height:1.65}
+#cards .vp-msg{margin:0;flex:1;min-height:38px;font-size:13.5px;font-weight:500;line-height:1.72;letter-spacing:0;text-align:left;white-space:pre-wrap;word-break:keep-all;overflow-wrap:break-word;color:inherit}
 #cards .vp-msg.empty{opacity:.42}
 #cards .vp-foot{display:flex;justify-content:space-between;align-items:flex-end;gap:8px;padding-top:10px;border-top:1px solid var(--pv-line,rgba(60,45,30,.14));font-size:10px;font-weight:600;letter-spacing:.06em;color:var(--pv-soft,inherit);opacity:1}
 #cards .vp-name{max-width:66%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11.5px;font-weight:700;letter-spacing:-.005em;opacity:1}
@@ -242,7 +251,7 @@ body.paused *{animation-play-state:paused!important}
 #cards .vin-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(146px,1fr));gap:10px;max-height:34vh;overflow-y:auto;padding:2px;scrollbar-width:thin;touch-action:pan-y}
 #cards .vcard{position:relative;border-radius:12px;border:1px solid;padding:15px 14px 12px;display:flex;flex-direction:column;gap:9px;background-image:var(--iv-noise),var(--iv-fiber);background-size:160px 160px,220px 220px;box-shadow:inset 0 0 30px rgba(120,95,60,.06),0 8px 20px rgba(45,30,15,.06)}
 #cards .vcard .vc-stamp{position:absolute;right:8px;top:8px;width:26px;height:32px;background-repeat:no-repeat;background-position:center;background-size:100% 100%;opacity:.92;filter:drop-shadow(0 1px 2px rgba(45,30,15,.16))}
-#cards .vcard .vc-msg{position:relative;flex:1;margin:0;padding-right:15px;font-size:12.5px;font-weight:500;line-height:1.55;letter-spacing:-.005em;white-space:pre-wrap;word-break:break-word;color:inherit}
+#cards .vcard .vc-msg{position:relative;flex:1;margin:0;padding-right:15px;font-size:12.5px;font-weight:500;line-height:1.62;letter-spacing:0;text-align:left;white-space:pre-wrap;word-break:keep-all;overflow-wrap:break-word;color:inherit}
 #cards .vcard .vc-foot{position:relative;display:flex;justify-content:space-between;align-items:center;gap:6px;padding-top:8px;border-top:1px solid;font-size:10px;font-weight:600;letter-spacing:.02em;opacity:.75}
 #cards .vcard .vc-foot b{font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 #cards .vin-empty{grid-column:1/-1;margin:0;text-align:center;font-size:12px;font-weight:500;line-height:1.7;color:var(--iv-sub);padding:22px 6px}
@@ -387,7 +396,8 @@ body.paused *{animation-play-state:paused!important}
   <div class="vin-grid" id="cardList"></div>
 </div></div></div>
 <div id="treebar" class="hidden"><button id="tbBack">← 첫 화면으로</button><button id="tbCard" class="primary">🎄 카드 남기기</button></div>
-<div id="endbar" class="hidden"><button class="btn" id="bSpinToggle">360° 회전 멈춤/재생</button><button class="btn" id="bPhoto">📸 기념사진</button><button class="btn sub" id="bResOpen">결과 보기</button><button class="btn sub" id="bShot2">장면 캡처</button><button class="btn sub" id="bRetry3">한 번 더</button></div>
+<div id="endbar" class="hidden"><button class="btn" id="bSpinToggle">360° 회전</button><button class="btn" id="bPhoto">📸 기념사진</button><button class="btn sub" id="bResOpen">결과 보기</button><button class="btn sub" id="bShot2">장면 캡처</button><button class="btn sub" id="bRetry3">한 번 더</button></div>
+<div id="orbitHint" aria-hidden="true">👆 드래그해서 360° 둘러보기 · 팻말 터치</div>
 <div id="shot" class="modal hidden"><div class="panel shotbox">
   <button class="x" id="bShotX" title="닫기" aria-label="장면 캡처 닫기"><b>✕</b></button>
   <h2 id="shotTitle">장면 캡처</h2>
@@ -746,7 +756,7 @@ const wrapPi = (a) => { a = (a + Math.PI) % (2 * Math.PI); if (a < 0) a += 2 * M
 function rng(seed) { let a = seed >>> 0; return () => { a = (a + 0x6D2B79F5) | 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
 function h2(x, y) { const n = Math.sin(x * 127.1 + y * 311.7) * 43758.5453; return n - Math.floor(n); }
 function noise2(x, y) { const xi = Math.floor(x), yi = Math.floor(y), xf = x - xi, yf = y - yi, u = xf * xf * (3 - 2 * xf), v = yf * yf * (3 - 2 * yf); return lerp(lerp(h2(xi, yi), h2(xi + 1, yi), u), lerp(h2(xi, yi + 1), h2(xi + 1, yi + 1), u), v); }
-const FONT_T = "'Courier New',ui-monospace,'D2Coding','AppleMyungjo','Batang',monospace";
+const FONT_T = "'TypewriterKR','Courier New',ui-monospace,'AppleMyungjo',serif";
 const FONT_K = "'Pretendard Variable',Pretendard,-apple-system,'Apple SD Gothic Neo','Malgun Gothic','Noto Sans KR','Noto Sans CJK KR',sans-serif";
 const FONT_N = FONT_K;
 // 캔버스(Polaroid)용 Pretendard — 내장 @font-face('Pretendard Variable')를 'Pretendard' 이름으로도 등록
@@ -1845,37 +1855,48 @@ const cardPick = { theme: 'cream', stamp: 'tree' };
 // ---- 천공 우표/이중 원형 소인 (마스크로 모양만 그리고 색은 CSS 변수로) ----
 const STAMP_IMG = { tree: 'images/stamps/tree.png', bell: 'images/stamps/bell.png', santa: 'images/stamps/santa.png', wreath: 'images/stamps/wreath.png', star: 'images/stamps/star.png' };
 function stampArt(kind) { return STAMP_IMG[kind] || STAMP_IMG.tree; }
-function stampMaskUri() {
-  let holes = '';
-  for (let x = 3.5; x <= 56.5; x += 5.6) holes += '<circle cx="' + x.toFixed(1) + '" cy="2.6" r="3.3" fill="#000"/><circle cx="' + x.toFixed(1) + '" cy="69.4" r="3.3" fill="#000"/>';
-  for (let y = 5.5; y <= 66.5; y += 5.6) holes += '<circle cx="2.6" cy="' + y.toFixed(1) + '" r="3.3" fill="#000"/><circle cx="57.4" cy="' + y.toFixed(1) + '" r="3.3" fill="#000"/>';
-  const svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 72" width="60" height="72"><rect width="60" height="72" fill="#fff"/>' + holes + '</svg>';
+function stampMaskUri() { // 4:5 세로형 우표 + 네 변 톱니 천공 — evenodd로 구멍을 뚫어 alpha 마스크가 iOS에서도 확실히 먹게
+  const W = 56, H = 70, R = 2.9, STEP = 5.4;
+  let d = 'M0 0H' + W + 'V' + H + 'H0Z';
+  const hole = function (cx, cy) { return 'M' + (cx - R) + ' ' + cy + 'a' + R + ' ' + R + ' 0 1 0 ' + (2 * R) + ' 0a' + R + ' ' + R + ' 0 1 0 ' + (-2 * R) + ' 0Z'; };
+  for (let x = STEP / 2; x < W; x += STEP) d += hole(Math.round(x * 10) / 10, 0) + hole(Math.round(x * 10) / 10, H);
+  for (let y = STEP; y < H; y += STEP) d += hole(0, Math.round(y * 10) / 10) + hole(W, Math.round(y * 10) / 10);
+  const svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' + W + ' ' + H + '" width="' + W + '" height="' + H + '">'
+    + '<path d="' + d + '" fill="#fff" fill-rule="evenodd"/></svg>';
   return 'url("data:image/svg+xml,' + encodeURIComponent(svg) + '")';
 }
-function postmarkMaskUri() {
+function postmarkMaskUri() { // 좌측 상단 소인 — 이중 원 안의 세 줄이 테두리와 겹치지 않게 여백을 넉넉히
   let waves = '';
-  [17, 31, 45].forEach(function (y) {
-    waves += '<path d="M64 ' + y + ' q7 -5.5 14 0 t14 0 t14 0 t14 0 t14 0 t14 0" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/>';
+  [64, 80, 96].forEach(function (y) {
+    waves += '<path d="M158 ' + y + ' q9 -6 18 0 t18 0 t18 0 t18 0" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"/>';
   });
-  const svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 152 62" width="152" height="62">'
-    + '<circle cx="31" cy="31" r="26.4" fill="none" stroke="#fff" stroke-width="2.6"/>'
-    + '<circle cx="31" cy="31" r="20.6" fill="none" stroke="#fff" stroke-width="1.3"/>'
-    + '<text x="31" y="21.6" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="5.2" font-weight="700" letter-spacing="0.25" fill="#fff">CHRISTMAS POST</text>'
-    + '<rect x="14.5" y="26" width="33" height="9.6" rx="1.8" fill="none" stroke="#fff" stroke-width="1"/>'
-    + '<text x="31" y="33.4" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="5" font-weight="700" letter-spacing="0.15" fill="#fff">DEC 25 &#183; 2026</text>'
-    + '<text x="31" y="44.2" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="4.4" font-weight="700" letter-spacing="0.7" fill="#fff">CiT WINTER</text>'
+  const svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 160" width="260" height="160">'
+    + '<circle cx="80" cy="80" r="72" fill="none" stroke="#fff" stroke-width="6"/>'
+    + '<circle cx="80" cy="80" r="63" fill="none" stroke="#fff" stroke-width="2"/>'
+    + '<text x="80" y="60" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="12" font-weight="700" letter-spacing="0.9" fill="#fff">CHRISTMAS POST</text>'
+    + '<text x="80" y="80" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="15" font-weight="700" letter-spacing="0.5" fill="#fff">DEC 25 &#183; 2026</text>'
+    + '<text x="80" y="99" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="11" font-weight="700" letter-spacing="2.4" fill="#fff">CiT WINTER</text>'
     + waves + '</svg>';
   return 'url("data:image/svg+xml,' + encodeURIComponent(svg) + '")';
 }
 // ---- 빈티지 카드 이미지 공유 (카톡·문자·SNS) ----
 function loadImg(src) { return new Promise((res, rej) => { const im = new Image(); im.onload = () => res(im); im.onerror = rej; im.src = src; }); }
-function wrapCanvasText(ctx, text, maxW) {
+function wrapCanvasText(ctx, text, maxW) { // 한글 어절 단위로 끊고(word-break:keep-all), 한 어절이 줄보다 길 때만 글자로 쪼갠다
   const out = [];
   String(text).split('\n').forEach(par => {
     let line = '';
-    for (const ch of par) {
-      if (ctx.measureText(line + ch).width > maxW) { out.push(line); line = ch; } else line += ch;
-    }
+    par.split(/(\s+)/).forEach(w => {
+      if (!w) return;
+      if (!line.trim() && !w.trim()) { line = ''; return; }
+      if (ctx.measureText(line + w).width <= maxW) { line += w; return; }
+      if (line.trim()) { out.push(line.replace(/\s+$/, '')); line = w.replace(/^\s+/, ''); }
+      else line = w;
+      while (ctx.measureText(line).width > maxW && line.length > 1) {
+        let cut = line.length - 1;
+        while (cut > 1 && ctx.measureText(line.slice(0, cut)).width > maxW) cut--;
+        out.push(line.slice(0, cut)); line = line.slice(cut);
+      }
+    });
     out.push(line);
   });
   return out;
@@ -1887,21 +1908,22 @@ async function drawCardCanvas() {
   const msg = ($('#cardMsg').value || '').trim() || '메리 크리스마스!';
   const cv = document.createElement('canvas'); cv.width = CW; cv.height = CH;
   const x = cv.getContext('2d');
+  try { await Promise.race([document.fonts.load('400 44px TypewriterKR', '엽서'), document.fonts.load('700 28px TypewriterKR', 'From'), new Promise(r => setTimeout(r, 1500))]); } catch (e) { }
   x.fillStyle = th.bg; x.fillRect(0, 0, CW, CH);
   for (let i = 0; i < 5200; i++) { x.fillStyle = th.dark ? 'rgba(255,255,255,0.045)' : 'rgba(96,74,46,0.05)'; const sz = Math.random() < 0.85 ? 1 : 2; x.fillRect(Math.random() * CW, Math.random() * CH, sz, sz); }
   x.strokeStyle = th.edge; x.lineWidth = 4; x.strokeRect(28, 28, CW - 56, CH - 56);
   x.strokeStyle = th.dark ? 'rgba(250,244,230,.35)' : 'rgba(60,45,30,.22)'; x.lineWidth = 1.4; x.strokeRect(44, 44, CW - 88, CH - 88);
   try {
     const im = await loadImg(stampArt(cardPick.stamp));
-    const sc = document.createElement('canvas'); sc.width = 150; sc.height = 182;
+    const sc = document.createElement('canvas'); sc.width = 150; sc.height = 188;
     const sx = sc.getContext('2d');
-    sx.fillStyle = '#fffdf8'; sx.fillRect(0, 0, 150, 182);
-    sx.drawImage(im, 9, 9, 132, 164);
-    sx.strokeStyle = 'rgba(60,45,30,.22)'; sx.lineWidth = 1.5; sx.strokeRect(9, 9, 132, 164);
+    sx.fillStyle = '#fffdf8'; sx.fillRect(0, 0, 150, 188);
+    sx.drawImage(im, 9, 9, 132, 176);
+    sx.strokeStyle = 'rgba(60,45,30,.22)'; sx.lineWidth = 1.5; sx.strokeRect(9, 9, 132, 176);
     sx.globalCompositeOperation = 'destination-out';
-    for (let i = 4; i <= 146; i += 5.6) { sx.beginPath(); sx.arc(i, 2.6, 3.4, 0, 7); sx.fill(); sx.beginPath(); sx.arc(i, 179.4, 3.4, 0, 7); sx.fill(); }
-    for (let j = 6; j <= 176; j += 5.6) { sx.beginPath(); sx.arc(2.6, j, 3.4, 0, 7); sx.fill(); sx.beginPath(); sx.arc(147.4, j, 3.4, 0, 7); sx.fill(); }
-    x.save(); x.translate(CW - 135, 150); x.rotate(0.038); x.drawImage(sc, -75, -91); x.restore();
+    for (let i = 4; i <= 146; i += 5.6) { sx.beginPath(); sx.arc(i, 2.6, 3.4, 0, 7); sx.fill(); sx.beginPath(); sx.arc(i, 185.4, 3.4, 0, 7); sx.fill(); }
+    for (let j = 6; j <= 182; j += 5.6) { sx.beginPath(); sx.arc(2.6, j, 3.4, 0, 7); sx.fill(); sx.beginPath(); sx.arc(147.4, j, 3.4, 0, 7); sx.fill(); }
+    x.save(); x.translate(CW - 135, 150); x.rotate(0.038); x.drawImage(sc, -75, -94); x.restore();
   } catch (e) { }
   const mark = th.dark ? 'rgba(244,226,184,.8)' : 'rgba(124,35,41,.5)';
   x.save(); x.translate(CW - 300, 152); x.rotate(-0.12); x.strokeStyle = mark;
@@ -1972,7 +1994,7 @@ function openTreeView() {
   G.treeBaseAng = Math.atan2(hP.x - tP.x, hP.z - tP.z);
   G.autoSpin = true; G.orbitYaw = 0; G.orbitPitch = 0.18;
   resetWorld(); G.lastSec = -1; G.offR = 0;
-  $('#result').classList.add('hidden'); $('#endbar').classList.add('hidden');
+  $('#result').classList.add('hidden'); $('#endbar').classList.add('hidden'); orbitHint(false);
   $('#help').classList.add('hidden'); $('#board').classList.add('hidden');
   $('#menu').classList.add('out');
   setTimeout(() => { if (G.treeView) $('#menu').classList.add('hidden'); }, 520);
@@ -2222,42 +2244,70 @@ let _polCanvas = null, _polarLast = null, _polarTimer2 = 0;
 // 문구를 고치는 동안에는 캔버스를 그대로 보여 주고(인코딩 없음), 입력이 멈추면 저장용 JPEG로 바꾼다
 function showPolaroidPreview() { if (!_polCanvas) return; _polCanvas.classList.remove('hidden'); $('#shotImg').classList.add('hidden'); }
 function hidePolaroidPreview() { if (_polCanvas) _polCanvas.classList.add('hidden'); $('#shotImg').classList.remove('hidden'); }
-function polaroidCanvas(raw, customText) { // 3D 원본 장면 + 흰 폴라로이드 틀 + Pretendard 문구 합성
-  const PW = 1280, PAD = 64, FWD = PW - PAD * 2, FHT = Math.round(FWD * 1152 / 1536), PH = PAD + FHT + 344;
+function polaroidCanvas(raw, customText) { // 3D 원본 장면 + 실제 폴라로이드 600/SX-70 필름 틀 + Pretendard 문구 합성
+  // 실제 폴라로이드 필름 비율(88×108mm): 사진 창 79×79mm 정사각, 위·좌·우 여백 4.5mm, 하단 친 24.5mm
+  const PW = 1080, S = 58, IW = 964, PH = 1312, CHIN = PH - (S + IW);   // 여백 58 · 사진 964 정사각 · 친 290
   const c = _polCanvas || (_polCanvas = document.createElement('canvas'));
   if (!c.id) { c.id = 'shotPrev'; c.className = 'hidden'; c.setAttribute('aria-hidden', 'true'); try { const im = $('#shotImg'); im.parentNode.insertBefore(c, im.nextSibling); } catch (e) { } }
   if (c.width !== PW || c.height !== PH) { c.width = PW; c.height = PH; }
   const x = c.getContext('2d'); x.clearRect(0, 0, PW, PH);
-  x.fillStyle = '#fbf9f4'; x.fillRect(0, 0, PW, PH);
-  for (let i = 0; i < 1100; i++) { x.fillStyle = `rgba(120,108,86,${0.012 + Math.random() * 0.02})`; x.fillRect(Math.random() * PW, Math.random() * PH, 1 + Math.random() * 2, 1); }
-  x.save(); x.shadowColor = 'rgba(24,28,54,.28)'; x.shadowBlur = 26; x.shadowOffsetY = 8; x.fillStyle = '#fff'; x.fillRect(PAD - 14, PAD - 14, FWD + 28, FHT + 28); x.restore();
-  // 사진 — 아날로그 폴라로이드 필름 느낌: 살짝 번진 듯하고 따뜻한 톤 + 비네트 + 미세 그레인
-  const px = PAD + FWD / 2, py = PAD + FHT / 2;
-  x.save(); x.beginPath(); x.rect(PAD, PAD, FWD, FHT); x.clip();
-  try { x.filter = 'blur(0.7px) contrast(0.93) saturate(0.9) sepia(0.10) brightness(1.03)'; } catch (e) { }
-  try { x.drawImage(raw, PAD, PAD, FWD, FHT); } catch (e) { }
+  const rr = (px, py, w, h, r) => { x.beginPath(); x.moveTo(px + r, py); x.arcTo(px + w, py, px + w, py + h, r); x.arcTo(px + w, py + h, px, py + h, r); x.arcTo(px, py + h, px, py, r); x.arcTo(px, py, px + w, py, r); x.closePath(); };
+  // ① 필름 종이 — 쨍한 흰색 대신 따뜻한 오프화이트 인화지 (아래로 살짝 가라앉는 톤 + 미세한 종이 섬유)
+  x.save(); rr(0, 0, PW, PH, 18); x.clip();
+  const pg = x.createLinearGradient(0, 0, 0, PH);
+  pg.addColorStop(0, '#faf7f0'); pg.addColorStop(0.55, '#f6f2e8'); pg.addColorStop(1, '#f1ece1');
+  x.fillStyle = pg; x.fillRect(0, 0, PW, PH);
+  for (let i = 0; i < 2600; i++) { x.fillStyle = `rgba(126,113,90,${0.008 + Math.random() * 0.016})`; x.fillRect(Math.random() * PW, Math.random() * PH, 1 + Math.random() * 2.4, 1); }
+  for (let i = 0; i < 700; i++) { x.fillStyle = `rgba(255,255,255,${0.05 + Math.random() * 0.06})`; x.fillRect(Math.random() * PW, Math.random() * PH, 1 + Math.random() * 2, 1); }
+  // ② 사진 창 — 아날로그 필름 색감 + 비네트 + 그레인
+  const IX = S, IY = S;
+  x.save(); rr(IX, IY, IW, IW, 4); x.clip();
+  try { x.filter = 'blur(0.5px) contrast(0.94) saturate(0.9) sepia(0.09) brightness(1.02)'; } catch (e) { }
+  try {
+    const rw = raw.width, rh = raw.height, sc = Math.max(IW / rw, IW / rh);   // cover: 비율이 달라도 늘어나지 않고 잘리기만
+    const dw = rw * sc, dh = rh * sc;
+    x.drawImage(raw, IX + (IW - dw) / 2, IY + (IW - dh) / 2, dw, dh);
+  } catch (e) { }
   try { x.filter = 'none'; } catch (e) { }
-  x.fillStyle = 'rgba(255,243,224,0.10)'; x.fillRect(PAD, PAD, FWD, FHT);              // 크림빛 페이드
-  x.fillStyle = 'rgba(255,252,246,0.05)'; x.fillRect(PAD, PAD, FWD, FHT * 0.5);        // 하이라이트 리프트
-  const vg = x.createRadialGradient(px, py, FHT * 0.30, px, py, FHT * 0.80);
+  x.fillStyle = 'rgba(255,243,224,0.10)'; x.fillRect(IX, IY, IW, IW);              // 크림빛 페이드
+  x.fillStyle = 'rgba(255,252,246,0.05)'; x.fillRect(IX, IY, IW, IW * 0.5);        // 하이라이트 리프트
+  const vg = x.createRadialGradient(IX + IW / 2, IY + IW / 2, IW * 0.30, IX + IW / 2, IY + IW / 2, IW * 0.80);
   vg.addColorStop(0, 'rgba(70,45,25,0)'); vg.addColorStop(0.62, 'rgba(70,45,25,0.05)'); vg.addColorStop(1, 'rgba(58,36,18,0.22)');
-  x.fillStyle = vg; x.fillRect(PAD, PAD, FWD, FHT);
-  for (let i = 0; i < 1500; i++) { const a = 0.02 + Math.random() * 0.05; x.fillStyle = Math.random() < 0.5 ? `rgba(255,255,255,${a})` : `rgba(40,28,18,${a})`; x.fillRect(PAD + Math.random() * FWD, PAD + Math.random() * FHT, 1 + Math.random() * 1.6, 1 + Math.random() * 1.6); }
+  x.fillStyle = vg; x.fillRect(IX, IY, IW, IW);
+  for (let i = 0; i < 2200; i++) { const a = 0.015 + Math.random() * 0.045; x.fillStyle = Math.random() < 0.5 ? `rgba(255,255,255,${a})` : `rgba(40,28,18,${a})`; x.fillRect(IX + Math.random() * IW, IY + Math.random() * IW, 1 + Math.random() * 1.6, 1 + Math.random() * 1.6); }
+  // 종이 프레임이 사진보다 살짝 올라온 느낌 — 사진 창 안쪽으로 번지는 그림자
+  x.shadowColor = 'rgba(56,42,26,.5)'; x.shadowBlur = 24; x.shadowOffsetX = 0; x.shadowOffsetY = 4;
+  x.strokeStyle = 'rgba(56,42,26,.9)'; x.lineWidth = 16;
+  x.strokeRect(IX - 26, IY - 26, IW + 52, IW + 52);
   x.restore();
-  x.strokeStyle = 'rgba(24,28,54,.14)'; x.lineWidth = 2; x.strokeRect(PAD, PAD, FWD, FHT);
-  const cx = PW / 2, B = PAD + FHT; x.textAlign = 'center'; x.textBaseline = 'middle';
-  x.fillStyle = '#171d3d'; x.font = `800 54px ${FONT_P}`; x.fillText('CiT코칭연구소 · 2026 크리스마스', cx, B + 116, FWD);  // 제목: Pretendard Bold
-  x.fillStyle = '#20264a'; x.font = `700 44px ${FONT_P}`;                                                              // 사용자가 입력한 문구
-  wrapLines(x, customText, FWD - 60, 2).forEach((ln, i) => x.fillText(ln, cx, B + 206 + i * 54, FWD - 60));
+  // ③ 사진 창 경계 — 바깥쪽 얇은 빛(종이 두께) + 안쪽 헤어라인
+  x.strokeStyle = 'rgba(255,255,255,.5)'; x.lineWidth = 2; rr(IX - 1.5, IY - 1.5, IW + 3, IW + 3, 5); x.stroke();
+  x.strokeStyle = 'rgba(96,80,58,.2)'; x.lineWidth = 1; rr(IX + 0.5, IY + 0.5, IW - 1, IW - 1, 4); x.stroke();
+  // ④ 하단 친 여백 — 넓은 여백 안에 제목·문구·출처를 여백과 균형 있게
+  x.textAlign = 'center'; x.textBaseline = 'middle';
+  const titleF = `800 42px ${FONT_P}`, msgF = `700 36px ${FONT_P}`;
+  x.font = msgF;
+  const lines = wrapLines(x, customText, IW - 96, 2);
+  const TITLE_H = 50, MSG_LH = 46, GAP = 16, FOOT = 68;
+  const blockH = TITLE_H + (lines.length ? GAP + lines.length * MSG_LH : 0);
+  let by = IY + IW + Math.max(18, (CHIN - FOOT - blockH) / 2);
+  x.font = titleF; x.fillStyle = '#1b2144'; x.fillText('CiT코칭연구소 · 2026 크리스마스', PW / 2, by + TITLE_H / 2, IW - 40);
+  by += TITLE_H + GAP;
+  x.font = msgF; x.fillStyle = '#252b50';
+  lines.forEach((ln) => { x.fillText(ln, PW / 2, by + MSG_LH / 2, IW - 96); by += MSG_LH; });
   const dd = new Date(), ds = `${dd.getFullYear()}.${String(dd.getMonth() + 1).padStart(2, '0')}.${String(dd.getDate()).padStart(2, '0')}`;
-  x.textAlign = 'left'; x.fillStyle = '#9aa0b4'; x.font = `500 26px ${FONT_P}`; x.fillText('citkorea.co.kr', PAD, PH - 46);
-  x.textAlign = 'right'; x.fillText(ds, PW - PAD, PH - 46);
+  x.textBaseline = 'alphabetic'; x.fillStyle = '#a8a294'; x.font = `500 22px ${FONT_P}`;
+  x.textAlign = 'left'; x.fillText('citkorea.co.kr', S + 4, PH - 34);
+  x.textAlign = 'right'; x.fillText(ds, PW - S - 4, PH - 34);
+  x.restore();
+  // ⑤ 필름 가장자리 — 아주 얇은 테두리
+  x.save(); rr(0.8, 0.8, PW - 1.6, PH - 1.6, 18); x.strokeStyle = 'rgba(120,105,80,.22)'; x.lineWidth = 1.6; x.stroke(); x.restore();
   return c;
 }
 async function takePolaroid() { // 오두막 앞에 네 캐릭터를 모아 한 장 찍고 폴라로이드 틀에 담는다
   if (G.state !== 'finish' && G.state !== 'result') return;
   SFX.click();
-  try { await Promise.race([Promise.all([`800 54px ${FONT_P}`, `700 44px ${FONT_P}`].map(f => document.fonts.load(f, '가A1').catch(() => null))), new Promise(r => setTimeout(r, 1200))]); } catch (e) { }
+  try { await Promise.race([Promise.all([`800 42px ${FONT_P}`, `700 36px ${FONT_P}`, `500 22px ${FONT_P}`].map(f => document.fonts.load(f, '가A1').catch(() => null))), new Promise(r => setTimeout(r, 1200))]); } catch (e) { }
   const saved = meshes.map(m => ({ p: m.position.clone(), q: m.quaternion.clone() }));
   const camP = camera.position.clone(), camQ = camera.quaternion.clone(), camFov = camera.fov;
   let src = null;
@@ -2265,9 +2315,9 @@ async function takePolaroid() { // 오두막 앞에 네 캐릭터를 모아 한 
     const th = trk(2069.4).th, spots = [[-3.5, 0], [-1.15, 0.5], [1.15, 0.5], [3.5, 0]];
     meshes.forEach((m, i) => { const [u, ds] = spots[i] || [0, 0]; wpos(2069.4 + ds, u, 0.02, m.position); m.rotation.set(0, -th + (i === 0 ? 0.08 : i === 3 ? -0.08 : 0), 0); });
     const cp = new THREE.Vector3(), cl = new THREE.Vector3();
-    wpos(2061.0, 0.55, 3.62, cp); wpos(2073.2, -0.6, 3.05, cl);
-    camera.position.copy(cp); camera.lookAt(cl); camera.fov = 58;
-    src = grab(1536, 1152)[0];
+    wpos(2059.8, 0.35, 3.55, cp); wpos(2073.2, -0.35, 2.85, cl);
+    camera.position.copy(cp); camera.lookAt(cl); camera.fov = 68;
+    src = grab(1200, 1200)[0];   // 정사각 폴라로이드 사진 창에 맞춰 정사각으로 촬영
   } catch (e) { src = null; }
   finally {
     meshes.forEach((m, i) => { m.position.copy(saved[i].p); m.quaternion.copy(saved[i].q); });
@@ -2305,15 +2355,16 @@ function openShot(c, title, name, polaroid) {
   $('#bShare').classList.add('hidden');
   const row = $('#shotMsgRow'); if (row) row.classList.toggle('hidden', !polaroid);
   hidePolaroidPreview();
-  $('#shotNote').textContent = IS_IOS
-    ? (polaroid ? '문구를 고치면 사진에 바로 반영돼요. ‘이미지 저장’을 누르면 공유 시트에서 사진 앱에 담을 수 있어요.' : '위 이미지를 길게 눌러 ‘사진에 저장’을 선택해 주세요.')
-    : (polaroid ? '문구를 고치면 사진에 바로 반영돼요. 저장한 뒤 인스타그램에 올려 보세요.' : '이미지를 저장한 뒤 인스타그램에 올려 주세요. 저장이 안 되면 이미지를 길게 눌러 저장하세요.');
+  const nEl = $('#shotNote');
+  if (polaroid) nEl.innerHTML = '문구를 고치면 사진에 바로 반영돼요.<br>' + (IS_IOS ? '‘이미지 저장’을 누르면 사진 앱에 저장할 수 있어요.' : '저장한 뒤 인스타그램에 올려 보세요.');
+  else nEl.textContent = IS_IOS ? '위 이미지를 길게 눌러 ‘사진에 저장’을 선택해 주세요.' : '이미지를 저장한 뒤 인스타그램에 올려 주세요. 저장이 안 되면 이미지를 길게 눌러 저장하세요.';
   $('#shot').classList.remove('hidden');
   // iOS Safari는 data: URL + download를 무시하므로 Blob URL로 바꿔 준다 (이전 URL은 해제)
   applyShotCanvas(c);
 }
 async function doShare() { const s = G.shot; if (!s || !s.can) return; try { await navigator.share({ files: [s.file], title: 'CiT 썰매대작전', text: 'CiT 썰매대작전에서 달렸어요! citkorea.co.kr' }); } catch (e) { if (e && e.name !== 'AbortError') $('#shotNote').textContent = '공유 창을 열지 못했어요. 이미지를 저장한 뒤 Instagram에 올려 주세요.'; } }
-function setResOpen(v) { G.resOpen = v; $('#result').classList.toggle('hidden', !v); $('#endbar').classList.toggle('hidden', v || G.state !== 'result'); }
+function orbitHint(v) { const h = $('#orbitHint'); if (h) h.classList.toggle('on', !!v); }
+function setResOpen(v) { G.resOpen = v; $('#result').classList.toggle('hidden', !v); const bar = !v && G.state === 'result'; $('#endbar').classList.toggle('hidden', !bar); orbitHint(bar); }
 function buildUI() {
   $('#chars').innerHTML = ROSTER.map((q, i) => `<button class="char" data-i="${i}"><img src="${G.thumbs[i] || ''}" alt=""><span>${q.name}</span></button>`).join('');
   $('#rankOf').textContent = '/' + ROSTER.length;
@@ -2386,6 +2437,7 @@ function buildUI() {
       pause(false, true);
       setResOpen(false);
       $('#endbar').classList.add('hidden');
+      orbitHint(false);
       G.lookYaw = 0;
       G.lookPitch = 0;
       toMenu();
@@ -2414,7 +2466,7 @@ function buildUI() {
 function toggleHelp(v) { const h = $('#help'); const show = v === undefined ? h.classList.contains('hidden') : v; h.classList.toggle('hidden', !show); if (show && G.state === 'race') pause(true, true); }
 function whiteFade(fn) { const f = $('#fade'); f.classList.add('on'); setTimeout(() => { fn(); setTimeout(() => f.classList.remove('on'), 120); }, 360); }
 function pause(v, silent) { if (G.state !== 'race' && !G.paused) return; G.paused = v === undefined ? !G.paused : v; $('#pause').classList.toggle('hidden', !G.paused || !!silent || !$('#help').classList.contains('hidden')); document.body.classList.toggle('paused', G.paused); if (G.paused) auEngine(0, false, true); }
-function resetWorld() { Object.values(W.snowmen).forEach(m => { m.visible = true; m.position.copy(m.userData.home); m.rotation.x = m.rotation.z = 0; }); trails.forEach(t => t.reset()); W.fireOn = false; G.lastSec = -1; G.offR = 0; G.last = null; G.saved = 0; G.mine = null; G.resOpen = false; $('#endbar').classList.add('hidden'); $('#shot').classList.add('hidden'); $('#turbo').classList.remove('on'); $('#gl').style.cursor = ''; }
+function resetWorld() { Object.values(W.snowmen).forEach(m => { m.visible = true; m.position.copy(m.userData.home); m.rotation.x = m.rotation.z = 0; }); trails.forEach(t => t.reset()); W.fireOn = false; G.lastSec = -1; G.offR = 0; G.last = null; G.saved = 0; G.mine = null; G.resOpen = false; $('#endbar').classList.add('hidden'); orbitHint(false); $('#shot').classList.add('hidden'); $('#turbo').classList.remove('on'); $('#gl').style.cursor = ''; }
 function toMenu(first) {
   G.state = 'menu'; G.R = newRace(G.diff, 1); resetWorld(); G.finT = 0; G.orbitYaw = 0; G.orbitPitch = 0; G.autoSpin = false; AU.celeb = false; bgm(false); auEngine(0, false, true);
   $('#result').classList.add('hidden'); $('#board').classList.add('hidden'); $('#hud').classList.remove('on'); $('#menu').classList.remove('hidden'); requestAnimationFrame(() => $('#menu').classList.remove('out')); showBest(); $('#speedlines').style.opacity = 0;
@@ -2613,6 +2665,7 @@ boot().catch(e => { console.error(e); const l = $('#loading'); l.classList.remov
 (function() {
   let isDrag = false, dragX = 0, dragY = 0, startYaw = 0, startPitch = 0;
   window.addEventListener('pointerdown', function(e) {
+    const h = document.getElementById('orbitHint'); if (h) h.classList.remove('on');
     if (window.G && (G.state === 'finish' || G.state === 'result') && !G.resOpen) {
       if (e.target.closest('button, input, a, .tb, #endbar, .modal:not(.hidden)')) return;
       isDrag = true;
