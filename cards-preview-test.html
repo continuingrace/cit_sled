@@ -201,7 +201,7 @@ body.paused *{animation-play-state:paused!important}
 #cards .vin-preview{position:relative;margin-top:18px;border-radius:14px;padding:18px 18px 13px;display:flex;flex-direction:column;gap:11px;border:1px solid var(--pv-edge,#e2d7c4);background-color:var(--pv-bg,#f8f2e6);background-image:var(--iv-noise),var(--iv-fiber),radial-gradient(120% 100% at 50% 0%,rgba(255,255,255,.28),rgba(255,255,255,0) 62%);background-size:160px 160px,220px 220px,auto;color:var(--pv-ink,#2b221a);box-shadow:0 12px 30px rgba(45,30,15,.09);transition:background-color .18s ease,color .18s ease,border-color .18s ease}
 #cards .vin-preview:before{content:'';position:absolute;inset:5px;border:1px solid rgba(255,255,255,.5);border-radius:10px;pointer-events:none}
 #cards .vp-top{position:relative;display:flex;justify-content:flex-end;align-items:flex-start;min-height:72px}
-#cards .vp-post{position:absolute;right:50px;top:10px;width:132px;height:56px;background-color:var(--pv-mark,rgba(124,35,41,.55));-webkit-mask:var(--postmark-mask) center/100% 100% no-repeat;mask:var(--postmark-mask) center/100% 100% no-repeat;transform:rotate(-7deg);opacity:.42;pointer-events:none}
+#cards .vp-post{position:absolute;right:72px;top:10px;width:126px;height:54px;background-color:var(--pv-mark,rgba(124,35,41,.55));-webkit-mask:var(--postmark-mask) center/100% 100% no-repeat;mask:var(--postmark-mask) center/100% 100% no-repeat;transform:rotate(-7deg);opacity:.42;pointer-events:none}
 #cards .vp-stamp{position:relative;width:58px;height:70px;padding:5px;background:#fffdf8;transform:rotate(2.2deg);filter:drop-shadow(0 2px 4px rgba(45,30,15,.22));-webkit-mask:var(--stamp-mask) center/100% 100% no-repeat;mask:var(--stamp-mask) center/100% 100% no-repeat}
 #cards .vp-stamp i{display:block;width:100%;height:100%;background-size:cover;background-position:center;box-shadow:inset 0 0 0 1px rgba(60,45,30,.2)}
 #cards .vp-msg{margin:0;flex:1;min-height:38px;font-size:13.5px;font-weight:500;line-height:1.68;letter-spacing:-.005em;white-space:pre-wrap;word-break:break-word;color:inherit}
@@ -1872,10 +1872,10 @@ function postmarkMaskUri() {
   const svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 152 62" width="152" height="62">'
     + '<circle cx="31" cy="31" r="26.4" fill="none" stroke="#fff" stroke-width="2.6"/>'
     + '<circle cx="31" cy="31" r="20.6" fill="none" stroke="#fff" stroke-width="1.3"/>'
-    + '<text x="31" y="20.5" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="6.6" font-weight="700" letter-spacing="0.5" fill="#fff">CHRISTMAS POST</text>'
-    + '<rect x="12.5" y="26.5" width="37" height="10.5" rx="2" fill="none" stroke="#fff" stroke-width="1.1"/>'
-    + '<text x="31" y="34.4" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="6" font-weight="700" letter-spacing="0.3" fill="#fff">DEC 25 &#183; 2026</text>'
-    + '<text x="31" y="45.6" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="5.4" font-weight="700" letter-spacing="0.9" fill="#fff">CiT WINTER</text>'
+    + '<text x="31" y="21.6" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="5.2" font-weight="700" letter-spacing="0.25" fill="#fff">CHRISTMAS POST</text>'
+    + '<rect x="14.5" y="26" width="33" height="9.6" rx="1.8" fill="none" stroke="#fff" stroke-width="1"/>'
+    + '<text x="31" y="33.4" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="5" font-weight="700" letter-spacing="0.15" fill="#fff">DEC 25 &#183; 2026</text>'
+    + '<text x="31" y="44.2" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="4.4" font-weight="700" letter-spacing="0.7" fill="#fff">CiT WINTER</text>'
     + waves + '</svg>';
   return 'url("data:image/svg+xml,' + encodeURIComponent(svg) + '")';
 }
@@ -1916,12 +1916,13 @@ async function drawCardCanvas() {
     x.save(); x.translate(CW - 135, 150); x.rotate(0.038); x.drawImage(sc, -75, -91); x.restore();
   } catch (e) { }
   const mark = th.dark ? 'rgba(244,226,184,.8)' : 'rgba(124,35,41,.5)';
-  x.save(); x.translate(CW - 262, 158); x.rotate(-0.12); x.strokeStyle = mark;
-  x.lineWidth = 5; x.beginPath(); x.arc(0, 0, 52, 0, Math.PI * 2); x.stroke();
-  x.lineWidth = 2.4; x.beginPath(); x.arc(0, 0, 41, 0, Math.PI * 2); x.stroke();
+  x.save(); x.translate(CW - 300, 152); x.rotate(-0.12); x.strokeStyle = mark;
+  x.lineWidth = 4; x.beginPath(); x.arc(0, 0, 46, 0, Math.PI * 2); x.stroke();
+  x.lineWidth = 1.8; x.beginPath(); x.arc(0, 0, 36, 0, Math.PI * 2); x.stroke();
   x.lineWidth = 4; for (let i = -1; i <= 1; i++) { x.beginPath(); const yy0 = i * 26; for (let t = 0; t <= 190; t += 4) { const xx = 56 + t, yy = yy0 + Math.sin(t / 18) * 7; if (t === 0) x.moveTo(xx, yy); else x.lineTo(xx, yy); } x.stroke(); }
-  x.fillStyle = mark; x.textAlign = 'center'; x.font = '700 15px ' + FONT_K; x.fillText('CHRISTMAS POST', 0, -2);
-  x.font = '700 13px ' + FONT_K; x.fillText('DEC 25 · 2026', 0, 18);
+  x.fillStyle = mark; x.textAlign = 'center'; x.font = '700 10px ' + FONT_K; x.fillText('CHRISTMAS POST', 0, -8);
+  x.font = '700 11px ' + FONT_K; x.fillText('DEC 25 · 2026', 0, 6);
+  x.font = '700 9px ' + FONT_K; x.fillText('CiT WINTER', 0, 22);
   x.restore();
   x.fillStyle = th.ink; x.textAlign = 'left'; x.font = '500 46px ' + FONT_K;
   wrapCanvasText(x, msg, CW - 210).slice(0, 12).forEach((t, i) => x.fillText(t, 100, 470 + i * 68));
@@ -1931,7 +1932,7 @@ async function drawCardCanvas() {
   x.fillText('From. ' + name.slice(0, 16), 100, CH - 196);
   x.textAlign = 'right'; x.fillText('To. ' + to.slice(0, 16), CW - 100, CH - 196);
   x.textAlign = 'left'; x.font = '700 26px ' + FONT_K; x.fillStyle = th.dark ? 'rgba(244,226,184,.72)' : 'rgba(124,35,41,.55)';
-  x.fillText('CiT 썰매대작전 · Winter Event 2026', 100, CH - 120);
+  x.fillText('CiT 썰매대작전 · Winter Special Game • 2026', 100, CH - 120);
   x.font = '500 22px ' + FONT_K; x.fillStyle = th.dark ? 'rgba(250,244,230,.55)' : 'rgba(38,29,22,.45)';
   x.fillText('continuingrace.github.io/cit_sled', 100, CH - 82);
   return cv;
