@@ -1435,18 +1435,29 @@ BGA.addEventListener('ended', () => {
   try { const p = BGA.play(); if (p && p.catch) p.catch(() => { }); } catch (e) { }
   if (!AU.celeb && G.state === 'race') pop('♪ ' + (tr.ko || tr.name), 'gold');
 });
-// 메뉴 배경음악: 호두까기인형 '행진곡'(완주 세리머니 '꽃의 왈츠'와 다른 악장) — 레이스 캐럴과 분리해 재생
-const MENU_TRACK = { ko: '호두까기인형 행진곡', name: 'March (The Nutcracker, Op. 71a)', file: './audio/menu-nutcracker.mp3' };
+// 메뉴 배경음악: 호두까기인형 중 '꽃의 왈츠'가 아닌 악장 3곡을 랜덤 시작 → 곡이 끝나면 다음 곡으로 순환
+const MENU_TRACKS = [
+  { ko: '사탕 요정의 춤', name: 'Dance of the Sugar Plum Fairy (The Nutcracker)', file: './audio/menu-sugar-plum.mp3' },
+  { ko: '행진곡', name: 'March (The Nutcracker)', file: './audio/menu-march.mp3' },
+  { ko: '트레팍', name: 'Trepak - Russian Dance (The Nutcracker)', file: './audio/menu-trepak.mp3' }
+];
 const MGA = new Audio();
-MGA.loop = true; MGA.preload = 'auto'; MGA.volume = BGM_VOL * 0.7; MGA.muted = true;
+MGA.preload = 'none'; MGA.volume = BGM_VOL * 0.7; MGA.muted = true;
 MGA.setAttribute('playsinline', ''); MGA.setAttribute('webkit-playsinline', '');
-let mgaReady = false;
+let menuI = Math.floor(Math.random() * MENU_TRACKS.length);
+MGA.addEventListener('ended', () => {
+  if (G.state !== 'menu' || AU.muted) return;
+  menuI = (menuI + 1) % MENU_TRACKS.length; playMenuTrack();
+});
+function playMenuTrack() {
+  try { MGA.src = bgmSrc(MENU_TRACKS[menuI]); const p = MGA.play(); if (p && p.catch) p.catch(() => { }); } catch (e) { }
+}
 function menuBgm(on) {
   try {
     if (!on) { MGA.pause(); return; }
     if (AU.muted) return;
-    if (!mgaReady) { MGA.src = bgmSrc(MENU_TRACK); MGA.muted = false; mgaReady = true; }
-    const p = MGA.play(); if (p && p.catch) p.catch(() => { });
+    if (!MGA.getAttribute('src')) { playMenuTrack(); return; }
+    if (MGA.paused) { const p = MGA.play(); if (p && p.catch) p.catch(() => { }); }
   } catch (e) { }
 }
 function bgmTrack() { if (AU.celeb) return CELEB[(AU.celebI || 0) % CELEB.length]; return AU.carol || TRACKS[0]; }
