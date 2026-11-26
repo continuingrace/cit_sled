@@ -219,11 +219,14 @@ body.paused *{animation-play-state:paused!important}
 #cards .vin-preview:before{content:'';position:absolute;inset:5px;border:1px solid rgba(255,255,255,.5);border-radius:10px;pointer-events:none}
 #cards .vp-top{position:relative;display:flex;justify-content:flex-end;align-items:flex-start;min-height:114px}
 #cards .vp-post{position:absolute;left:16px;top:12px;width:152px;height:94px;color:var(--pv-mark,rgba(124,35,41,.72));transform:rotate(-6deg);transform-origin:left top;opacity:.78;pointer-events:none;mix-blend-mode:multiply;overflow:visible}
-#cards .vp-stamp{position:relative;width:56px;height:70px;padding:6px;box-sizing:border-box;background:#fffdf8;transform:rotate(2.2deg);filter:drop-shadow(0 2px 4px rgba(45,30,15,.24));-webkit-mask-image:var(--stamp-mask);mask-image:var(--stamp-mask);-webkit-mask-size:100% 100%;mask-size:100% 100%;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-position:center;mask-position:center}
+#cards .vp-stamp{position:relative;width:56px;height:70px;padding:6px;box-sizing:border-box;background-color:#efe5cf;background-image:var(--iv-noise);background-size:96px 96px;transform:rotate(2.2deg);filter:drop-shadow(0 2px 4px rgba(45,30,15,.24));-webkit-mask-image:var(--stamp-mask);mask-image:var(--stamp-mask);-webkit-mask-size:100% 100%;mask-size:100% 100%;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-position:center;mask-position:center}
 #cards .vp-stamp i{display:block;width:100%;height:100%;background-size:cover;background-position:center;box-shadow:inset 0 0 0 1px rgba(60,45,30,.2)}
 #cards .vp-msg,#cards .vp-foot,#cards .vp-name,#cards .vp-to,#cards .vcard .vc-msg,#cards .vcard .vc-foot{font-family:'TypewriterKR','Courier New',ui-monospace,'AppleMyungjo',serif;letter-spacing:.02em;line-height:1.65}
 #cards .vp-msg{margin:0;flex:1;min-height:38px;font-size:13.5px;font-weight:500;line-height:1.72;letter-spacing:0;text-align:left;white-space:pre-wrap;word-break:keep-all;overflow-wrap:break-word;color:inherit}
 #cards .vp-msg.empty{opacity:.42}
+#cards .vin-preview.dark .vp-msg{color:#faf4e6}
+#cards .vin-preview.dark .vp-msg.empty{opacity:.74}
+#cards .vin-preview.dark .vp-post{mix-blend-mode:screen;opacity:1}
 #cards .vp-foot{display:flex;justify-content:space-between;align-items:flex-end;gap:8px;padding-top:10px;border-top:1px solid var(--pv-line,rgba(60,45,30,.14));font-size:10px;font-weight:600;letter-spacing:.06em;color:var(--pv-soft,inherit);opacity:1}
 #cards .vp-name{max-width:66%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11.5px;font-weight:700;letter-spacing:-.005em;opacity:1}
 #cards .vin-acts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
@@ -1878,7 +1881,7 @@ function saveName() {
 const CARD_THEMES = {
   cream: { label: '아이보리', bg: '#f8f2e6', ink: '#2b221a', edge: '#e2d7c4', dark: false },
   kraft: { label: '크라프트', bg: '#ecdfc9', ink: '#3a2c1d', edge: '#d3bd9d', dark: false },
-  sage: { label: '딥그린', bg: '#22412f', ink: '#f1ecdf', edge: '#3b5d48', dark: true }
+  sage: { label: '딥그린', bg: '#22412f', ink: '#faf4e6', edge: '#3b5d48', dark: true }
 };
 const CARD_STAMPS = { tree: '🎄', bell: '🔔', santa: '🎅', star: '⭐' };
 const CARD_MSG_MAX = 140, CARD_NAME_MAX = 12, CARD_ORNAMENT_MAX = 48;
@@ -1961,8 +1964,8 @@ async function drawCardCanvas() {
     const sx = sc.getContext('2d');
     const sp = pinkingPts(150, 188, 7, 15);              // 공유 이미지도 같은 핑킹가위 경계
     sx.beginPath(); sp.forEach(function (q, i) { if (i) sx.lineTo(q[0], q[1]); else sx.moveTo(q[0], q[1]); }); sx.closePath(); sx.clip();
-    sx.fillStyle = '#fffdf8'; sx.fillRect(0, 0, 150, 188);
-    sx.drawImage(im, 12, 12, 126, 164);                    // 균일한 크림 여백
+    sx.fillStyle = '#efe5cf'; sx.fillRect(0, 0, 150, 188);
+    sx.drawImage(im, 12, 12, 126, 164);                    // 균일한 미색 종이 여백
     sx.strokeStyle = 'rgba(60,45,30,.22)'; sx.lineWidth = 1.5; sx.strokeRect(12, 12, 126, 164);
     x.save(); x.translate(CW - 135, 150); x.rotate(0.038); x.drawImage(sc, -75, -94); x.restore();
   } catch (e) { }
@@ -2018,7 +2021,8 @@ function renderCardPreview() {
   pv.style.setProperty('--pv-edge', th.edge);
   pv.style.setProperty('--pv-line', th.dark ? 'rgba(250,244,230,.28)' : 'rgba(60,45,30,.14)');
   pv.style.setProperty('--pv-soft', th.dark ? 'rgba(250,244,230,.86)' : 'rgba(38,29,22,.66)');
-  pv.style.setProperty('--pv-mark', th.dark ? 'rgba(244,226,184,.78)' : 'rgba(124,35,41,.55)');
+  pv.style.setProperty('--pv-mark', th.dark ? 'rgba(242,224,180,.60)' : 'rgba(124,35,41,.55)'));
+  pv.classList.toggle('dark', !!th.dark);
   const m = $('#vpMsg'); m.textContent = msg || '따뜻한 한마디를 적으면 이 엽서에 그대로 담겨요.'; m.classList.toggle('empty', !msg);
   const to = ($('#cardToIn').value || '').trim();
   $('#vpName').textContent = 'From. ' + (name || '익명');
