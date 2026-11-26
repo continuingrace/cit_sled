@@ -129,6 +129,8 @@ kbd{display:inline-block;min-width:26px;padding:1px 7px;margin:0 2px;border-radi
 .blist b{font-weight:800;color:var(--acc);font-variant-numeric:tabular-nums}.blist i{font-style:normal;font-size:13px;font-weight:600;color:var(--sub);font-variant-numeric:tabular-nums;width:58px;text-align:right}
 .blist .empty{justify-content:center;color:var(--sub);font-weight:500;padding:22px 12px}
 .note{margin:12px 0 0;text-align:center;font-size:13px;font-weight:500;color:var(--sub)}
+.modal .panel{position:relative}
+.modal .panel h2{padding:0 44px}
 .x{position:absolute;right:14px;top:14px;width:36px;height:36px;border-radius:50%;border:0;background:rgba(255,255,255,.1);color:#fff;font-size:22px;font-weight:500;line-height:1;cursor:pointer;padding:0}
 .x:hover{background:rgba(255,255,255,.2)}
 #bResX{right:22px;top:24px;width:auto;height:34px;padding:0 13px 0 11px;border-radius:17px;border:1px solid rgba(255,255,255,.42);background:rgba(255,255,255,.22);color:#fff;display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:800;letter-spacing:.02em;line-height:1;box-shadow:0 6px 18px rgba(0,0,0,.32);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
@@ -326,6 +328,7 @@ body.paused *{animation-play-state:paused!important}
   <a class="btn link" id="bHome" href="https://www.citkorea.co.kr/03_08_02/677" target="_blank" rel="noopener noreferrer">CiT 장학이벤트 보기 ↗</a>
 </div></div>
 <div id="help" class="modal hidden"><div class="panel">
+  <button class="x" id="bHelpX" title="닫기" aria-label="조작법 닫기"><b>✕</b><span>닫기</span></button>
   <h2>조작법</h2>
   <div class="help">
     <div><h3>주행</h3><p><kbd>←</kbd><kbd>→</kbd> 방향 바꾸기</p><p><kbd>↓</kbd> 브레이크</p><p><kbd>↑</kbd> 밀기 (느릴 때만)</p></div>
@@ -333,13 +336,12 @@ body.paused *{animation-play-state:paused!important}
     <div><h3>코스</h3><p>기문 사이를 통과하면 +30점, 놓치면 +2초</p><p>선물 상자 +50점</p><p>노란 별은 터보. 잠깐 빨라지고 친구 썰매에 밀리지 않아요.</p><p>노란 화살표는 부스트. 눈사람과 나무는 피하세요.</p></div>
     <div><h3>기타</h3><p><kbd>C</kbd> 카메라 전환</p><p><kbd>P</kbd> 일시정지 · <kbd>M</kbd> 소리</p><p><kbd>H</kbd> 이 창 열기/닫기</p></div>
   </div>
-  <div class="center"><button class="btn" id="bHelpX">닫기</button></div>
 </div></div>
 <div id="board" class="modal hidden"><div class="panel">
+  <button class="x" id="bBoardX" title="닫기" aria-label="순위표 닫기"><b>✕</b><span>닫기</span></button>
   <h2>순위표</h2>
   <ol class="blist" id="bList"></ol>
   <p class="note" id="boardNote"></p>
-  <div class="center"><button class="btn" id="bBoardX">닫기</button></div>
 </div></div>
 <div id="cards" class="modal hidden"><div class="panel vint"><div class="vint-sheet">
   <div class="vin-head">
