@@ -166,6 +166,60 @@ body.paused *{animation-play-state:paused!important}
 @media (max-aspect-ratio:1/1){#menu{align-items:flex-end;justify-content:center;padding:0 4vw 2vh;background:linear-gradient(0deg,rgba(11,17,42,.85),rgba(11,17,42,.3) 55%,rgba(11,17,42,0) 75%)}.modal.side{justify-content:center;align-items:flex-end;padding:10px}}
 @media (max-height:520px){.logo{font-size:26px}.mcol{gap:8px;width:min(380px,58vw)}.lbl,#diffDesc,.best{display:none}.card{gap:8px;padding:12px}.char img{aspect-ratio:1.7}.char span{padding:4px 2px 5px;font-size:12px}.btn.big{font-size:17px;padding:10px}.btn.sub{padding:8px 6px;font-size:13px}.diff{padding:7px 4px;font-size:13px}.modal.side .panel{gap:8px;padding:14px}}
 
+/* ===== 빈티지 크리스마스 카드 (트리에 거는 엽서) ===== */
+#cards{--v-ink:#3b2a20;--v-red:#9e2a2b;--v-green:#245438;--v-gold:#b8860b}
+#cards .panel.vint{width:min(780px,96vw);max-width:min(780px,96vw);max-height:94vh;overflow:auto;padding:0;background:transparent;border:0;box-shadow:none;scrollbar-width:thin}
+#cards .vint-sheet{position:relative;color:#3b2a20;border-radius:14px;padding:24px 22px 20px;background-color:#f6eedc;background-image:radial-gradient(circle at 12% 6%,rgba(255,255,255,.9),transparent 42%),radial-gradient(circle at 92% 98%,rgba(184,134,11,.14),transparent 55%),repeating-linear-gradient(0deg,rgba(120,90,50,.05) 0 1px,transparent 1px 3px);box-shadow:0 24px 60px rgba(4,8,26,.55),inset 0 0 0 5px #fffdf6,inset 0 0 0 6px #ded1b4}
+#cards .vint-sheet:after{content:'';position:absolute;inset:13px;border:2px dashed rgba(158,42,43,.26);border-radius:9px;pointer-events:none}
+#cards .vin-body{position:relative;z-index:1}
+#cards .vin-close{position:absolute;right:12px;top:8px;z-index:3;border:0;background:none;color:#9e2a2b;font-size:22px;font-weight:800;line-height:1;cursor:pointer;padding:6px 8px;border-radius:9px}
+#cards .vin-close:hover{background:rgba(158,42,43,.1)}
+#cards .vin-eyebrow{display:block;font-size:11px;font-weight:800;letter-spacing:.24em;color:#245438;opacity:.9;margin-bottom:5px}
+#cards h2.vin-title{margin:0 0 3px;font-size:23px;font-weight:900;letter-spacing:.01em;color:#9e2a2b;text-align:left;line-height:1.28}
+#cards .vin-count{font-size:13px;font-weight:700;color:#6b5540}
+#cards .vin-count b{color:#245438;font-size:16px;font-variant-numeric:tabular-nums}
+#cards .vin-stamp{position:absolute;right:14px;top:16px;width:72px;height:86px;border-radius:4px;background:#fdf8ec;border:1px solid #cbb894;box-shadow:0 1px 0 #fff,inset 0 0 0 3px #f6eedc,0 6px 12px rgba(80,50,10,.14);transform:rotate(3deg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;font-size:9.5px;font-weight:900;color:#245438;letter-spacing:.08em;text-align:center;pointer-events:none}
+#cards .vin-stamp .ic{font-size:21px;line-height:1.1}
+#cards .vin-postmark{position:absolute;right:52px;top:56px;width:62px;height:62px;border:2px solid rgba(158,42,43,.4);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:8.5px;font-weight:900;color:rgba(158,42,43,.55);transform:rotate(-13deg);letter-spacing:.06em;text-align:center;line-height:1.15;pointer-events:none}
+#cards .vin-form{display:flex;flex-direction:column;gap:8px;margin:16px 0 6px;padding:13px 13px 11px;border:1.5px solid rgba(184,134,11,.5);border-radius:11px;background:rgba(255,253,246,.78)}
+#cards .vin-line{display:flex;gap:8px;align-items:flex-start}
+#cards .vin-label{flex:none;width:38px;padding-top:9px;font-size:12px;font-weight:800;color:#245438;letter-spacing:.02em}
+#cards input.vin-in,#cards textarea.vin-ta{flex:1;min-width:0;font-family:inherit;font-weight:600;font-size:14px;line-height:1.5;color:#3b2a20;background:#fffdf6;border:1px solid #d9c9a6;border-radius:8px;padding:9px 11px;outline:none;letter-spacing:.01em}
+#cards input.vin-in:focus,#cards textarea.vin-ta:focus{border-color:#9e2a2b;box-shadow:0 0 0 3px rgba(158,42,43,.13)}
+#cards textarea.vin-ta{min-height:76px;resize:vertical}
+#cards .vin-meta{align-self:flex-end;font-size:11px;font-weight:800;color:#8a7458;font-variant-numeric:tabular-nums;margin:-2px 2px 0 0}
+#cards .vin-picks{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+#cards .vin-picks .vin-label{padding-top:0;width:auto;margin-right:2px}
+#cards .vin-chip{display:inline-flex;align-items:center;gap:5px;border:1.5px solid rgba(59,42,32,.18);background:#fffdf6;color:#5a462f;border-radius:999px;padding:5px 10px;font-size:12px;font-weight:800;cursor:pointer;transition:border-color .12s,color .12s}
+#cards .vin-chip:hover{border-color:rgba(158,42,43,.5)}
+#cards .vin-chip.on{border-color:#9e2a2b;color:#9e2a2b;box-shadow:0 0 0 2px rgba(158,42,43,.13)}
+#cards .vin-chip .sw{width:12px;height:12px;border-radius:3px;border:1px solid rgba(0,0,0,.16);display:inline-block;flex:none}
+#cards .vin-send{align-self:stretch;border:0;border-radius:10px;padding:12px 14px;font-family:inherit;font-size:15px;font-weight:900;color:#fff8e8;background:linear-gradient(180deg,#b3312f,#8d2224);box-shadow:0 8px 16px rgba(158,42,43,.28);cursor:pointer;letter-spacing:.03em}
+#cards .vin-send:hover{background:linear-gradient(180deg,#c03a37,#9a2628)}
+#cards .vin-send:disabled{opacity:.6;cursor:default;box-shadow:none}
+#cards .vin-note{font-size:11.5px;font-weight:700;color:#8a7458;min-height:17px;line-height:1.45}
+#cards .vin-note.bad{color:#9e2a2b}
+#cards .vin-note.good{color:#245438}
+#cards .vin-sep{display:flex;align-items:center;gap:9px;margin:14px 0 8px;font-size:11px;font-weight:900;letter-spacing:.18em;color:#8a7458}
+#cards .vin-sep:before,#cards .vin-sep:after{content:'';flex:1;height:1px;background:rgba(120,90,50,.28)}
+#cards .vin-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:10px;max-height:37vh;overflow-y:auto;padding:2px 2px 4px;scrollbar-width:thin;touch-action:pan-y}
+#cards .vcard{position:relative;border-radius:9px;border:1px solid;padding:10px 10px 8px;min-height:110px;display:flex;flex-direction:column;gap:6px;box-shadow:0 6px 14px rgba(60,40,10,.13)}
+#cards .vcard:before{content:'';position:absolute;inset:4px;border:1px dashed rgba(120,90,50,.22);border-radius:6px;pointer-events:none}
+#cards .vcard .vc-stamp{position:absolute;right:7px;top:6px;font-size:14px;line-height:1;opacity:.9}
+#cards .vcard .vc-msg{position:relative;flex:1;padding-right:16px;font-size:12.5px;font-weight:600;line-height:1.5;white-space:pre-wrap;word-break:break-word;color:inherit}
+#cards .vcard .vc-foot{position:relative;display:flex;justify-content:space-between;align-items:center;gap:6px;font-size:10.5px;font-weight:800;opacity:.78}
+#cards .vcard .vc-foot b{font-weight:900;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#cards .vin-empty{grid-column:1/-1;text-align:center;font-size:12.5px;font-weight:700;color:#8a7458;padding:20px 4px}
+#menu .menu-snd{position:fixed;right:14px;top:14px;z-index:6;width:44px;height:44px;padding:0;border-radius:50%;border:1px solid rgba(255,255,255,.28);background:rgba(15,21,46,.72);color:#fff;font-size:19px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+@media (max-width:520px){
+  #cards .vint-sheet{padding:20px 15px 15px}
+  #cards h2.vin-title{font-size:20px;padding-right:64px}
+  #cards .vin-stamp{width:58px;height:70px;right:10px;top:12px;font-size:8.5px}
+  #cards .vin-stamp .ic{font-size:17px}
+  #cards .vin-postmark{width:50px;height:50px;right:40px;top:46px;font-size:7.5px}
+  #cards .vin-grid{grid-template-columns:repeat(2,minmax(0,1fr));max-height:34vh}
+  #cards .vin-label{width:34px}
+}
 * { touch-action: manipulation; }
 #gl, canvas, #touch, .tb, button, .btn { touch-action: none !important; }
 </style>
@@ -192,6 +246,7 @@ body.paused *{animation-play-state:paused!important}
 </div>
 <div id="count"></div>
 <div id="menu">
+  <button class="menu-snd" id="bSnd3" title="소리 (M)" aria-label="소리 켜기/끄기">🔊</button>
   <div class="mcol">
     <h1 class="logo"><span>CiT</span> 썰매대작전</h1>
     <div class="panel card">
@@ -203,7 +258,7 @@ body.paused *{animation-play-state:paused!important}
       <div class="lbl">내 이름 / 닉네임 <span style="font-weight:500;opacity:.7">(순위표에 남을 이름)</span></div>
       <input id="menuNameIn" class="namefield" maxlength="10" placeholder="이름 또는 닉네임을 입력해 주세요" autocomplete="off" enterkeyhint="done" aria-label="내 이름 또는 닉네임">
       <button class="btn big" id="bStart">출발 <small>ENTER</small></button>
-      <div class="row"><button class="btn sub" id="bHelp">조작법</button><button class="btn sub" id="bBoard">순위표</button><button class="btn sub" id="bSnd2">소리 켬</button></div>
+      <div class="row"><button class="btn sub" id="bHelp">조작법</button><button class="btn sub" id="bBoard">순위표</button><button class="btn sub" id="bCards">🎄 카드 남기기</button></div>
       <div class="best" id="best"></div>
     </div>
   </div>
@@ -219,7 +274,7 @@ body.paused *{animation-play-state:paused!important}
   <div class="best" id="rBest"></div>
   <button class="btn" id="bLookAround" style="background:rgba(255,216,77,.22);border:1px solid #ffd84d;color:#ffd84d;font-weight:700;margin-bottom:6px">주변 풍경 둘러보기 👀 (360도 회전)</button>
   <div class="row"><button class="btn" id="bRetry">한 번 더</button><button class="btn" id="bVerify">참여인증</button><button class="btn sub" id="bBoard2">순위표</button></div>
-  <div class="row"><button class="btn sub" id="bStory">스토리로 공유</button></div>
+  <div class="row"><button class="btn sub" id="bStory">스토리로 공유</button><button class="btn sub" id="bCards2">🎄 카드 남기기</button></div>
   <a class="btn link" id="bHome" href="https://www.citkorea.co.kr/03_08_02/677" target="_blank" rel="noopener noreferrer">CiT 장학이벤트 보기 ↗</a>
 </div></div>
 <div id="help" class="modal hidden"><div class="panel">
@@ -238,6 +293,27 @@ body.paused *{animation-play-state:paused!important}
   <p class="note" id="boardNote"></p>
   <div class="center"><button class="btn" id="bBoardX">닫기</button></div>
 </div></div>
+<div id="cards" class="modal hidden"><div class="panel vint"><div class="vint-sheet">
+  <button class="vin-close" id="cardsX" title="닫기" aria-label="카드 창 닫기">✕</button>
+  <div class="vin-stamp"><span class="ic">🎄</span>CiT<br>2026</div>
+  <div class="vin-postmark">CHRISTMAS<br>POST<br>SEOUL</div>
+  <div class="vin-body">
+    <span class="vin-eyebrow">CiT 2026 · 크리스마스 우체국</span>
+    <h2 class="vin-title">트리에 빈티지 카드를 걸어 주세요</h2>
+    <p class="vin-count" id="cardCount">트리에 <b>0</b>장의 카드가 걸려 있어요</p>
+    <div class="vin-form">
+      <div class="vin-line"><span class="vin-label">이름</span><input id="cardName" class="vin-in" maxlength="12" placeholder="닉네임 (12자까지)" autocomplete="off" enterkeyhint="next" aria-label="카드에 남길 이름"></div>
+      <div class="vin-line"><span class="vin-label">내용</span><textarea id="cardMsg" class="vin-ta" maxlength="140" placeholder="따뜻한 한마디를 적어 주세요 (140자까지)" aria-label="카드 내용"></textarea></div>
+      <div class="vin-meta"><span id="cardCounter">0 / 140</span></div>
+      <div class="vin-picks" id="cardThemePick"><span class="vin-label">종이</span><button type="button" class="vin-chip on" data-theme="cream"><i class="sw" style="background:#f6eedc"></i>크림</button><button type="button" class="vin-chip" data-theme="kraft"><i class="sw" style="background:#e7d3b3"></i>크라프트</button><button type="button" class="vin-chip" data-theme="sage"><i class="sw" style="background:#e2e8d8"></i>세이지</button><button type="button" class="vin-chip" data-theme="ruby"><i class="sw" style="background:#f3dcd9"></i>루비</button></div>
+      <div class="vin-picks" id="cardStampPick"><span class="vin-label">우표</span><button type="button" class="vin-chip on" data-stamp="tree">🎄 트리</button><button type="button" class="vin-chip" data-stamp="bell">🔔 종</button><button type="button" class="vin-chip" data-stamp="santa">🎅 산타</button><button type="button" class="vin-chip" data-stamp="star">⭐ 별</button></div>
+      <button type="button" class="vin-send" id="cardSend">🎄 트리에 걸기</button>
+      <p class="vin-note" id="cardNote">등록할 때 보안 확인(Turnstile)이 자동으로 함께 진행돼요.</p>
+    </div>
+    <div class="vin-sep">트리에 걸린 카드</div>
+    <div class="vin-grid" id="cardList"></div>
+  </div>
+</div></div></div>
 <div id="endbar" class="hidden"><button class="btn" id="bSpinToggle" style="background:rgba(255,216,77,.25);border:1px solid #ffd84d;color:#ffd84d;font-weight:700">360° 회전 멈춤/재생</button><button class="btn" id="bPhoto" style="background:linear-gradient(180deg,#f45c62,#d13a43);box-shadow:0 8px 18px rgba(209,58,67,.35)">📸 기념사진</button><button class="btn sub" id="bResOpen">결과 보기</button><button class="btn sub" id="bShot2">장면 캡처</button><button class="btn sub" id="bRetry3">한 번 더</button></div>
 <div id="shot" class="modal hidden"><div class="panel shotbox">
   <h2 id="shotTitle">장면 캡처</h2>
@@ -1050,6 +1126,9 @@ function buildWorld(scene) {
     const m = new THREE.Mesh(merge(a), vc); m.matrixAutoUpdate = false; m.matrix.copy(F); m.frustumCulled = false; scene.add(m);
     const sp = PT(F, 0, y + 2.6, 0), st = new THREE.Mesh(starGeo5(1.8, 0.44), new THREE.MeshBasicMaterial({ color: '#ffd84d', toneMapped: false, side: THREE.DoubleSide })); st.position.copy(sp); st.frustumCulled = false; scene.add(st); W.star = st; for (let k = 0; k < 4; k++) bigGlow(sp, '#ffe98a');
     W.treeTop = sp.clone();
+    W.treeMesh = m; W.treeFrame = F;
+    W.cardLinks = [];
+    W.cardGroup = new THREE.Group(); W.cardGroup.frustumCulled = false; scene.add(W.cardGroup);
   }
   { // ---------- 엔딩: CiT 오두막과 파티 준비 ----------
     const s0 = 2080, F = frame(s0, 0), w = 9.6, h = 4.2, d = 7.4, rh = 4.6, zf = d / 2, a = [];
@@ -1274,11 +1353,10 @@ const TRACKS = [
   { ko: '한밤중에 천사 노래', name: 'It Came Upon the Midnight Clear', file: './audio/midnight-clear.mp3' },
   { ko: '임마누엘 오소서', name: 'O Come, O Come Emmanuel', file: './audio/o-come-emmanuel.mp3' }
 ];
-// 완주 세리머니용 연말 재즈 (레이스 6곡과 겹치지 않는 다른 곡 — audio/LICENSES.md 참고)
+// 완주 세리머니용 곡 (레이스 6곡과 겹치지 않는 다른 곡 — audio/LICENSES.md 참고)
 // 결승선을 통과하면 레이스 캐럴 대신 이 곡으로 넘어가 결과창·360도 둘러보기·기념사진 화면에서 계속 흐르고,
-// 한 곡이 끝나면 다음 세리머니 곡으로 이어진다.
+// 한 곡이 끝나면 같은 곡을 처음부터 다시 튼다 (2026-11-27: <호두까기인형> 한 곡으로 확정).
 const CELEB = [
-  { ko: '올드 랭 사인 (차차차)', name: 'Auld Lang Syne (Cha Cha Cha)', file: './audio/celeb-auld-lang-syne.mp3' },
   { ko: '호두까기인형 왈츠', name: 'Waltz of the Flowers (The Nutcracker)', file: './audio/celeb-nutcracker.mp3' }
 ];
 const BGM_VOL = 0.68;
@@ -1452,7 +1530,7 @@ function bgmDuck(ms) { // 팡파레가 울리는 동안만 BGM 볼륨을 낮춘�
   bgmDuckT = setTimeout(() => { try { BGA.volume = BGM_VOL; } catch (e) { } }, ms || 2200);
 }
 function bgmCelebrate() { // 결승 통과: 레이스 캐럴에서 세리머니 재즈로 넘어가 결과창까지 이어진다
-  AU.celeb = true; AU.celebI = (AU.celebI == null) ? Math.floor(Math.random() * CELEB.length) : (AU.celebI + 1) % CELEB.length;
+  AU.celeb = true; AU.celebI = 0;
   bgm(true);
   bgmDuck(2200);
 }
@@ -1486,7 +1564,7 @@ async function boot() {
   renderer = new THREE.WebGLRenderer({ canvas: $('#gl'), antialias: true, powerPreference: 'high-performance' });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.75)); renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   scene = new THREE.Scene(); camera = new THREE.PerspectiveCamera(60, 1, 0.3, 3200);
-  makeTextures(); W = buildWorld(scene); W.onFirework = () => { if (G.state === 'finish') SFX.firework(); };
+  makeTextures(); W = buildWorld(scene); W.onFirework = () => { if (G.state === 'finish') SFX.firework(); }; updateTreeCards();
   ROSTER.forEach((q, i) => { const m = makeRacer(THREE, CAST[q.key]); m.scale.setScalar(1.12); m.rotation.order = 'YXZ'; m.traverse(o => { if (o.isMesh) o.frustumCulled = false; }); scene.add(m); meshes.push(m); trails.push(new Trail(scene)); });
   makeThumbs(); resize(); window.addEventListener('resize', resize);
   G.R = newRace(G.diff, 1); W.setTime(0); placeAll(0); setCam(0, true);
@@ -1494,7 +1572,7 @@ async function boot() {
   scene.traverse(o => { if (o.isMesh || o.isPoints || o.isLine) { o.userData._fc = o.frustumCulled; o.frustumCulled = false; } });
   W.fireOn = true; W.update(0.016, 0, camera, 2000); W.fireOn = false; W.setTime(1); renderer.compile(scene, camera); renderer.render(scene, camera); W.setTime(0); renderer.render(scene, camera);
   scene.traverse(o => { if (o.userData._fc !== undefined) o.frustumCulled = o.userData._fc; });
-  buildUI(); bindInput(); toMenu(true);
+  buildUI(); initCards(); bindInput(); toMenu(true); loadCards();
   const sh = Q.get('shot'); if (sh) devShot(sh); if (AUTO) setTimeout(() => startRace(), 50);
   $('#loading').classList.add('out'); setTimeout(() => $('#loading').classList.add('hidden'), 700);
   let last = performance.now(); const loop = (now) => { requestAnimationFrame(loop); const dt = Math.min(0.05, (now - last) / 1000) * SPEED; last = now; frame_(dt); }; requestAnimationFrame(loop);
@@ -1577,7 +1655,7 @@ function setName(v) {
   const ni = $('#nameIn'); if (ni && !ni.disabled) ni.value = G.pname;
   if (G.updateResultRoster) G.updateResultRoster();
 }
-function sndIcon() { const i = $('#bSnd').querySelector('.ic'), l = $('#bSnd').querySelector('.lb'); if (i) i.textContent = AU.muted ? '🔇' : '🔊'; else $('#bSnd').textContent = AU.muted ? '🔇' : '🔊'; if (l) l.textContent = AU.muted ? '음소거' : '소리'; $('#bSnd2').textContent = AU.muted ? '소리 끔' : '소리 켬'; }
+function sndIcon() { const i = $('#bSnd').querySelector('.ic'), l = $('#bSnd').querySelector('.lb'); if (i) i.textContent = AU.muted ? '🔇' : '🔊'; else $('#bSnd').textContent = AU.muted ? '🔇' : '🔊'; if (l) l.textContent = AU.muted ? '음소거' : '소리'; const s2 = $('#bSnd2'); if (s2) s2.textContent = AU.muted ? '소리 끔' : '소리 켬'; const s3 = $('#bSnd3'); if (s3) s3.textContent = AU.muted ? '🔇' : '🔊'; }
 function setDiff(d) { G.diff = d; try { localStorage.setItem('sledDiff', d); } catch (e) { } document.querySelectorAll('.diff').forEach(b => b.classList.toggle('on', b.dataset.d === d)); $('#diffDesc').textContent = DIFF_DESC[d]; }
 function showBest() { const b = getBest(); $('#best').innerHTML = b ? `내 최고 기록 <span class="num">${b.score}</span>점 · <span class="num">${fmt(b.time)}</span>` : '아직 기록이 없어요. 첫 기록을 세워 보세요.'; }
 function setPick(i) { // 캐릭터 선택: 고른 캐릭터가 0번(플레이어), 나머지가 친구
@@ -1644,6 +1722,174 @@ function saveName() {
   $('#rBest').textContent = '온라인 순위표에 올리는 중이에요…';
   postOnline(rec).then(() => { $('#rBest').textContent = '온라인 순위표에 이름을 남겼어요.'; }, () => { $('#rBest').textContent = '온라인에 올리지 못해 이 기기에만 저장했어요.'; }).then(() => toggleBoard(true));
 }
+// ---------- 빈티지 크리스마스 카드 (결승 트리에 거는 엽서) ----------
+const CARD_THEMES = {
+  cream: { label: '크림', bg: '#f6eedc', ink: '#3b2a20', edge: '#d8c9a8' },
+  kraft: { label: '크라프트', bg: '#e7d3b3', ink: '#3a2a1b', edge: '#c9ae85' },
+  sage: { label: '세이지', bg: '#e2e8d8', ink: '#2b3a22', edge: '#bcc9a9' },
+  ruby: { label: '루비', bg: '#f3dcd9', ink: '#5a1f21', edge: '#dfb3ad' }
+};
+const CARD_STAMPS = { tree: '🎄', bell: '🔔', santa: '🎅', star: '⭐' };
+const CARD_MSG_MAX = 140, CARD_NAME_MAX = 12, CARD_ORNAMENT_MAX = 48;
+let CARDS = [], CARDS_TOTAL = 0, CARDS_STATE = 'idle';
+const cardPick = { theme: 'cream', stamp: 'tree' };
+
+function cardWhen(ts) { const d = new Date((+ts || 0) * 1000); return isNaN(d.getTime()) ? '' : (d.getMonth() + 1) + '월 ' + d.getDate() + '일'; }
+function cardCount(n) { const el = $('#cardCount'); if (el) el.innerHTML = '트리에 <b>' + (n | 0) + '</b>장의 카드가 걸려 있어요'; }
+function cardNoteText(t, kind) { const el = $('#cardNote'); if (!el) return; el.className = 'vin-note' + (kind ? ' ' + kind : ''); el.textContent = t; }
+function paintCards() {
+  cardCount(CARDS_TOTAL || 0);
+  const list = $('#cardList'); if (!list) return;
+  if (!CARDS.length) {
+    list.innerHTML = CARDS_STATE === 'fail'
+      ? '<p class="vin-empty">카드 목록을 지금 불러오지 못했어요. 잠시 뒤 다시 열어 봐 주세요.</p>'
+      : '<p class="vin-empty">' + (CARDS_STATE === 'loading' ? '카드를 불러오는 중이에요…' : '아직 걸린 카드가 없어요. 첫 번째 빈티지 엽서를 남겨 보세요!') + '</p>';
+    return;
+  }
+  list.innerHTML = CARDS.map(c => {
+    const th = CARD_THEMES[c.theme] || CARD_THEMES.cream;
+    return '<article class="vcard" style="background:' + th.bg + ';color:' + th.ink + ';border-color:' + th.edge + '">'
+      + '<span class="vc-stamp">' + (CARD_STAMPS[c.stamp] || '🎄') + '</span>'
+      + '<p class="vc-msg">' + esc(c.message) + '</p>'
+      + '<div class="vc-foot"><b>' + esc(c.name) + '</b><span>' + esc(cardWhen(c.createdAt)) + '</span></div></article>';
+  }).join('');
+}
+async function loadCards() {
+  if (CARDS_STATE === 'loading') return;
+  CARDS_STATE = 'loading'; if (isOpen('#cards')) paintCards();
+  try {
+    const r = await apiFetch('/cards'), j = await r.json();
+    if (!j || !Array.isArray(j.cards)) throw new Error('bad payload');
+    CARDS = j.cards.map(c => ({
+      id: +c.id || 0,
+      name: String(c.name == null ? '' : c.name),
+      message: String(c.message == null ? '' : c.message),
+      theme: CARD_THEMES[c.theme] ? c.theme : 'cream',
+      stamp: CARD_STAMPS[c.stamp] ? c.stamp : 'tree',
+      createdAt: +c.createdAt || 0
+    }));
+    CARDS_TOTAL = Number(j.total); if (!isFinite(CARDS_TOTAL) || CARDS_TOTAL < CARDS.length) CARDS_TOTAL = CARDS.length;
+    CARDS_STATE = 'ok';
+  } catch (e) { CARDS_STATE = 'fail'; }
+  paintCards(); updateTreeCards();
+}
+async function sendCard() {
+  const name = ($('#cardName').value || '').trim(), message = ($('#cardMsg').value || '').trim();
+  if (!name) { cardNoteText('이름을 적어 주세요.', 'bad'); $('#cardName').focus(); return; }
+  if (!message) { cardNoteText('카드에 남길 내용을 적어 주세요.', 'bad'); $('#cardMsg').focus(); return; }
+  if (/[<>]/.test(name + message)) { cardNoteText('카드에는 < > 같은 괄호 기호를 쓸 수 없어요.', 'bad'); return; }
+  if (/(https?:\/\/|www\.)/i.test(name + message)) { cardNoteText('링크 주소는 카드에 적을 수 없어요.', 'bad'); return; }
+  const btn = $('#cardSend'), old = btn.textContent;
+  btn.disabled = true; btn.textContent = '거는 중…'; cardNoteText('보안 확인 중이에요…');
+  try {
+    const token = await getTurnstileToken();
+    cardNoteText('카드를 트리에 거는 중이에요…');
+    await apiFetch('/cards', { method: 'POST', body: JSON.stringify({ turnstileToken: token, name: name, message: message, theme: cardPick.theme, stamp: cardPick.stamp }) });
+    $('#cardMsg').value = ''; $('#cardCounter').textContent = '0 / ' + CARD_MSG_MAX;
+    cardNoteText('카드를 트리에 걸었어요. 고마워요!', 'good');
+    try { SFX.gate(); } catch (e) { }
+    CARDS_STATE = 'idle'; await loadCards();
+    const l = $('#cardList'); if (l) l.scrollTop = 0;
+  } catch (e) {
+    cardNoteText(/429/.test(String(e && e.message))
+      ? '조금 전에 여러 장을 걸었어요. 잠시 뒤 다시 시도해 주세요.'
+      : '카드를 걸지 못했어요. 잠시 뒤 다시 시도해 주세요.', 'bad');
+  } finally { btn.disabled = false; btn.textContent = old; }
+}
+function toggleCards(v) {
+  const show = v === undefined ? !isOpen('#cards') : v;
+  $('#cards').classList.toggle('hidden', !show);
+  if (!show) return;
+  const n = $('#cardName');
+  if (n && !n.value) { let nm = ''; try { nm = localStorage.getItem('sledName') || ''; } catch (e) { } n.value = (G.pname || nm || '').slice(0, CARD_NAME_MAX); }
+  loadCards();
+}
+function initCards() {
+  const b1 = $('#bCards'), b2 = $('#bCards2');
+  if (b1) b1.onclick = () => { auInit(); toggleCards(true); };
+  if (b2) b2.onclick = () => { auInit(); toggleCards(true); };
+  $('#cardsX').onclick = () => toggleCards(false);
+  $('#cards').addEventListener('click', (e) => { if (e.target.id === 'cards') toggleCards(false); });
+  $('#cardSend').onclick = sendCard;
+  $('#cardMsg').addEventListener('input', () => { $('#cardCounter').textContent = $('#cardMsg').value.length + ' / ' + CARD_MSG_MAX; });
+  $('#cardName').addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); $('#cardMsg').focus(); } });
+  document.querySelectorAll('#cardThemePick .vin-chip').forEach(b => {
+    b.onclick = () => { cardPick.theme = b.dataset.theme; document.querySelectorAll('#cardThemePick .vin-chip').forEach(x => x.classList.toggle('on', x === b)); };
+  });
+  document.querySelectorAll('#cardStampPick .vin-chip').forEach(b => {
+    b.onclick = () => { cardPick.stamp = b.dataset.stamp; document.querySelectorAll('#cardStampPick .vin-chip').forEach(x => x.classList.toggle('on', x === b)); };
+  });
+  paintCards();
+}
+// 완주 트리 가지에 미니 엽서를 매다는 장식 (등록 카드 수만큼)
+const CARD_LAYERS = [[8, 7], [6.6, 6.4], [5.2, 5.8], [3.8, 5.2], [2.4, 4.6]];
+function treeRadiusAt(y) {
+  let base = 3;
+  for (let i = 0; i < CARD_LAYERS.length; i++) {
+    const rad = CARD_LAYERS[i][0], h = CARD_LAYERS[i][1];
+    if (y >= base && y <= base + h) { const k = (y - base) / h; return Math.max(0.7, rad * (1 - k) * 0.9 + 0.35); }
+    base += h * 0.62;
+  }
+  return 0.9;
+}
+const cardTexCache = new Map();
+function cardTexture(c) {
+  const key = (c.id || '') + '|' + c.name + '|' + c.message + '|' + c.theme + '|' + c.stamp;
+  if (cardTexCache.has(key)) return cardTexCache.get(key);
+  const th = CARD_THEMES[c.theme] || CARD_THEMES.cream, Wd = 256, Ht = 180;
+  const cv = document.createElement('canvas'); cv.width = Wd; cv.height = Ht;
+  const x = cv.getContext('2d');
+  x.fillStyle = th.bg; x.fillRect(0, 0, Wd, Ht);
+  x.strokeStyle = th.edge; x.lineWidth = 7; x.strokeRect(3.5, 3.5, Wd - 7, Ht - 7);
+  x.setLineDash([5, 4]); x.strokeStyle = 'rgba(158,42,43,0.45)'; x.lineWidth = 1.4; x.strokeRect(14, 14, Wd - 28, Ht - 28); x.setLineDash([]);
+  x.fillStyle = '#fdf8ec'; x.fillRect(Wd - 60, 20, 38, 46); x.strokeStyle = 'rgba(120,90,50,0.45)'; x.strokeRect(Wd - 60, 20, 38, 46);
+  x.textAlign = 'center'; x.textBaseline = 'middle'; x.font = '26px serif'; x.fillStyle = th.ink;
+  x.fillText(CARD_STAMPS[c.stamp] || '🎄', Wd - 41, 43);
+  x.textAlign = 'left'; x.textBaseline = 'top'; x.font = '700 15px ' + FONT_K; x.fillStyle = th.ink;
+  const maxW = Wd - 46, lines = []; let line = '';
+  for (const ch of c.message) {
+    if (ch === '\n') { lines.push(line); line = ''; continue; }
+    if (x.measureText(line + ch).width > maxW) { lines.push(line); line = ch; } else line += ch;
+    if (lines.length > 4) break;
+  }
+  if (lines.length <= 4) lines.push(line);
+  const shown = lines.slice(0, 5);
+  if (lines.length > 5) shown[4] = shown[4].slice(0, Math.max(0, shown[4].length - 1)) + '…';
+  shown.forEach((t, i) => x.fillText(t, 20, 30 + i * 21));
+  x.font = '900 13px ' + FONT_K; x.fillStyle = th.ink;
+  x.fillText((c.name || '').slice(0, 14), 20, Ht - 30);
+  x.font = '700 10px ' + FONT_K; x.fillStyle = 'rgba(120,90,50,0.7)'; x.textAlign = 'right';
+  x.fillText('CiT 2026', Wd - 22, Ht - 28);
+  const tex = new THREE.CanvasTexture(cv);
+  try { if ('SRGBColorSpace' in THREE) tex.colorSpace = THREE.SRGBColorSpace; } catch (e) { }
+  cardTexCache.set(key, tex);
+  return tex;
+}
+function updateTreeCards() {
+  if (!W || !W.cardGroup) return;
+  const g = W.cardGroup;
+  for (let i = g.children.length - 1; i >= 0; i--) {
+    const ch = g.children[i]; g.remove(ch);
+    if (ch.material) ch.material.dispose();
+  }
+  W.cardLinks.length = 0; if (W.treeMesh) W.cardLinks.push(W.treeMesh);
+  const n = Math.min(CARDS.length, CARD_ORNAMENT_MAX);
+  if (n < 1) return;
+  for (let i = 0; i < n; i++) {
+    const c = CARDS[i];
+    const t = n === 1 ? 0.62 : i / (n - 1);
+    const y = 4.3 + t * 14.4;
+    const ang = i * 2.399963229728653 + (i % 3) * 0.55;
+    const rad = treeRadiusAt(y) * 0.97;
+    const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: cardTexture(c), transparent: true, depthWrite: false }));
+    sp.position.copy(PT(W.treeFrame, Math.cos(ang) * rad, y, Math.sin(ang) * rad));
+    const sc = 1.5 + (i % 4) * 0.13;
+    sp.scale.set(sc, sc * 0.703, 1);
+    sp.userData.card = c;
+    g.add(sp); W.cardLinks.push(sp);
+  }
+}
+
 // ---------- 장면 캡처 · 공유 이미지 ----------
 function grab(w, h) { // 지금 장면을 UI 없이 지정 크기로 한 번 렌더해 2D 캔버스로 복사
   const pr = renderer.getPixelRatio(), fov = camera.fov, view = camera.view && camera.view.enabled ? Object.assign({}, camera.view) : null;
@@ -1856,7 +2102,7 @@ function buildUI() {
     G.autoSpin = !G.autoSpin;
     toast(G.autoSpin ? '360° 자동 회전 재생 ▶' : '360° 회전 일시정지 ⏸', '화면을 직접 드래그해서 둘러볼 수도 있어요');
   };
-  $('#bSnd').onclick = $('#bSnd2').onclick = () => { auInit(); auMute(!AU.muted); sndIcon(); };
+  ['#bSnd', '#bSnd2', '#bSnd3'].forEach(sel => { const el = $(sel); if (el) el.onclick = () => { auInit(); auMute(!AU.muted); sndIcon(); }; });
   $('#bCam').onclick = () => { G.camMode = (G.camMode + 1) % 3; }; $('#bPause').onclick = () => pause();
   $('#bResume').onclick = () => pause(false); const doRetry = () => {
     auInit();
@@ -1885,8 +2131,10 @@ function buildUI() {
   $('#bMenu2').onclick = () => whiteFade(() => { pause(false, true); toMenu(); });
   // 마지막 장면의 팻말·간판을 누르면 홈페이지로
   const ray = new THREE.Raycaster(), nd = new THREE.Vector2(), hitOn = (e, list) => { if (G.state !== 'result' || !list || !list.length) return false; nd.set(e.clientX / innerWidth * 2 - 1, -(e.clientY / innerHeight) * 2 + 1); ray.setFromCamera(nd, camera); return ray.intersectObjects(list, false).length > 0; }, hit = (e) => hitOn(e, W.links), hitPhoto = (e) => hitOn(e, W.photoLinks);
-  $('#gl').addEventListener('click', (e) => { if (hitPhoto(e)) { takePolaroid(); return; } if (hit(e)) window.open(HOME, '_blank', 'noopener'); });
-  $('#gl').addEventListener('pointermove', (e) => { $('#gl').style.cursor = (hitPhoto(e) || hit(e)) ? 'pointer' : ''; });
+  // 완주 트리와 트리에 매단 카드 엽서를 누르면 빈티지 카드 창이 열린다
+  const hitCard = (e) => { if (!W.cardLinks || !W.cardLinks.length) return false; if (!(G.state === 'result' || G.state === 'menu' || G.state === 'intro')) return false; nd.set(e.clientX / innerWidth * 2 - 1, -(e.clientY / innerHeight) * 2 + 1); ray.setFromCamera(nd, camera); return ray.intersectObjects(W.cardLinks, false).length > 0; };
+  $('#gl').addEventListener('click', (e) => { if (hitPhoto(e)) { takePolaroid(); return; } if (hitCard(e)) { toggleCards(true); return; } if (hit(e)) window.open(HOME, '_blank', 'noopener'); });
+  $('#gl').addEventListener('pointermove', (e) => { $('#gl').style.cursor = (hitPhoto(e) || hitCard(e) || hit(e)) ? 'pointer' : ''; });
 }
 function toggleHelp(v) { const h = $('#help'); const show = v === undefined ? h.classList.contains('hidden') : v; h.classList.toggle('hidden', !show); if (show && G.state === 'race') pause(true, true); }
 function whiteFade(fn) { const f = $('#fade'); f.classList.add('on'); setTimeout(() => { fn(); setTimeout(() => f.classList.remove('on'), 120); }, 360); }
@@ -1945,14 +2193,14 @@ function showResult() {
 // ---------- 입력 ----------
 function bindInput() {
   addEventListener('keydown', (e) => {
-    if (e.target && e.target.tagName === 'INPUT') return;
+    if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')) return;
     const k = e.code; if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Space'].includes(k)) e.preventDefault(); if (e.repeat) return; keys[k] = true;
     if (k === 'Space' && G.state === 'race') G.jumpQ = true;
-    if (k === 'Enter') { if (isOpen('#shot')) $('#shot').classList.add('hidden'); else if (isOpen('#board')) toggleBoard(false); else if (G.state === 'menu' && !isOpen('#help')) startRace(); else if (G.state === 'result') $('#bRetry').click(); }
+    if (k === 'Enter') { if (isOpen('#shot')) $('#shot').classList.add('hidden'); else if (isOpen('#cards')) { } else if (isOpen('#board')) toggleBoard(false); else if (G.state === 'menu' && !isOpen('#help') && !isOpen('#cards')) startRace(); else if (G.state === 'result' && !isOpen('#cards')) $('#bRetry').click(); }
     if (k === 'KeyH') { if ($('#help').classList.contains('hidden')) toggleHelp(true); else { toggleHelp(false); if (G.paused) pause(false); } }
     if (k === 'KeyM') { auInit(); auMute(!AU.muted); sndIcon(); }
     if (k === 'KeyC') G.camMode = (G.camMode + 1) % 3;
-    if (k === 'KeyP' || k === 'Escape') { if (isOpen('#shot')) $('#shot').classList.add('hidden'); else if (isOpen('#board')) toggleBoard(false); else if (k === 'Escape' && G.state === 'result') setResOpen(!G.resOpen); else if (isOpen('#help')) { toggleHelp(false); if (G.paused) pause(false); } else pause(); }
+    if (k === 'KeyP' || k === 'Escape') { if (isOpen('#cards')) toggleCards(false); else if (isOpen('#shot')) $('#shot').classList.add('hidden'); else if (isOpen('#board')) toggleBoard(false); else if (k === 'Escape' && G.state === 'result') setResOpen(!G.resOpen); else if (isOpen('#help')) { toggleHelp(false); if (G.paused) pause(false); } else pause(); }
   });
   addEventListener('keyup', (e) => { keys[e.code] = false; });
   addEventListener('blur', () => { for (const k in keys) keys[k] = false; if (G.state === 'race' && !G.paused) pause(true); });

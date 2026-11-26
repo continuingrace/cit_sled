@@ -1,4 +1,4 @@
-import { parseAllowedList, validateScorePayload } from './validation.js';
+import { parseAllowedList, validateCardPayload, validateScorePayload } from './validation.js';
 
 const JSON_HEADERS = {
   'Content-Type': 'application/json; charset=utf-8',
@@ -98,8 +98,7 @@ async function createSession(request, env, origin) {
   return json({ sessionId: id, expiresIn: 1200 }, 201, origin);
 }
 
-async function listScores(env, origin) {
-  const result = await env.DB.prepare(`
+async function listScores(env, origin) {  const result = await env.DB.prepare(`
     SELECT name, score, time_sec AS timeSec, char, diff
     FROM sled_scores
     ORDER BY score DESC, time_sec ASC, created_at ASC
@@ -168,6 +167,69 @@ async function submitScore(request, env, origin) {
   return json({ ok: true }, 201, origin);
 }
 
+// ---------- 빈티지 크리스마스 카드 ----------
+const CARD_LIST_LIMIT = 100;
+
+async function listCards(env, origin) {
+  const rows = await env.DB.prepare(`
+    SELECT id, name, message, theme, stamp, created_at AS createdAt
+    FROM cards
+    ORDER BY id DESC
+    LIMIT ${CARD_LIST_LIMIT}
+  `).all();
+  const total = await env.DB.prepare('SELECT COUNT(*) AS n FROM cards').first();
+  return json({ cards: rows.results || [], total: Number(total?.n || 0) }, 200, origin);
+}
+
+async function cardRateLimited(db, ipHash, now) {
+  const shortWindow = now - 10 * 60;
+  const dayWindow = now - 24 * 60 * 60;
+  const result = await db.prepare(`
+    SELECT
+      SUM(CASE WHEN created_at >= ? THEN 1 ELSE 0 END) AS short_count,
+      COUNT(*) AS day_count
+    FROM card_rate_events
+    WHERE ip_hash = ? AND created_at >= ?
+  `).bind(shortWindow, ipHash, dayWindow).first();
+  return Number(result?.short_count || 0) >= 3 || Number(result?.day_count || 0) >= 12;
+}
+
+async function submitCard(request, env, origin) {
+  const contentLength = Number(request.headers.get('Content-Length') || 0);
+  if (contentLength > 4096) return json({ error: '요청 크기가 너무 큽니다.' }, 413, origin);
+
+  let raw;
+  try {
+    const text = await request.text();
+    if (text.length > 4096) return json({ error: '요청 크기가 너무 큽니다.' }, 413, origin);
+    raw = JSON.parse(text);
+  } catch {
+    return json({ error: 'JSON 요청만 허용됩니다.' }, 400, origin);
+  }
+  const checked = validateCardPayload(raw);
+  if (!checked.ok) return json({ error: checked.error }, 400, origin);
+
+  const now = Math.floor(Date.now() / 1000);
+  const ipHash = await hashIp(request, env);
+  if (await cardRateLimited(env.DB, ipHash, now)) {
+    return json({ error: '카드 등록 횟수가 너무 많습니다. 잠시 후 다시 시도해 주세요.' }, 429, origin);
+  }
+  if (!(await verifyTurnstile(checked.value.turnstileToken, request, env))) {
+    return json({ error: '보안 확인에 실패했습니다. 다시 시도해 주세요.' }, 403, origin);
+  }
+
+  await env.DB.batch([
+    env.DB.prepare(`
+      INSERT INTO cards (name, message, theme, stamp, created_at)
+      VALUES (?, ?, ?, ?, ?)
+    `).bind(checked.value.name, checked.value.message, checked.value.theme, checked.value.stamp, now),
+    env.DB.prepare('INSERT INTO card_rate_events (ip_hash, created_at) VALUES (?, ?)').bind(ipHash, now),
+    env.DB.prepare('DELETE FROM card_rate_events WHERE created_at < ?').bind(now - 2 * 24 * 60 * 60)
+  ]);
+  const total = await env.DB.prepare('SELECT COUNT(*) AS n FROM cards').first();
+  return json({ ok: true, total: Number(total?.n || 0) }, 201, origin);
+}
+
 export default {
   async fetch(request, env) {
     try {
@@ -178,6 +240,8 @@ export default {
       if (!origin) return json({ error: '허용되지 않은 출처입니다.' }, 403);
 
       if (request.method === 'GET' && url.pathname === '/v1/scores') return listScores(env, origin);
+      if (request.method === 'GET' && url.pathname === '/v1/cards') return listCards(env, origin);
+      if (request.method === 'POST' && url.pathname === '/v1/cards') return submitCard(request, env, origin);
       if (request.method === 'POST' && url.pathname === '/v1/session') return createSession(request, env, origin);
       if (request.method === 'POST' && url.pathname === '/v1/scores') return submitScore(request, env, origin);
       return json({ error: '찾을 수 없습니다.' }, 404, origin);

@@ -19,31 +19,25 @@ Airmen of Note(재즈 오케스트라) 2곡, Diplomats(재즈 앙상블) 3곡, �
 | `midnight-clear.mp3` | It Came Upon the Midnight Clear (한밤중에 천사 노래) | 미 공군 악단 — Diplomats (재즈 피아노 편성) | Frank Pappajohn | 5:59 | 2:27 | [File:It Came Upon the Midnight Clear - Diplomats …](https://commons.wikimedia.org/wiki/File:It_Came_Upon_the_Midnight_Clear_-_Diplomats_-_United_States_Air_Force_Band.mp3) |
 | `o-come-emmanuel.mp3` | O Come, O Come Emmanuel (임마누엘 오소서) | 미 공군 악단 — Diplomats | Mitchell Morton | 4:39 | 2:29 | [File:O Come, O Come Emmanuel - Diplomats …](https://commons.wikimedia.org/wiki/File:O_Come,_O_Come_Emmanuel_-_Diplomats_-_United_States_Air_Force_Band.mp3) |
 
-## 완주 세리머니 곡 (2026-11-26 추가 · 2026-11-27 2곡 구성으로 정리)
+## 완주 세리머니 곡 (2026-11-26 추가 · 2026-11-27 <호두까기인형> 한 곡으로 확정)
 
 결승선을 통과한 뒤 결과창·360도 둘러보기·기념사진 화면에서 흐르는 `CELEB` 트랙입니다.
-한 곡이 끝나면 다음 곡으로 넘어가고, 완주할 때마다 **올드 랭 사인 ↔ 호두까기인형 왈츠** 두 곡이 번갈아 재생됩니다
+2026-11-27 사용자 결정으로 **호두까기인형 왈츠 한 곡만** 쓰고, 한 곡이 끝나면 같은 곡을 처음부터 다시 재생합니다
 (`index.html`의 `CELEB` 배열 + `nextCeleb()`). 레이스용 6곡과 겹치지 않으며, 작곡·연주·녹음 모두 퍼블릭 도메인입니다.
+(같이 쓰던 `celeb-auld-lang-syne.mp3`는 이 결정으로 저장소에서 삭제했습니다.)
 
 | 파일 | 곡 | 연주·편곡 | 원본 길이 | 이 파일 | 원본(위키미디어 공용) |
 | --- | --- | --- | --- | --- | --- |
-| `celeb-auld-lang-syne.mp3` | Auld Lang Syne (올드 랭 사인) — 차차차 편곡 | 미 공군 악단 — Airmen of Note(재즈 오케스트라), 편곡 SMSgt Joe Jackson (2009) | 3:36 | 2:20 | [File:Auld Lang Cha Cha Cha.ogg](https://commons.wikimedia.org/wiki/File:Auld_Lang_Cha_Cha_Cha.ogg) |
 | `celeb-nutcracker.mp3` | Waltz of the Flowers (꽃의 왈츠) — 《호두까기인형》 모음곡 Op. 71a 中 | 미 공군 악단 — Concert Band(관악 편성), 편곡 Lawrence Odom, 앨범 *Christmas on Stage and Screen*(1996) | 7:30 | 2:15 | [File:Waltz of the Flowers - Concert Band - United States Air Force Band.mp3](https://commons.wikimedia.org/wiki/File:Waltz_of_the_Flowers_-_Concert_Band_-_United_States_Air_Force_Band.mp3) |
 
-- **곡(작곡)**: Robert Burns의 시 *Auld Lang Syne*(1788, 전통 가락)와 표트르 차이코프스키의 발레 *호두까기인형*(The Nutcracker, 1892) 모음곡 Op. 71a — 두 곡 모두 작곡 저작권 만료(퍼블릭 도메인).
+- **곡(작곡)**: 표트르 차이코프스키의 발레 *호두까기인형*(The Nutcracker, 1892) 모음곡 Op. 71a — 작곡 저작권 만료(퍼블릭 도메인).
 - **연주·녹음·편곡**: 미 공군 악단의 직무 수행물이라 미국 연방정부 저작물(17 U.S.C. §105)로 퍼블릭 도메인.
   위키미디어 공용 메타데이터의 `LicenseShortName`·`UsageTerms`가 모두 `Public domain`, `AttributionRequired: false`, `Copyrighted: False`이고
-  두 문서 모두 `PD US Air Force` 분류입니다(호두까기인형 문서는 `CC-PD-Mark`·`PD-old-100-expired`·`Audio files of the Nutcracker` 분류도 함께).
-  (Auld Lang Cha Cha Cha 문서 출처 표기: 미 공군 악단 디스코그래피 `usafband.af.mil/ensembles/BandDiscography.asp?albumID=60`,
-  Waltz of the Flowers 문서 출처 표기: 미 공군 음악국 퍼블릭 도메인 음원 페이지 `music.af.mil/Multimedia/Music/Public-Domain-Music/`)
-- 원본 직링크:
-  - https://upload.wikimedia.org/wikipedia/commons/4/4b/Auld_Lang_Cha_Cha_Cha.ogg
-  - https://upload.wikimedia.org/wikipedia/commons/b/b5/Waltz_of_the_Flowers_-_Concert_Band_-_United_States_Air_Force_Band.mp3
-- 편집: 모노 44.1 kHz MP3 96 kbps, 0.6초 페이드인·2.5초 페이드아웃.
-  음량은 측정 −18.7 LUFS(트루피크 −1.54 / −1.30 dBTP)로 레이스 곡과 같게 맞췄습니다.
-  - `celeb-auld-lang-syne.mp3`: 앞 2분 20초 사용.
-  - `celeb-nutcracker.mp3`: 원곡 7분 30초 중 5:00~7:15 구간(곡이 고조되며 끝나는 피날레) 2분 15초를 사용해
-    게임에서 `volume +6.78 dB → alimiter(limit 0.84)`로 피크를 −1.4 dBTP에 묶고 최종 −18.5 LUFS(트루피크 −1.42 dBTP)로 맞췄습니다.
+  문서는 `PD US Air Force`·`CC-PD-Mark`·`PD-old-100-expired`·`Audio files of the Nutcracker` 분류입니다.
+  (출처 표기: 미 공군 음악국 퍼블릭 도메인 음원 페이지 `music.af.mil/Multimedia/Music/Public-Domain-Music/`)
+- 원본 직링크: https://upload.wikimedia.org/wikipedia/commons/b/b5/Waltz_of_the_Flowers_-_Concert_Band_-_United_States_Air_Force_Band.mp3
+- 편집: 모노 44.1 kHz MP3 96 kbps, 0.6초 페이드인·2.5초 페이드아웃. 원곡 7분 30초 중 5:00~7:15 구간(곡이 고조되며 끝나는 피날레) 2분 15초를 사용해
+  게임에서 `volume +6.78 dB → alimiter(limit 0.84)`로 피크를 −1.4 dBTP에 묶고 최종 −18.5 LUFS(트루피크 −1.42 dBTP)로 맞췄습니다.
 - 재즈 편곡(엘링턴류)은 편곡 저작권이 살아 있어 쓰지 않았습니다. 이 곡은 미 공군 악단 자신의 관악 편곡이라 편곡까지 PD입니다.
 
 원본 파일 직링크(다운로드):

@@ -31,6 +31,17 @@
 8. 게임의 Supabase 직접 호출을 Worker 호출로 교체한다.
 9. 읽기·등록·차단 동작을 확인한 다음에만 기존 Supabase 삭제 여부를 결정한다.
 
+## API
+
+- `GET /v1/scores` — 상위 30개 순위
+- `POST /v1/session` — 게임 세션 발급
+- `POST /v1/scores` — 점수 등록 (Turnstile + 세션 + 레이트리밋)
+- `GET /v1/cards` — 결승 트리에 걸린 빈티지 카드 최신 100장 + 총 개수(`total`)
+- `POST /v1/cards` — 카드 등록 (Turnstile + IP 레이트리밋 + 입력 검증: 닉네임 12자·내용 140자, `< >`·URL·연락처·긴 숫자·비속어/광고 문구 차단)
+
+카드 테이블과 카드 전용 레이트리밋 테이블은 `schema.sql`에 함께 들어 있습니다(기존 `rate_events`의 `action` CHECK 제약을 건드리지 않으려고 `card_rate_events`를 따로 둠).
+원격 반영은 `npx wrangler d1 execute cit-sled-db --remote --file=schema.sql` 후 `npx wrangler deploy`.
+
 ## 남는 한계
 
 게임 계산이 브라우저에서 실행되므로 Turnstile, 일회용 세션, 시간 검증, 속도 제한만으로 고의적인 점수 조작을 완전히 증명할 수는 없다. 완전한 검증이 필요하면 입력 리플레이를 서버에서 재실행하거나 게임 자체를 서버 권위 방식으로 바꿔야 한다.

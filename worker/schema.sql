@@ -31,3 +31,26 @@ CREATE TABLE IF NOT EXISTS rate_events (
 
 CREATE INDEX IF NOT EXISTS idx_rate_events_lookup
   ON rate_events(ip_hash, action, created_at);
+
+-- 결승 트리에 거는 빈티지 크리스마스 카드
+CREATE TABLE IF NOT EXISTS cards (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL CHECK (length(trim(name)) BETWEEN 1 AND 12),
+  message TEXT NOT NULL CHECK (length(trim(message)) BETWEEN 1 AND 140),
+  theme TEXT NOT NULL CHECK (theme IN ('cream', 'kraft', 'sage', 'ruby')),
+  stamp TEXT NOT NULL CHECK (stamp IN ('tree', 'bell', 'santa', 'star')),
+  created_at INTEGER NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_cards_recent
+  ON cards(id DESC);
+
+-- 카드 등록 레이트리밋 (기존 rate_events의 action CHECK 제약을 건드리지 않도록 분리)
+CREATE TABLE IF NOT EXISTS card_rate_events (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  ip_hash TEXT NOT NULL,
+  created_at INTEGER NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_card_rate_events_lookup
+  ON card_rate_events(ip_hash, created_at);
