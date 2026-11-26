@@ -217,9 +217,9 @@ body.paused *{animation-play-state:paused!important}
 /* 실시간 미리보기 엽서 */
 #cards .vin-preview{position:relative;margin-top:18px;border-radius:14px;padding:18px 18px 13px;display:flex;flex-direction:column;gap:11px;border:1px solid var(--pv-edge,#e2d7c4);background-color:var(--pv-bg,#f8f2e6);background-image:var(--iv-noise),var(--iv-fiber),radial-gradient(120% 100% at 50% 0%,rgba(255,255,255,.28),rgba(255,255,255,0) 62%);background-size:160px 160px,220px 220px,auto;color:var(--pv-ink,#2b221a);box-shadow:0 12px 30px rgba(45,30,15,.09);transition:background-color .18s ease,color .18s ease,border-color .18s ease}
 #cards .vin-preview:before{content:'';position:absolute;inset:5px;border:1px solid rgba(255,255,255,.5);border-radius:10px;pointer-events:none}
-#cards .vp-top{position:relative;display:flex;justify-content:flex-end;align-items:flex-start;min-height:104px}
-#cards .vp-post{position:absolute;left:16px;top:14px;width:130px;height:80px;background-color:var(--pv-mark,rgba(124,35,41,.62));-webkit-mask-image:var(--postmark-mask);mask-image:var(--postmark-mask);-webkit-mask-size:100% 100%;mask-size:100% 100%;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-position:center;mask-position:center;transform:rotate(-6deg);transform-origin:left top;opacity:.62;pointer-events:none;mix-blend-mode:multiply}
-#cards .vp-stamp{position:relative;width:56px;height:70px;padding:5px;box-sizing:border-box;background:#fffdf8;transform:rotate(2.2deg);filter:drop-shadow(0 2px 4px rgba(45,30,15,.24));-webkit-mask-image:var(--stamp-mask);mask-image:var(--stamp-mask);-webkit-mask-size:100% 100%;mask-size:100% 100%;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-position:center;mask-position:center}
+#cards .vp-top{position:relative;display:flex;justify-content:flex-end;align-items:flex-start;min-height:114px}
+#cards .vp-post{position:absolute;left:16px;top:12px;width:152px;height:94px;background-color:var(--pv-mark,rgba(124,35,41,.62));-webkit-mask-image:var(--postmark-mask);mask-image:var(--postmark-mask);-webkit-mask-size:100% 100%;mask-size:100% 100%;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-position:center;mask-position:center;transform:rotate(-6deg);transform-origin:left top;opacity:.62;pointer-events:none;mix-blend-mode:multiply}
+#cards .vp-stamp{position:relative;width:56px;height:70px;padding:6px;box-sizing:border-box;background:#fffdf8;transform:rotate(2.2deg);filter:drop-shadow(0 2px 4px rgba(45,30,15,.24));-webkit-mask-image:var(--stamp-mask);mask-image:var(--stamp-mask);-webkit-mask-size:100% 100%;mask-size:100% 100%;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-position:center;mask-position:center}
 #cards .vp-stamp i{display:block;width:100%;height:100%;background-size:cover;background-position:center;box-shadow:inset 0 0 0 1px rgba(60,45,30,.2)}
 #cards .vp-msg,#cards .vp-foot,#cards .vp-name,#cards .vp-to,#cards .vcard .vc-msg,#cards .vcard .vc-foot{font-family:'TypewriterKR','Courier New',ui-monospace,'AppleMyungjo',serif;letter-spacing:.02em;line-height:1.65}
 #cards .vp-msg{margin:0;flex:1;min-height:38px;font-size:13.5px;font-weight:500;line-height:1.72;letter-spacing:0;text-align:left;white-space:pre-wrap;word-break:keep-all;overflow-wrap:break-word;color:inherit}
@@ -1881,20 +1881,20 @@ function pinkingPathD(W, H, a, p) {
 function stampMaskUri() { // 4:5 세로형 우표 — 정교한 핑킹가위(SVG 톱니) 커팅을 alpha 마스크로 (iOS는 -webkit-mask-image 동시 적용)
   const W = 56, H = 70;
   const svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' + W + ' ' + H + '" width="' + W + '" height="' + H + '">'
-    + '<path d="' + pinkingPathD(W, H, 2.6, 5.6) + '" fill="#fff"/></svg>';
+    + '<path d="' + pinkingPathD(W, H, 3.3, 6.4) + '" fill="#fff"/></svg>';
   return 'url("data:image/svg+xml,' + encodeURIComponent(svg) + '")';
 }
-function postmarkMaskUri() { // 좌측 상단 소인 — 이중 원 안의 세 줄이 테두리와 겹치지 않게 여백을 넉넉히
+function postmarkMaskUri() { // 좌측 상단 소인 — 이중 원 안의 세 줄이 테두리와 겹치지 않게 안쪽 여백을 넉넉히
   let waves = '';
-  [64, 80, 96].forEach(function (y) {
-    waves += '<path d="M158 ' + y + ' q9 -6 18 0 t18 0 t18 0 t18 0" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"/>';
+  [78, 94, 110].forEach(function (y) {
+    waves += '<path d="M192 ' + y + ' q10 -7 20 0 t20 0 t20 0 t20 0 t20 0" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"/>';
   });
-  const svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 160" width="260" height="160">'
-    + '<circle cx="80" cy="80" r="72" fill="none" stroke="#fff" stroke-width="6"/>'
-    + '<circle cx="80" cy="80" r="63" fill="none" stroke="#fff" stroke-width="2"/>'
-    + '<text x="80" y="60" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="12" font-weight="700" letter-spacing="0.9" fill="#fff">CHRISTMAS POST</text>'
-    + '<text x="80" y="80" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="15" font-weight="700" letter-spacing="0.5" fill="#fff">DEC 25 &#183; 2026</text>'
-    + '<text x="80" y="99" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="11" font-weight="700" letter-spacing="2.4" fill="#fff">CiT WINTER</text>'
+  const svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 304 188" width="304" height="188">'
+    + '<circle cx="94" cy="94" r="90" fill="none" stroke="#fff" stroke-width="6"/>'
+    + '<circle cx="94" cy="94" r="76" fill="none" stroke="#fff" stroke-width="2"/>'
+    + '<text x="94" y="74" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="12" font-weight="700" letter-spacing="0.8" fill="#fff">CHRISTMAS POST</text>'
+    + '<text x="94" y="96" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="15" font-weight="700" letter-spacing="0.5" fill="#fff">DEC 25 &#183; 2026</text>'
+    + '<text x="94" y="116" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="11" font-weight="700" letter-spacing="2.2" fill="#fff">CiT WINTER</text>'
     + waves + '</svg>';
   return 'url("data:image/svg+xml,' + encodeURIComponent(svg) + '")';
 }
