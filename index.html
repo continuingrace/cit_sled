@@ -178,9 +178,9 @@ body.paused *{animation-play-state:paused!important}
 #cards h2.vin-title{margin:0 0 3px;font-size:23px;font-weight:900;letter-spacing:.01em;color:#9e2a2b;text-align:left;line-height:1.28}
 #cards .vin-count{font-size:13px;font-weight:700;color:#6b5540}
 #cards .vin-count b{color:#245438;font-size:16px;font-variant-numeric:tabular-nums}
-#cards .vin-stamp{position:absolute;right:14px;top:16px;width:72px;height:86px;border-radius:4px;background:#fdf8ec;border:1px solid #cbb894;box-shadow:0 1px 0 #fff,inset 0 0 0 3px #f6eedc,0 6px 12px rgba(80,50,10,.14);transform:rotate(3deg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;font-size:9.5px;font-weight:900;color:#245438;letter-spacing:.08em;text-align:center;pointer-events:none}
+#cards .vin-stamp{position:absolute;right:14px;top:34px;width:72px;height:86px;border-radius:4px;background:#fdf8ec;border:1px solid #cbb894;box-shadow:0 1px 0 #fff,inset 0 0 0 3px #f6eedc,0 6px 12px rgba(80,50,10,.14);transform:rotate(3deg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;font-size:9.5px;font-weight:900;color:#245438;letter-spacing:.08em;text-align:center;pointer-events:none}
 #cards .vin-stamp .ic{font-size:21px;line-height:1.1}
-#cards .vin-postmark{position:absolute;right:52px;top:56px;width:62px;height:62px;border:2px solid rgba(158,42,43,.4);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:8.5px;font-weight:900;color:rgba(158,42,43,.55);transform:rotate(-13deg);letter-spacing:.06em;text-align:center;line-height:1.15;pointer-events:none}
+#cards .vin-postmark{position:absolute;right:88px;top:86px;width:62px;height:62px;border:2px solid rgba(158,42,43,.4);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:8.5px;font-weight:900;color:rgba(158,42,43,.55);transform:rotate(-13deg);letter-spacing:.06em;text-align:center;line-height:1.15;pointer-events:none}
 #cards .vin-form{display:flex;flex-direction:column;gap:8px;margin:16px 0 6px;padding:13px 13px 11px;border:1.5px solid rgba(184,134,11,.5);border-radius:11px;background:rgba(255,253,246,.78)}
 #cards .vin-line{display:flex;gap:8px;align-items:flex-start}
 #cards .vin-label{flex:none;width:38px;padding-top:9px;font-size:12px;font-weight:800;color:#245438;letter-spacing:.02em}
@@ -214,9 +214,9 @@ body.paused *{animation-play-state:paused!important}
 @media (max-width:520px){
   #cards .vint-sheet{padding:20px 15px 15px}
   #cards h2.vin-title{font-size:20px;padding-right:64px}
-  #cards .vin-stamp{width:58px;height:70px;right:10px;top:12px;font-size:8.5px}
+  #cards .vin-stamp{width:58px;height:70px;right:10px;top:30px;font-size:8.5px}
   #cards .vin-stamp .ic{font-size:17px}
-  #cards .vin-postmark{width:50px;height:50px;right:40px;top:46px;font-size:7.5px}
+  #cards .vin-postmark{width:50px;height:50px;right:64px;top:70px;font-size:7.5px}
   #cards .vin-grid{grid-template-columns:repeat(2,minmax(0,1fr));max-height:34vh}
   #cards .vin-label{width:34px}
 }
@@ -1782,7 +1782,10 @@ async function sendCard() {
   const btn = $('#cardSend'), old = btn.textContent;
   btn.disabled = true; btn.textContent = '거는 중…'; cardNoteText('보안 확인 중이에요…');
   try {
-    const token = await getTurnstileToken();
+    const token = await Promise.race([
+      getTurnstileToken(),
+      new Promise((_, reject) => setTimeout(() => reject(new Error('turnstile timeout')), 20000))
+    ]);
     cardNoteText('카드를 트리에 거는 중이에요…');
     await apiFetch('/cards', { method: 'POST', body: JSON.stringify({ turnstileToken: token, name: name, message: message, theme: cardPick.theme, stamp: cardPick.stamp }) });
     $('#cardMsg').value = ''; $('#cardCounter').textContent = '0 / ' + CARD_MSG_MAX;
@@ -1791,9 +1794,12 @@ async function sendCard() {
     CARDS_STATE = 'idle'; await loadCards();
     const l = $('#cardList'); if (l) l.scrollTop = 0;
   } catch (e) {
-    cardNoteText(/429/.test(String(e && e.message))
+    const msg = String(e && e.message);
+    cardNoteText(/429/.test(msg)
       ? '조금 전에 여러 장을 걸었어요. 잠시 뒤 다시 시도해 주세요.'
-      : '카드를 걸지 못했어요. 잠시 뒤 다시 시도해 주세요.', 'bad');
+      : /turnstile/.test(msg)
+        ? '보안 확인이 끝나지 않았어요. 잠시 뒤 다시 시도해 주세요.'
+        : '카드를 걸지 못했어요. 잠시 뒤 다시 시도해 주세요.', 'bad');
   } finally { btn.disabled = false; btn.textContent = old; }
 }
 function toggleCards(v) {
