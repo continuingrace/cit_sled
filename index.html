@@ -219,7 +219,7 @@ body.paused *{animation-play-state:paused!important}
 #cards .vin-preview:before{content:'';position:absolute;inset:5px;border:1px solid rgba(255,255,255,.5);border-radius:10px;pointer-events:none}
 #cards .vp-top{position:relative;display:flex;justify-content:flex-end;align-items:flex-start;min-height:114px}
 #cards .vp-post{position:absolute;left:16px;top:12px;width:152px;height:94px;color:var(--pv-mark,rgba(124,35,41,.72));transform:rotate(-6deg);transform-origin:left top;opacity:.78;pointer-events:none;mix-blend-mode:multiply;overflow:visible}
-#cards .vp-stamp{position:relative;width:56px;height:70px;padding:6px;box-sizing:border-box;background-color:#efe5cf;background-image:var(--iv-noise);background-size:96px 96px;transform:rotate(2.2deg);filter:drop-shadow(0 2px 4px rgba(45,30,15,.24));-webkit-mask-image:var(--stamp-mask);mask-image:var(--stamp-mask);-webkit-mask-size:100% 100%;mask-size:100% 100%;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-position:center;mask-position:center}
+#cards .vp-stamp{position:relative;width:56px;height:70px;padding:6px;box-sizing:border-box;background-color:#f6f0e2;background-image:var(--iv-noise);background-size:96px 96px;transform:rotate(2.2deg);filter:drop-shadow(0 2px 4px rgba(36,22,8,.28)) drop-shadow(0 0 1px rgba(36,22,8,.25));-webkit-mask-image:var(--stamp-mask);mask-image:var(--stamp-mask);-webkit-mask-size:100% 100%;mask-size:100% 100%;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-position:center;mask-position:center}
 #cards .vp-stamp i{display:block;width:100%;height:100%;background-size:cover;background-position:center;box-shadow:inset 0 0 0 1px rgba(60,45,30,.2)}
 #cards .vp-msg,#cards .vp-foot,#cards .vp-name,#cards .vp-to,#cards .vcard .vc-msg,#cards .vcard .vc-foot{font-family:'TypewriterKR','Courier New',ui-monospace,'AppleMyungjo',serif;letter-spacing:.02em;line-height:1.65}
 #cards .vp-msg{margin:0;flex:1;min-height:38px;font-size:13.5px;font-weight:500;line-height:1.72;letter-spacing:0;text-align:left;white-space:pre-wrap;word-break:keep-all;overflow-wrap:break-word;color:inherit}
@@ -1973,12 +1973,12 @@ async function drawCardCanvas() {
     const im = await loadImg(stampArt(cardPick.stamp));
     const sc = document.createElement('canvas'); sc.width = 150; sc.height = 188;
     const sx = sc.getContext('2d');
-    sx.fillStyle = '#efe5cf'; sx.fillRect(0, 0, 150, 188);
+    sx.fillStyle = '#f6f0e2'; sx.fillRect(0, 0, 150, 188);
     sx.drawImage(im, 12, 12, 126, 164);                    // 균일한 미색 종이 여백
     sx.strokeStyle = 'rgba(60,45,30,.22)'; sx.lineWidth = 1.5; sx.strokeRect(12, 12, 126, 164);
     sx.globalCompositeOperation = 'destination-out';       // 공유 이미지도 같은 반원 천공
     stampHoles(150, 188, 7.2, 18.75).forEach(function (q) { sx.beginPath(); sx.arc(q[0], q[1], 7.2, 0, Math.PI * 2); sx.fill(); });
-    x.save(); x.translate(CW - 135, 150); x.rotate(0.038); x.drawImage(sc, -75, -94); x.restore();
+    x.save(); x.translate(CW - 135, 150); x.rotate(0.038); x.shadowColor = 'rgba(36,22,8,.3)'; x.shadowBlur = 7; x.shadowOffsetY = 2; x.drawImage(sc, -75, -94); x.restore();
   } catch (e) { }
   const mark = th.dark ? 'rgba(244,226,184,.8)' : 'rgba(124,35,41,.5)';
   x.save(); x.translate(CW - 300, 152); x.rotate(-0.12); x.strokeStyle = mark;
