@@ -231,7 +231,8 @@ body.paused *{animation-play-state:paused!important}
 #menu{background:linear-gradient(90deg,rgba(9,14,34,.78),rgba(9,14,34,.34) 42%,rgba(9,14,34,0) 68%)}
 .brand{display:flex;flex-direction:column;gap:7px}
 .brand .logo{margin:0;display:flex;align-items:center;gap:12px;flex-wrap:wrap;font-size:45px;font-weight:800;line-height:1.1;letter-spacing:-.02em;color:#fff;text-shadow:0 2px 3px rgba(8,14,40,.5),0 10px 30px rgba(8,14,40,.45)}
-.brand .logo span{display:inline-flex;align-items:center;justify-content:center;padding:3px 12px 4px;border:1px solid rgba(232,208,150,.55);border-radius:999px;font-size:.42em;font-weight:700;letter-spacing:.16em;color:#e8d096;background:rgba(232,208,150,.06);text-shadow:none;box-shadow:inset 0 1px 0 rgba(255,255,255,.14)}
+.brand .logo span{display:inline-flex;align-items:center;padding:0;border:0;background:none;box-shadow:none;font-size:.4em;font-weight:700;letter-spacing:.24em;color:#e8d096;text-shadow:none}
+.brand .logo span:after{content:'';display:inline-block;width:1px;height:.72em;margin-left:.85em;background:rgba(232,208,150,.45)}
 .brand-sub{margin:0 0 2px 3px;font-size:10.5px;font-weight:600;letter-spacing:.26em;text-transform:uppercase;color:rgba(232,208,150,.78)}
 #menu .card{background:rgba(13,19,42,.72);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid rgba(255,255,255,.16);border-radius:22px;box-shadow:0 24px 60px rgba(4,8,26,.48),inset 0 1px 0 rgba(255,255,255,.12);padding:20px}
 #menu .chars{gap:9px}
@@ -244,11 +245,13 @@ body.paused *{animation-play-state:paused!important}
 #menu .btn.big{font-size:20px;font-weight:800;letter-spacing:-.01em;padding:16px;border-radius:14px;background:linear-gradient(180deg,#e05a5e,#c9353c);box-shadow:0 12px 26px rgba(201,53,60,.3),inset 0 1px 0 rgba(255,255,255,.2)}
 #menu .btn.big:hover{background:linear-gradient(180deg,#e7686b,#d24249)}
 #menu .row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-#menu .row .btn.sub{font-size:13.5px;font-weight:700;letter-spacing:-.01em;padding:11px 4px;white-space:nowrap;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.06);border-radius:11px}
+#menu .row .btn.sub{display:flex;align-items:center;justify-content:center;text-align:center;height:46px;font-size:13.5px;font-weight:700;letter-spacing:-.01em;padding:0 6px;white-space:nowrap;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.06);border-radius:11px}
 #menu .row .btn.sub:hover{background:rgba(255,255,255,.12)}
 #menu .lbl{font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:rgba(170,180,216,.9);margin-bottom:-2px}
 #menu #diffDesc{font-size:13px;font-weight:500;line-height:1.6;color:rgba(215,221,245,.85)}
-#menu .namefield{border-radius:11px}
+#menu .namefield{border-radius:11px;height:46px;font-weight:500;font-size:14px}
+#menu .best{font-size:12.5px;font-weight:500;letter-spacing:-.005em;color:rgba(170,180,216,.85)}
+#menu .best .num{font-weight:700;color:#fff}
 #menu .menu-snd{position:fixed;right:14px;top:14px;z-index:6;width:40px;height:40px;padding:0;border-radius:50%;border:1px solid rgba(255,255,255,.2);background:rgba(13,19,42,.62);color:#fff;font-size:17px;line-height:1;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);cursor:pointer;transition:border-color .15s}
 #menu .menu-snd:hover{border-color:rgba(255,255,255,.36)}
 @media (pointer:coarse){#menu .btn.big small{display:none}}
@@ -299,7 +302,7 @@ body.paused *{animation-play-state:paused!important}
       <div class="lbl">내 이름 / 닉네임 <span style="font-weight:500;opacity:.7">(순위표에 남을 이름)</span></div>
       <input id="menuNameIn" class="namefield" maxlength="10" placeholder="이름 또는 닉네임을 입력해 주세요" autocomplete="off" enterkeyhint="done" aria-label="내 이름 또는 닉네임">
       <button class="btn big" id="bStart">출발 <small>ENTER</small></button>
-      <div class="row"><button class="btn sub" id="bHelp">조작법</button><button class="btn sub" id="bBoard">순위표</button><button class="btn sub" id="bCards">🎄 카드 남기기</button></div>
+      <div class="row"><button class="btn sub" id="bHelp">조작법</button><button class="btn sub" id="bBoard">순위표</button><button class="btn sub" id="bCards">카드 남기기</button></div>
       <div class="best" id="best"></div>
     </div>
   </div>
