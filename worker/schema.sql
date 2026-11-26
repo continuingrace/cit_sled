@@ -36,6 +36,7 @@ CREATE INDEX IF NOT EXISTS idx_rate_events_lookup
 CREATE TABLE IF NOT EXISTS cards (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   name TEXT NOT NULL CHECK (length(trim(name)) BETWEEN 1 AND 12),
+  to_name TEXT NOT NULL DEFAULT '모두에게' CHECK (length(trim(to_name)) BETWEEN 1 AND 12),
   message TEXT NOT NULL CHECK (length(trim(message)) BETWEEN 1 AND 140),
   theme TEXT NOT NULL CHECK (theme IN ('cream', 'kraft', 'sage', 'ruby')),
   stamp TEXT NOT NULL CHECK (stamp IN ('tree', 'bell', 'santa', 'star')),

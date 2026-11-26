@@ -73,7 +73,7 @@ export function validateCardPayload(value) {
     return { ok: false, error: '잘못된 요청입니다.' };
   }
 
-  const allowed = new Set(['turnstileToken', 'name', 'message', 'theme', 'stamp']);
+  const allowed = new Set(['turnstileToken', 'name', 'toName', 'message', 'theme', 'stamp']);
   if (Object.keys(value).some((key) => !allowed.has(key))) {
     return { ok: false, error: '허용되지 않은 항목이 있습니다.' };
   }
@@ -82,6 +82,8 @@ export function validateCardPayload(value) {
   const rawName = typeof value.name === 'string' ? value.name.normalize('NFC') : '';
   const rawMessage = typeof value.message === 'string' ? value.message.normalize('NFC') : '';
   const name = rawName.trim();
+  const rawTo = typeof value.toName === 'string' ? value.toName.normalize('NFC') : '';
+  const toName = rawTo.trim() || '모두에게';
   const message = rawMessage.replace(/\r\n?/g, '\n').trim();
 
   if (!turnstileToken || turnstileToken.length > 2048) {
@@ -89,6 +91,9 @@ export function validateCardPayload(value) {
   }
   if (name.length < 1 || name.length > 12 || /[\u0000-\u001f\u007f]/u.test(rawName)) {
     return { ok: false, error: '이름은 제어문자 없이 1~12자로 입력해 주세요.' };
+  }
+  if (toName.length > 12 || /[\u0000-\u001f\u007f]/u.test(rawTo)) {
+    return { ok: false, error: '받는 분은 제어문자 없이 12자까지 입력할 수 있습니다.' };
   }
   if (message.length < 1 || message.length > 140) {
     return { ok: false, error: '카드 내용은 1~140자로 입력해 주세요.' };
@@ -98,7 +103,7 @@ export function validateCardPayload(value) {
     return { ok: false, error: '카드 내용에 쓸 수 없는 문자가 있습니다.' };
   }
 
-  const text = `${name}\n${message}`.toLowerCase();
+  const text = `${name}\n${toName}\n${message}`.toLowerCase();
   if (/[<>]/.test(text)) {
     return { ok: false, error: '< > 기호는 사용할 수 없습니다.' };
   }
@@ -126,7 +131,7 @@ export function validateCardPayload(value) {
 
   return {
     ok: true,
-    value: { turnstileToken, name, message, theme: value.theme, stamp: value.stamp }
+    value: { turnstileToken, name, toName, message, theme: value.theme, stamp: value.stamp }
   };
 }
 

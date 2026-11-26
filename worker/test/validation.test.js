@@ -90,3 +90,21 @@ test('카드의 알 수 없는 필드와 제어문자를 거부한다', () => {
   assert.equal(validateCardPayload({ ...card, message: 'abc\u0007def' }).ok, false);
   assert.equal(validateCardPayload({ ...card, turnstileToken: '' }).ok, false);
 });
+
+test('받는 분을 선택적으로 저장하고 비면 모두에게로 채운다', () => {
+  const a = validateCardPayload({ ...card, toName: '  혜련  ' });
+  assert.equal(a.ok, true);
+  assert.equal(a.value.toName, '혜련');
+  const b = validateCardPayload({ ...card, toName: '   ' });
+  assert.equal(b.ok, true);
+  assert.equal(b.value.toName, '모두에게');
+  const c = validateCardPayload(card);
+  assert.equal(c.ok, true);
+  assert.equal(c.value.toName, '모두에게');
+});
+
+test('받는 분에도 길이·괄호·링크 제한을 적용한다', () => {
+  assert.equal(validateCardPayload({ ...card, toName: '1234567890123' }).ok, false);
+  assert.equal(validateCardPayload({ ...card, toName: '<b>팀</b>' }).ok, false);
+  assert.equal(validateCardPayload({ ...card, toName: 'https://x.example' }).ok, false);
+});

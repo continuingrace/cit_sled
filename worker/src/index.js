@@ -172,7 +172,7 @@ const CARD_LIST_LIMIT = 100;
 
 async function listCards(env, origin) {
   const rows = await env.DB.prepare(`
-    SELECT id, name, message, theme, stamp, created_at AS createdAt
+    SELECT id, name, to_name AS toName, message, theme, stamp, created_at AS createdAt
     FROM cards
     ORDER BY id DESC
     LIMIT ${CARD_LIST_LIMIT}
@@ -220,9 +220,9 @@ async function submitCard(request, env, origin) {
 
   await env.DB.batch([
     env.DB.prepare(`
-      INSERT INTO cards (name, message, theme, stamp, created_at)
-      VALUES (?, ?, ?, ?, ?)
-    `).bind(checked.value.name, checked.value.message, checked.value.theme, checked.value.stamp, now),
+      INSERT INTO cards (name, to_name, message, theme, stamp, created_at)
+      VALUES (?, ?, ?, ?, ?, ?)
+    `).bind(checked.value.name, checked.value.toName, checked.value.message, checked.value.theme, checked.value.stamp, now),
     env.DB.prepare('INSERT INTO card_rate_events (ip_hash, created_at) VALUES (?, ?)').bind(ipHash, now),
     env.DB.prepare('DELETE FROM card_rate_events WHERE created_at < ?').bind(now - 2 * 24 * 60 * 60)
   ]);
