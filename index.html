@@ -1881,7 +1881,7 @@ function hangCards(g, frameM, count, yFrom, yTo, radiusAt, scale, startIdx, link
     const t = count === 1 ? 0.62 : i / (count - 1);
     const y = yFrom + t * (yTo - yFrom);
     const ang = i * 2.399963229728653 + (i % 3) * 0.55;
-    const rad = radiusAt(y) * 0.97;
+    const rad = radiusAt(y) * 1.08;
     const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: cardTexture(c), transparent: true, depthWrite: false }));
     sp.position.copy(PT(frameM, Math.cos(ang) * rad, y, Math.sin(ang) * rad));
     sp.scale.set(scale, scale * 0.703, 1);
