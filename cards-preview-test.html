@@ -131,7 +131,9 @@ kbd{display:inline-block;min-width:26px;padding:1px 7px;margin:0 2px;border-radi
 .note{margin:12px 0 0;text-align:center;font-size:13px;font-weight:500;color:var(--sub)}
 .modal .panel{position:relative}
 .modal .panel h2{padding:0 44px}
-.x{position:absolute;right:14px;top:14px;width:36px;height:36px;border-radius:50%;border:0;background:rgba(255,255,255,.1);color:#fff;font-size:22px;font-weight:500;line-height:1;cursor:pointer;padding:0}
+.x{position:absolute;right:16px;top:16px;width:36px;height:36px;border-radius:50%;border:0;background:rgba(255,255,255,.1);color:#fff;font-size:18px;font-weight:500;line-height:1;cursor:pointer;padding:0;display:flex;align-items:center;justify-content:center}
+.x span{display:none}
+.x b{font-weight:500;line-height:1}
 .x:hover{background:rgba(255,255,255,.2)}
 #bResX{right:22px;top:24px;width:auto;height:34px;padding:0 13px 0 11px;border-radius:17px;border:1px solid rgba(255,255,255,.42);background:rgba(255,255,255,.22);color:#fff;display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:800;letter-spacing:.02em;line-height:1;box-shadow:0 6px 18px rgba(0,0,0,.32);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
 #bResX b{font-size:15px;font-weight:700;line-height:1}
@@ -178,7 +180,7 @@ body.paused *{animation-play-state:paused!important}
 #cards h2.vin-title{margin:8px 0 6px;font-size:21px;font-weight:800;line-height:1.32;letter-spacing:-.012em;text-align:left;color:var(--iv-burgundy)}
 #cards .vin-count{margin:0;font-size:12.5px;font-weight:500;color:var(--iv-sub);letter-spacing:-.005em}
 #cards .vin-count b{font-weight:800;color:var(--iv-green)}
-#cards .vin-close{position:absolute;right:0;top:0;width:30px;height:30px;padding:0;border-radius:50%;border:1px solid var(--iv-line);background:var(--iv-surface);color:var(--iv-sub);font-size:14px;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:color .15s,border-color .15s}
+#cards .vin-close{position:absolute;right:0;top:0;width:36px;height:36px;padding:0;border-radius:50%;border:1px solid var(--iv-line);background:var(--iv-surface);color:var(--iv-sub);font-size:15px;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:color .15s,border-color .15s}
 #cards .vin-close:hover{color:var(--iv-burgundy);border-color:rgba(124,35,41,.4)}
 /* 실시간 미리보기 엽서 */
 #cards .vin-preview{position:relative;margin-top:18px;border-radius:14px;padding:18px 18px 13px;display:flex;flex-direction:column;gap:11px;border:1px solid var(--pv-edge,#e2d7c4);background-color:var(--pv-bg,#f8f2e6);background-image:var(--iv-noise),var(--iv-fiber),radial-gradient(120% 100% at 50% 0%,rgba(255,255,255,.28),rgba(255,255,255,0) 62%);background-size:160px 160px,220px 220px,auto;color:var(--pv-ink,#2b221a);box-shadow:0 12px 30px rgba(45,30,15,.09);transition:background-color .18s ease,color .18s ease,border-color .18s ease}
@@ -316,7 +318,7 @@ body.paused *{animation-play-state:paused!important}
 </div>
 <div id="pause" class="modal hidden"><div class="panel" style="text-align:center;min-width:280px"><h2>일시정지</h2><div style="display:flex;flex-direction:column;gap:10px"><button class="btn" id="bResume">계속 달리기</button><button class="btn sub" id="bShot">장면 캡처</button><button class="btn sub" id="bRetry2">처음부터</button><button class="btn sub" id="bMenu2">메인으로</button></div></div></div>
 <div id="result" class="modal side hidden"><div class="panel">
-  <button class="x" id="bResX" title="닫고 풍경 보기" aria-label="결과 창 닫기"><b>✕</b><span>닫기</span></button>
+  <button class="x" id="bResX" title="닫고 풍경 보기" aria-label="결과 창 닫기"><b>✕</b></button>
   <div class="rhead"><b id="rRank">1</b><span>위</span><em id="rMsg"></em></div>
   <ol class="rlist" id="rList"></ol>
   <div class="stats" id="rStats"></div>
@@ -329,7 +331,7 @@ body.paused *{animation-play-state:paused!important}
   <a class="btn link" id="bHome" href="https://www.citkorea.co.kr/03_08_02/677" target="_blank" rel="noopener noreferrer">CiT 장학이벤트 보기 ↗</a>
 </div></div>
 <div id="help" class="modal hidden"><div class="panel">
-  <button class="x" id="bHelpX" title="닫기" aria-label="조작법 닫기"><b>✕</b><span>닫기</span></button>
+  <button class="x" id="bHelpX" title="닫기" aria-label="조작법 닫기"><b>✕</b></button>
   <h2>조작법</h2>
   <div class="help">
     <div><h3>주행</h3><p><kbd>←</kbd><kbd>→</kbd> 방향 바꾸기</p><p><kbd>↓</kbd> 브레이크</p><p><kbd>↑</kbd> 밀기 (느릴 때만)</p></div>
@@ -339,7 +341,7 @@ body.paused *{animation-play-state:paused!important}
   </div>
 </div></div>
 <div id="board" class="modal hidden"><div class="panel">
-  <button class="x" id="bBoardX" title="닫기" aria-label="순위표 닫기"><b>✕</b><span>닫기</span></button>
+  <button class="x" id="bBoardX" title="닫기" aria-label="순위표 닫기"><b>✕</b></button>
   <h2>순위표</h2>
   <ol class="blist" id="bList"></ol>
   <p class="note" id="boardNote"></p>
@@ -371,6 +373,7 @@ body.paused *{animation-play-state:paused!important}
 <div id="treebar" class="hidden"><button id="tbBack">← 첫 화면으로</button><button id="tbCard" class="primary">🎄 카드 남기기</button></div>
 <div id="endbar" class="hidden"><button class="btn" id="bSpinToggle" style="background:rgba(255,216,77,.25);border:1px solid #ffd84d;color:#ffd84d;font-weight:700">360° 회전 멈춤/재생</button><button class="btn" id="bPhoto" style="background:linear-gradient(180deg,#f45c62,#d13a43);box-shadow:0 8px 18px rgba(209,58,67,.35)">📸 기념사진</button><button class="btn sub" id="bResOpen">결과 보기</button><button class="btn sub" id="bShot2">장면 캡처</button><button class="btn sub" id="bRetry3">한 번 더</button></div>
 <div id="shot" class="modal hidden"><div class="panel shotbox">
+  <button class="x" id="bShotX" title="닫기" aria-label="장면 캡처 닫기"><b>✕</b></button>
   <h2 id="shotTitle">장면 캡처</h2>
   <img id="shotImg" alt="캡처한 장면">
   <div id="shotMsgRow" class="hidden">
@@ -378,7 +381,7 @@ body.paused *{animation-play-state:paused!important}
     <input id="shotMsg" maxlength="40" placeholder="원하는 문구를 입력하세요" autocomplete="off" enterkeyhint="done">
   </div>
   <p class="note" id="shotNote"></p>
-  <div class="row" style="justify-content:center"><button class="btn" id="bShare">공유하기</button><a class="btn sub" id="bSaveImg" download="cit-sled.jpg">이미지 저장</a><button class="btn sub" id="bShotX">닫기</button></div>
+  <div class="row" style="justify-content:center"><button class="btn" id="bShare">공유하기</button><a class="btn sub" id="bSaveImg" download="cit-sled.jpg">이미지 저장</a></div>
 </div></div>
 <div id="fade"></div>
 <div id="loading"><i>🛷</i><span>눈길을 다지는 중…</span></div>
