@@ -92,9 +92,9 @@ kbd{display:inline-block;min-width:26px;padding:1px 7px;margin:0 2px;border-radi
 #count.go{animation:cnt .8s ease-out}
 @keyframes cnt{0%{opacity:0;transform:scale(1.5)}20%{opacity:1;transform:scale(1)}75%{opacity:1}100%{opacity:0;transform:scale(.85)}}
 #touch{position:absolute;left:0;right:0;bottom:0;height:150px;display:none;pointer-events:none}
-#touch .tb{position:absolute;bottom:22px;width:76px;height:76px;border-radius:50%;font-size:24px;font-weight:700;color:#fff;background:rgba(15,21,46,.62);border:2px solid rgba(255,255,255,.55);pointer-events:auto;display:flex;align-items:center;justify-content:center}
+#touch .tb{position:absolute;bottom:22px;width:72px;height:72px;border-radius:50%;font-size:24px;font-weight:700;color:#fff;background:rgba(15,21,46,.62);border:2px solid rgba(255,255,255,.55);pointer-events:auto;display:flex;align-items:center;justify-content:center}
 #touch .tb.on{background:var(--acc);color:var(--ink);border-color:var(--acc)}
-#tL{left:16px}#tR{right:16px}#tB{left:104px;font-size:14px!important}#tJ{right:104px;background:rgba(229,72,77,.8)!important;font-size:16px!important}
+#tL{left:calc(50% - 159px)}#tR{left:calc(50% + 87px)}#tB{left:calc(50% - 79px);font-size:14px!important}#tJ{left:calc(50% + 7px);background:rgba(229,72,77,.8)!important;font-size:16px!important}
 /* 모달 */
 .modal{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(8,12,34,.6);z-index:20;padding:16px}
 .modal .panel{padding:26px 24px 22px;max-width:min(760px,96vw);max-height:94vh;overflow:auto;touch-action:pan-y;scrollbar-width:none}
@@ -570,16 +570,8 @@ function makeMascot(THREE, spec, root) {
     a.add(outlined([0.07, 0.07, 0.07], tipP, 0.055));
     arms.push(a);
   });
-  // 반짝이 (먹선 4꼭지 별 + 흰 속)
-  const starShape = (inner) => { const sh = new THREE.Shape(), n = 4; for (let i = 0; i < n * 2; i++) { const r = i % 2 ? inner : 1, a = i * Math.PI / n; if (i) sh.lineTo(Math.sin(a) * r, Math.cos(a) * r); else sh.moveTo(0, 1); } return sh; };
-  const star = (x, y, sc) => {
-    const g = new THREE.Group();
-    const o = new THREE.Mesh(new THREE.ExtrudeGeometry(starShape(0.42), { depth: 0.25, bevelEnabled: true, bevelSize: 0.12, bevelThickness: 0.1, bevelSegments: 3 }), mat(THREE, ink, 0.6)); o.castShadow = true; g.add(o);
-    const i = new THREE.Mesh(new THREE.ShapeGeometry(starShape(0.34)), new THREE.MeshBasicMaterial({ color: '#ffffff' })); i.scale.setScalar(0.5); i.position.z = 0.36; g.add(i);
-    g.scale.setScalar(sc); g.position.set(x, y, -0.05); head.add(g); return g;
-  };
-  const stars = [star(-0.78, 0.78, 0.15), star(0.74, 0.86, 0.11)];
-  return { body, head, hatTip: null, arms, stars };
+  // 반짝이 장식은 제거했습니다(머리 위에 검은 4꼭지 별이 떠 보이던 문제).
+  return { body, head, hatTip: null, arms };
 }
 
 function makeRacer(THREE, spec) {
@@ -1531,7 +1523,6 @@ function placeRacer(i, t) {
   ud.head.rotation.z = -r.steer * 0.1 + Math.sin(t * 2.6 + i) * 0.03; ud.head.rotation.y = r.steer * -0.18;
   if (ud.hatTip) { ud.hatTip.rotation.x = -0.85 - sp * 0.35 + Math.sin(t * 11) * 0.12 * (0.3 + sp); ud.hatTip.rotation.z = 0.3 + Math.sin(t * 7) * 0.15 * (0.3 + sp) - r.steer * 0.3; }
   if (ud.arms) ud.arms.forEach((a, k) => { a.rotation.z = (k ? -1 : 1) * (Math.sin(t * 6 + k) * 0.12 * (0.4 + sp) + (r.air ? 0.25 : 0)); });
-  if (ud.stars) ud.stars.forEach((s, k) => { s.rotation.z = t * (1.5 + k); const q = 1 + Math.sin(t * 5 + k * 2) * 0.25; s.scale.setScalar((k ? 0.11 : 0.15) * q); });
 }
 function placeAll(t) { for (let i = 0; i < meshes.length; i++) placeRacer(i, t); }
 
