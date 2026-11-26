@@ -175,7 +175,8 @@ body.paused *{animation-play-state:paused!important}
 #cards .panel.vint{width:min(680px,96vw);max-width:min(680px,96vw);max-height:94vh;overflow:auto;padding:0;background:transparent;border:0;box-shadow:none;scrollbar-width:none}
 #cards .panel.vint::-webkit-scrollbar{width:0;height:0}
 #cards .vint-sheet{position:relative;color:var(--iv-ink);border:1px solid var(--iv-line);border-radius:20px;padding:26px 26px 22px;background-color:var(--iv-bg);background-image:var(--iv-noise),var(--iv-fiber);background-size:160px 160px,220px 220px;box-shadow:0 26px 64px rgba(5,9,30,.42),inset 0 0 60px rgba(120,95,60,.07),inset 0 1px 0 rgba(255,255,255,.6)}
-#cards .vin-head{position:relative;padding-right:40px}
+#cards .vin-head{position:relative;padding:0 44px 0 0;text-align:left}
+#cards .vin-head .vin-eyebrow,#cards .vin-head .vin-title,#cards .vin-head .vin-count{text-align:left;margin-left:0}
 #cards .vin-eyebrow{display:block;font-size:10px;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:var(--iv-brass)}
 #cards h2.vin-title{margin:8px 0 6px;font-size:21px;font-weight:800;line-height:1.32;letter-spacing:-.012em;text-align:left;color:var(--iv-burgundy)}
 #cards .vin-count{margin:0;font-size:12.5px;font-weight:500;color:var(--iv-sub);letter-spacing:-.005em}
@@ -185,15 +186,16 @@ body.paused *{animation-play-state:paused!important}
 /* 실시간 미리보기 엽서 */
 #cards .vin-preview{position:relative;margin-top:18px;border-radius:14px;padding:18px 18px 13px;display:flex;flex-direction:column;gap:11px;border:1px solid var(--pv-edge,#e2d7c4);background-color:var(--pv-bg,#f8f2e6);background-image:var(--iv-noise),var(--iv-fiber),radial-gradient(120% 100% at 50% 0%,rgba(255,255,255,.28),rgba(255,255,255,0) 62%);background-size:160px 160px,220px 220px,auto;color:var(--pv-ink,#2b221a);box-shadow:0 12px 30px rgba(45,30,15,.09);transition:background-color .18s ease,color .18s ease,border-color .18s ease}
 #cards .vin-preview:before{content:'';position:absolute;inset:5px;border:1px solid rgba(255,255,255,.5);border-radius:10px;pointer-events:none}
-#cards .vp-top{display:flex;justify-content:flex-end;align-items:flex-start;gap:10px;min-height:56px}
-#cards .vp-post{width:54px;height:54px;margin-right:auto;border:1px solid rgba(124,35,41,.22);border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;font-size:6.5px;font-weight:700;letter-spacing:.12em;line-height:1.3;text-align:center;color:rgba(124,35,41,.5);transform:rotate(-8deg)}
-#cards .vp-stamp{width:54px;height:66px;background-repeat:no-repeat;background-position:center;background-size:100% 100%;transform:rotate(2.2deg);filter:drop-shadow(0 2px 3px rgba(45,30,15,.18))}
-#cards .vp-stamp .ic{font-size:17px;line-height:1.05}
+#cards .vp-top{position:relative;display:flex;justify-content:flex-end;align-items:flex-start;min-height:72px}
+#cards .vp-post{position:absolute;right:44px;top:4px;width:150px;height:62px;background-color:var(--pv-mark,rgba(124,35,41,.55));-webkit-mask:var(--postmark-mask) center/100% 100% no-repeat;mask:var(--postmark-mask) center/100% 100% no-repeat;transform:rotate(-7deg);opacity:.92;pointer-events:none}
+#cards .vp-stamp{position:relative;width:58px;height:70px;padding:5px;background:#fffdf8;transform:rotate(2.2deg);filter:drop-shadow(0 2px 4px rgba(45,30,15,.22));-webkit-mask:var(--stamp-mask) center/100% 100% no-repeat;mask:var(--stamp-mask) center/100% 100% no-repeat}
+#cards .vp-stamp i{display:block;width:100%;height:100%;background-size:cover;background-position:center;box-shadow:inset 0 0 0 1px rgba(60,45,30,.2)}
 #cards .vp-msg{margin:0;flex:1;min-height:38px;font-size:13.5px;font-weight:500;line-height:1.68;letter-spacing:-.005em;white-space:pre-wrap;word-break:break-word;color:inherit}
 #cards .vp-msg.empty{opacity:.42}
-#cards .vp-foot{display:flex;justify-content:space-between;align-items:flex-end;gap:8px;padding-top:10px;border-top:1px solid var(--pv-line,rgba(60,45,30,.14));font-size:10px;font-weight:600;letter-spacing:.06em;color:inherit;opacity:.66}
+#cards .vp-foot{display:flex;justify-content:space-between;align-items:flex-end;gap:8px;padding-top:10px;border-top:1px solid var(--pv-line,rgba(60,45,30,.14));font-size:10px;font-weight:600;letter-spacing:.06em;color:var(--pv-soft,inherit);opacity:1}
 #cards .vp-name{max-width:66%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11.5px;font-weight:700;letter-spacing:-.005em;opacity:1}
-#cards .vin-tree{width:100%;margin-top:10px;padding:11px;display:flex;align-items:center;justify-content:center;gap:7px;border:1px solid var(--iv-line);border-radius:11px;background:var(--iv-surface);color:var(--iv-green);font-family:inherit;font-size:12.5px;font-weight:700;letter-spacing:.01em;cursor:pointer;transition:border-color .15s,box-shadow .15s}
+#cards .vin-acts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+#cards .vin-tree{padding:11px 8px;display:flex;align-items:center;justify-content:center;gap:7px;border:1px solid var(--iv-line);border-radius:11px;background:var(--iv-surface);color:var(--iv-green);font-family:inherit;font-size:12.5px;font-weight:700;letter-spacing:.01em;cursor:pointer;transition:border-color .15s,box-shadow .15s}
 #cards .vin-tree:hover{border-color:rgba(30,70,49,.42);box-shadow:0 4px 14px rgba(30,70,49,.10)}
 /* 작성 폼 */
 #cards .vin-form{display:flex;flex-direction:column;gap:16px;margin-top:22px}
@@ -216,7 +218,7 @@ body.paused *{animation-play-state:paused!important}
 #cards .vin-send{margin-top:4px;border:0;border-radius:13px;padding:15px;font-family:inherit;font-size:14.5px;font-weight:800;letter-spacing:.01em;color:#fff8ef;background:linear-gradient(180deg,#7b3036,#5d2228);box-shadow:0 12px 26px rgba(93,34,40,.2),inset 0 1px 0 rgba(255,255,255,.12);cursor:pointer;transition:filter .15s}
 #cards .vin-send:hover{filter:brightness(1.06)}
 #cards .vin-send:disabled{opacity:.55;cursor:default;box-shadow:none;filter:none}
-#cards .vin-note{margin:0;font-size:11px;font-weight:500;line-height:1.5;letter-spacing:-.005em;color:var(--iv-sub)}
+#cards .vin-note{margin:0;font-size:11px;font-weight:500;line-height:1.55;letter-spacing:-.005em;color:var(--iv-sub);text-align:center}
 #cards .vin-note.bad{color:#8f2b30}
 #cards .vin-note.good{color:var(--iv-green)}
 /* 목록 */
@@ -228,7 +230,7 @@ body.paused *{animation-play-state:paused!important}
 #cards .vcard .vc-msg{position:relative;flex:1;margin:0;padding-right:15px;font-size:12.5px;font-weight:500;line-height:1.55;letter-spacing:-.005em;white-space:pre-wrap;word-break:break-word;color:inherit}
 #cards .vcard .vc-foot{position:relative;display:flex;justify-content:space-between;align-items:center;gap:6px;padding-top:8px;border-top:1px solid;font-size:10px;font-weight:600;letter-spacing:.02em;opacity:.75}
 #cards .vcard .vc-foot b{font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-#cards .vin-empty{grid-column:1/-1;margin:0;text-align:center;font-size:12px;font-weight:500;line-height:1.6;color:var(--iv-sub);padding:22px 6px}
+#cards .vin-empty{grid-column:1/-1;margin:0;text-align:center;font-size:12px;font-weight:500;line-height:1.7;color:var(--iv-sub);padding:22px 6px}
 /* 첫 화면에서 트리 구경하기 바 */
 #treebar{position:fixed;left:0;right:0;bottom:0;z-index:18;display:flex;gap:8px;justify-content:center;padding:16px 14px calc(16px + env(safe-area-inset-bottom,0px));pointer-events:none}
 #treebar button{pointer-events:auto;display:inline-flex;align-items:center;gap:7px;padding:12px 18px;border-radius:999px;border:1px solid rgba(255,255,255,.18);background:rgba(13,19,42,.86);color:#f6f2e8;font-family:inherit;font-size:13px;font-weight:700;letter-spacing:.01em;box-shadow:0 14px 34px rgba(4,8,26,.42);cursor:pointer;transition:transform .12s,border-color .15s}
@@ -354,14 +356,14 @@ body.paused *{animation-play-state:paused!important}
     <p class="vin-count" id="cardCount">트리에 <b>0</b>장의 카드가 걸려 있어요</p>
   </div>
   <div class="vin-preview" id="cardPreview">
-    <div class="vp-top"><div class="vp-post">CHRISTMAS<br>POST<br>WINTER</div><div class="vp-stamp" id="vpStamp" role="img" aria-label="빈티지 우표"></div></div>
-    <p class="vp-msg empty" id="vpMsg">따뜻한 한마디를 적으면 이 엽서에 그대로 담겨요.</p>
+    <div class="vp-top"><div class="vp-post" id="vpPost" aria-hidden="true"></div><div class="vp-stamp" id="vpStamp" role="img" aria-label="빈티지 우표"><i id="vpStampImg"></i></div></div>
+    <p class="vp-msg empty" id="vpMsg">크리스마스를 함께 보내고 싶은 분에게 한마디를 남겨 보세요.</p>
     <div class="vp-foot"><span class="vp-name" id="vpName">From. 익명</span><span class="vp-to" id="vpTo">To. 모두에게</span></div>
   </div>
-  <button type="button" class="vin-tree" id="cardTree"><span>🌲</span>3D 트리 보기</button>
+  <div class="vin-acts"><button type="button" class="vin-tree" id="cardTree"><span>🌲</span>3D 트리 보기</button><button type="button" class="vin-tree" id="cardShare"><span>💌</span>카드 공유하기</button></div>
   <div class="vin-form">
     <div class="vin-row2"><div class="vin-field"><label class="vin-label" for="cardName">보내는 분</label><input id="cardName" class="vin-in" maxlength="12" placeholder="닉네임" autocomplete="off" enterkeyhint="next" aria-label="카드에 남길 이름"></div><div class="vin-field"><label class="vin-label" for="cardToIn">받는 분</label><input id="cardToIn" class="vin-in" maxlength="12" placeholder="모두에게" autocomplete="off" enterkeyhint="next" aria-label="카드를 받을 사람"></div></div>
-    <div class="vin-field"><label class="vin-label" for="cardMsg">내용</label><textarea id="cardMsg" class="vin-ta" maxlength="140" placeholder="따뜻한 한마디를 적어 주세요 (140자까지)" aria-label="카드 내용"></textarea><div class="vin-meta" id="cardCounter">0 / 140</div></div>
+    <div class="vin-field"><label class="vin-label" for="cardMsg">내용</label><textarea id="cardMsg" class="vin-ta" maxlength="140" placeholder="크리스마스 카드를 보내고 싶은 분에게 남겨보세요 (140자까지)" aria-label="카드 내용"></textarea><div class="vin-meta" id="cardCounter">0 / 140</div></div>
     <div class="vin-field"><span class="vin-label">종이</span><div class="vin-picks trio" id="cardThemePick"><button type="button" class="vin-chip on" data-theme="cream"><i class="sw" style="background:#f8f2e6"></i>아이보리</button><button type="button" class="vin-chip" data-theme="kraft"><i class="sw" style="background:#ecdfc9"></i>크라프트</button><button type="button" class="vin-chip" data-theme="sage"><i class="sw" style="background:#22412f"></i>딥그린</button></div></div>
     <div class="vin-field"><span class="vin-label">우표</span><div class="vin-picks" id="cardStampPick"><button type="button" class="vin-chip on" data-stamp="tree">🎄 트리</button><button type="button" class="vin-chip" data-stamp="bell">🔔 종</button><button type="button" class="vin-chip" data-stamp="santa">🎅 산타</button><button type="button" class="vin-chip" data-stamp="star">⭐ 별</button></div></div>
     <button type="button" class="vin-send" id="cardSend">트리에 걸기</button>
@@ -680,28 +682,28 @@ function makeHuman(THREE, spec, root) {
 // ===== HR둥이: 흰 공 + 굵은 먹선 마스코트 =====
 function makeMascot(THREE, spec, root) {
   const body = new THREE.Group(); root.add(body);
-  const ink = '#232328', hull = new THREE.MeshBasicMaterial({ color: ink, side: THREE.BackSide });
+  const ink = '#2f3240', hull = new THREE.MeshBasicMaterial({ color: ink, side: THREE.BackSide });
   const outlined = (s, p, w) => { // 뒤집힌 껍질로 굵은 먹선 외곽선
     const g = new THREE.Group(); g.position.set(...p);
-    g.add(ell(THREE, '#ffffff', s, null, null, 0.75));
+    g.add(ell(THREE, '#ffffff', s, null, null, 0.62));
     const h = new THREE.Mesh(sph(THREE), hull); h.scale.set(s[0] + w, s[1] + w, s[2] + w); g.add(h);
     return g;
   };
   const head = new THREE.Group(); head.position.set(0, 0.9, 0.0); body.add(head);
   const dims = [0.56, 0.53, 0.53];
-  const ball = outlined(dims, [0, 0, 0], 0.075); ball.children[0].geometry = sphHi(THREE); head.add(ball);
+  const ball = outlined(dims, [0, 0, 0], 0.038); ball.children[0].geometry = sphHi(THREE); head.add(ball);
   addFace(THREE, head, dims, spec);
-  [-1, 1].forEach(s => body.add(outlined([0.11, 0.085, 0.15], [0.21 * s, 0.39, 0.4], 0.045)));   // 발
+  [-1, 1].forEach(s => body.add(outlined([0.11, 0.085, 0.15], [0.21 * s, 0.39, 0.4], 0.023)));   // 발
   // 만세 하는 팔: 흰 속 + 굵은 먹선
   const arms = [];
   [-1, 1].forEach(s => {
     const a = new THREE.Group(); a.position.set(0.5 * s, -0.2, 0); head.add(a);
     const pts = [[0, 0, 0], [0.2 * s, 0.0, 0.01], [0.36 * s, 0.17, 0.02], [0.4 * s, 0.42, 0.02], [0.33 * s, 0.6, 0.02]];
-    a.add(tube(THREE, '#ffffff', pts, 0.07, 0.75, 28));
+    a.add(tube(THREE, '#ffffff', pts, 0.07, 0.62, 28));
     const c = new THREE.CatmullRomCurve3(pts.map(p => new THREE.Vector3(...p)));
-    a.add(new THREE.Mesh(new THREE.TubeGeometry(c, 28, 0.125, 14, false), hull));
+    a.add(new THREE.Mesh(new THREE.TubeGeometry(c, 32, 0.098, 16, false), hull));
     const tipP = pts[pts.length - 1];
-    a.add(outlined([0.07, 0.07, 0.07], tipP, 0.055));
+    a.add(outlined([0.07, 0.07, 0.07], tipP, 0.028));
     arms.push(a);
   });
   // 반짝이 장식은 제거했습니다(머리 위에 검은 4꼭지 별이 떠 보이던 문제).
@@ -1838,29 +1840,101 @@ CARDS = [
 CARDS_TOTAL = 240; CARDS_STATE = 'ok';
 const cardPick = { theme: 'cream', stamp: 'tree' };
 
-// 천공(톱니) 테두리 종이 우표 아트 — 외부 이미지 없이 SVG로 그려 저작권 문제 없음
-const STAMP_MOTIF = {
-  tree: '<path d="M30 17 L38 33 H22 Z" fill="TINT" fill-opacity="0.16" stroke="INK" stroke-width="1.4" stroke-linejoin="round"/><path d="M30 25 L41 43 H19 Z" fill="TINT" fill-opacity="0.16" stroke="INK" stroke-width="1.4" stroke-linejoin="round"/><path d="M30 35 L44 52 H16 Z" fill="TINT" fill-opacity="0.16" stroke="INK" stroke-width="1.4" stroke-linejoin="round"/><rect x="28.6" y="52" width="2.8" height="5" fill="INK"/>',
-  bell: '<path d="M30 18 C23 26 21 38 19 50 H41 C39 38 37 26 30 18 Z" fill="TINT" fill-opacity="0.16" stroke="INK" stroke-width="1.4" stroke-linejoin="round"/><path d="M24 18 H36" stroke="INK" stroke-width="1.4"/><circle cx="30" cy="53.5" r="2.6" fill="TINT" fill-opacity="0.16" stroke="INK" stroke-width="1.4"/>',
-  santa: '<path d="M22 50 C21 34 31 25 41 29 C47 31 49 42 45 50 Z" fill="TINT" fill-opacity="0.16" stroke="INK" stroke-width="1.4" stroke-linejoin="round"/><circle cx="46" cy="27" r="3" fill="INK"/><path d="M22 50 H45" stroke="INK" stroke-width="1.4"/><circle cx="33" cy="41" r="1.1" fill="INK"/>',
-  star: '<path d="M30 17 L35 32 L50 32 L38 41 L43 56 L30 47 L17 56 L22 41 L10 32 L25 32 Z" fill="TINT" fill-opacity="0.16" stroke="INK" stroke-width="1.4" stroke-linejoin="round"/>'
-};
-const STAMP_TINT = { tree: '#2f6b4a', bell: '#a67c37', santa: '#8f2b30', star: '#a67c37' };
-function stampArt(kind) {
-  const ink = '#23483a', tint = STAMP_TINT[kind] || '#2f6b4a', dots = [];
-  for (let x = 4; x <= 56; x += 6) { dots.push([x, 3], [x, 69]); }
-  for (let y = 5; y <= 67; y += 6) { dots.push([3, y], [57, y]); }
-  const holes = dots.map(([cx, cy]) => '<circle cx="' + cx + '" cy="' + cy + '" r="2.6" fill="#000"/>').join('');
-  const motif = (STAMP_MOTIF[kind] || STAMP_MOTIF.tree).replace(/INK/g, ink).replace(/TINT/g, tint);
-  const svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 72" width="60" height="72">'
-    + '<defs><mask id="p"><rect width="60" height="72" fill="#fff"/>' + holes + '</mask>'
-    + '<linearGradient id="paper" x1="0" y1="0" x2="0.2" y2="1"><stop offset="0" stop-color="#fffdf7"/><stop offset="1" stop-color="#f2e9d7"/></linearGradient></defs>'
-    + '<g mask="url(#p)"><rect x="1" y="1" width="58" height="70" fill="url(#paper)"/>'
-    + '<rect x="5.5" y="5.5" width="49" height="61" fill="none" stroke="' + ink + '" stroke-opacity="0.3" stroke-width="0.9"/>'
-    + '<rect x="7.6" y="7.6" width="44.8" height="56.8" fill="none" stroke="' + ink + '" stroke-opacity="0.16" stroke-width="0.5"/></g>'
-    + '<g transform="translate(30 38) scale(1.2) translate(-30 -38)">' + motif + '</g>'
-    + '</svg>';
-  return 'data:image/svg+xml,' + encodeURIComponent(svg);
+// ---- 천공 우표/이중 원형 소인 (마스크로 모양만 그리고 색은 CSS 변수로) ----
+const STAMP_IMG = { tree: 'images/stamps/tree.png', bell: 'images/stamps/bell.png', santa: 'images/stamps/santa.png', star: 'images/stamps/star.png' };
+function stampArt(kind) { return STAMP_IMG[kind] || STAMP_IMG.tree; }
+function stampMaskUri() {
+  let holes = '';
+  for (let x = 4; x <= 56; x += 6) holes += '<circle cx="' + x + '" cy="3" r="2.7" fill="#000"/><circle cx="' + x + '" cy="69" r="2.7" fill="#000"/>';
+  for (let y = 5; y <= 67; y += 6) holes += '<circle cx="3" cy="' + y + '" r="2.7" fill="#000"/><circle cx="57" cy="' + y + '" r="2.7" fill="#000"/>';
+  const svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 72" width="60" height="72"><rect width="60" height="72" fill="#fff"/>' + holes + '</svg>';
+  return 'url("data:image/svg+xml,' + encodeURIComponent(svg) + '")';
+}
+function postmarkMaskUri() {
+  let waves = '';
+  [17, 31, 45].forEach(function (y) {
+    waves += '<path d="M64 ' + y + ' q7 -5.5 14 0 t14 0 t14 0 t14 0 t14 0 t14 0" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/>';
+  });
+  const svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 152 62" width="152" height="62">'
+    + '<circle cx="31" cy="31" r="26.4" fill="none" stroke="#fff" stroke-width="2.6"/>'
+    + '<circle cx="31" cy="31" r="20.6" fill="none" stroke="#fff" stroke-width="1.3"/>'
+    + '<text x="31" y="20.5" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="6.6" font-weight="700" letter-spacing="0.5" fill="#fff">CHRISTMAS POST</text>'
+    + '<rect x="12.5" y="26.5" width="37" height="10.5" rx="2" fill="none" stroke="#fff" stroke-width="1.1"/>'
+    + '<text x="31" y="34.4" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="6" font-weight="700" letter-spacing="0.3" fill="#fff">DEC 25 &#183; 2026</text>'
+    + '<text x="31" y="45.6" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="5.4" font-weight="700" letter-spacing="0.9" fill="#fff">CiT WINTER</text>'
+    + waves + '</svg>';
+  return 'url("data:image/svg+xml,' + encodeURIComponent(svg) + '")';
+}
+// ---- 빈티지 카드 이미지 공유 (카톡·문자·SNS) ----
+function loadImg(src) { return new Promise((res, rej) => { const im = new Image(); im.onload = () => res(im); im.onerror = rej; im.src = src; }); }
+function wrapCanvasText(ctx, text, maxW) {
+  const out = [];
+  String(text).split('\n').forEach(par => {
+    let line = '';
+    for (const ch of par) {
+      if (ctx.measureText(line + ch).width > maxW) { out.push(line); line = ch; } else line += ch;
+    }
+    out.push(line);
+  });
+  return out;
+}
+async function drawCardCanvas() {
+  const CW = 1080, CH = 1350, th = CARD_THEMES[cardPick.theme] || CARD_THEMES.cream;
+  const name = ($('#cardName').value || '').trim() || '익명';
+  const to = ($('#cardToIn').value || '').trim() || '모두에게';
+  const msg = ($('#cardMsg').value || '').trim() || '메리 크리스마스!';
+  const cv = document.createElement('canvas'); cv.width = CW; cv.height = CH;
+  const x = cv.getContext('2d');
+  x.fillStyle = th.bg; x.fillRect(0, 0, CW, CH);
+  for (let i = 0; i < 5200; i++) { x.fillStyle = th.dark ? 'rgba(255,255,255,0.045)' : 'rgba(96,74,46,0.05)'; const sz = Math.random() < 0.85 ? 1 : 2; x.fillRect(Math.random() * CW, Math.random() * CH, sz, sz); }
+  x.strokeStyle = th.edge; x.lineWidth = 4; x.strokeRect(28, 28, CW - 56, CH - 56);
+  x.strokeStyle = th.dark ? 'rgba(250,244,230,.35)' : 'rgba(60,45,30,.22)'; x.lineWidth = 1.4; x.strokeRect(44, 44, CW - 88, CH - 88);
+  try {
+    const im = await loadImg(stampArt(cardPick.stamp));
+    x.fillStyle = '#fffdf8'; x.fillRect(CW - 210, 60, 150, 182);
+    x.drawImage(im, CW - 202, 68, 134, 166);
+    x.strokeStyle = 'rgba(60,45,30,.25)'; x.lineWidth = 1.5; x.strokeRect(CW - 210, 60, 150, 182);
+  } catch (e) { }
+  const mark = th.dark ? 'rgba(244,226,184,.8)' : 'rgba(124,35,41,.5)';
+  x.save(); x.translate(CW - 262, 158); x.rotate(-0.12); x.strokeStyle = mark;
+  x.lineWidth = 5; x.beginPath(); x.arc(0, 0, 52, 0, Math.PI * 2); x.stroke();
+  x.lineWidth = 2.4; x.beginPath(); x.arc(0, 0, 41, 0, Math.PI * 2); x.stroke();
+  x.lineWidth = 4; for (let i = -1; i <= 1; i++) { x.beginPath(); const yy0 = i * 26; for (let t = 0; t <= 190; t += 4) { const xx = 56 + t, yy = yy0 + Math.sin(t / 18) * 7; if (t === 0) x.moveTo(xx, yy); else x.lineTo(xx, yy); } x.stroke(); }
+  x.fillStyle = mark; x.textAlign = 'center'; x.font = '700 15px ' + FONT_K; x.fillText('CHRISTMAS POST', 0, -2);
+  x.font = '700 13px ' + FONT_K; x.fillText('DEC 25 · 2026', 0, 18);
+  x.restore();
+  x.fillStyle = th.ink; x.textAlign = 'left'; x.font = '500 46px ' + FONT_K;
+  wrapCanvasText(x, msg, CW - 210).slice(0, 12).forEach((t, i) => x.fillText(t, 100, 470 + i * 68));
+  x.strokeStyle = th.dark ? 'rgba(250,244,230,.28)' : 'rgba(60,45,30,.18)'; x.lineWidth = 2;
+  x.beginPath(); x.moveTo(100, CH - 250); x.lineTo(CW - 100, CH - 250); x.stroke();
+  x.fillStyle = th.dark ? 'rgba(250,244,230,.9)' : 'rgba(38,29,22,.8)'; x.font = '700 30px ' + FONT_K;
+  x.fillText('From. ' + name.slice(0, 16), 100, CH - 196);
+  x.textAlign = 'right'; x.fillText('To. ' + to.slice(0, 16), CW - 100, CH - 196);
+  x.textAlign = 'left'; x.font = '700 26px ' + FONT_K; x.fillStyle = th.dark ? 'rgba(244,226,184,.72)' : 'rgba(124,35,41,.55)';
+  x.fillText('CiT 썰매대작전 · Winter Event 2026', 100, CH - 120);
+  x.font = '500 22px ' + FONT_K; x.fillStyle = th.dark ? 'rgba(250,244,230,.55)' : 'rgba(38,29,22,.45)';
+  x.fillText('continuingrace.github.io/cit_sled', 100, CH - 82);
+  return cv;
+}
+async function shareVintageCard() {
+  const bt = $('#cardShare'), old = bt ? bt.innerHTML : '';
+  if (bt) { bt.disabled = true; bt.innerHTML = '<span>💌</span>준비 중…'; }
+  try {
+    const cv = await drawCardCanvas();
+    const to = ($('#cardToIn').value || '').trim() || '모두에게';
+    const text = to + '에게 보내는 크리스마스 카드 🎄\nhttps://continuingrace.github.io/cit_sled/';
+    const blob = await new Promise(r => cv.toBlob(r, 'image/png'));
+    const file = blob ? new File([blob], 'cit-christmas-card.png', { type: 'image/png' }) : null;
+    if (file && navigator.canShare && navigator.canShare({ files: [file] })) {
+      try { await navigator.share({ files: [file], title: 'CiT 크리스마스 카드', text: text }); return; }
+      catch (e) { if (e && e.name === 'AbortError') return; }
+    }
+    try { if (navigator.clipboard && navigator.clipboard.writeText) await navigator.clipboard.writeText(text); } catch (e) { }
+    openShot(cv, '카드 공유', 'cit-christmas-card.png');
+    cardNoteText('공유 시트를 쓸 수 없어 카드 이미지를 열었어요. 저장한 뒤 카톡·문자로 보내 주세요. (게임 링크도 복사했어요)', 'good');
+  } catch (e) {
+    cardNoteText('카드 이미지를 만들지 못했어요. 잠시 뒤 다시 시도해 주세요.', 'bad');
+  } finally { if (bt) { bt.disabled = false; bt.innerHTML = old; } }
 }
 function renderCardPreview() {
   const pv = $('#cardPreview'); if (!pv) return;
@@ -1870,12 +1944,14 @@ function renderCardPreview() {
   pv.style.setProperty('--pv-bg', th.bg);
   pv.style.setProperty('--pv-ink', th.ink);
   pv.style.setProperty('--pv-edge', th.edge);
-  pv.style.setProperty('--pv-line', th.dark ? 'rgba(255,255,255,.22)' : 'rgba(60,45,30,.14)');
+  pv.style.setProperty('--pv-line', th.dark ? 'rgba(250,244,230,.28)' : 'rgba(60,45,30,.14)');
+  pv.style.setProperty('--pv-soft', th.dark ? 'rgba(250,244,230,.86)' : 'rgba(38,29,22,.66)');
+  pv.style.setProperty('--pv-mark', th.dark ? 'rgba(244,226,184,.78)' : 'rgba(124,35,41,.55)');
   const m = $('#vpMsg'); m.textContent = msg || '따뜻한 한마디를 적으면 이 엽서에 그대로 담겨요.'; m.classList.toggle('empty', !msg);
   const to = ($('#cardToIn').value || '').trim();
   $('#vpName').textContent = 'From. ' + (name || '익명');
   $('#vpTo').textContent = 'To. ' + (to || '모두에게');
-  const st = $('#vpStamp'); if (st) st.style.backgroundImage = 'url("' + stampArt(cardPick.stamp) + '")';
+  const st = $('#vpStampImg'); if (st) st.style.backgroundImage = 'url(' + stampArt(cardPick.stamp) + ')';
 }
 function openTreeView() {
   menuBgm(false);
@@ -1908,7 +1984,7 @@ function paintCards() {
   const list = $('#cardList'); if (!list) return;
   if (!CARDS.length) {
     list.innerHTML = CARDS_STATE === 'fail'
-      ? '<p class="vin-empty">카드 목록을 지금 불러오지 못했어요. 잠시 뒤 다시 열어 봐 주세요.</p>'
+      ? '<p class="vin-empty">카드 목록을 지금 불러오지 못했어요.<br>잠시 뒤 다시 열어 봐 주세요.</p>'
       : '<p class="vin-empty">' + (CARDS_STATE === 'loading' ? '카드를 불러오는 중이에요…' : '아직 걸린 카드가 없어요. 첫 번째 빈티지 엽서를 남겨 보세요!') + '</p>';
     return;
   }
@@ -1996,7 +2072,10 @@ function initCards() {
   document.querySelectorAll('#cardStampPick .vin-chip').forEach(b => {
     b.onclick = () => { cardPick.stamp = b.dataset.stamp; document.querySelectorAll('#cardStampPick .vin-chip').forEach(x => x.classList.toggle('on', x === b)); renderCardPreview(); };
   });
+  const cs = $('#cards');
+  if (cs) { cs.style.setProperty('--stamp-mask', stampMaskUri()); cs.style.setProperty('--postmark-mask', postmarkMaskUri()); }
   $('#cardTree').onclick = () => openTreeView();
+  const sb = $('#cardShare'); if (sb) sb.onclick = () => shareVintageCard();
   $('#tbCard').onclick = () => { auInit(); toggleCards(true); };
   $('#tbBack').onclick = () => closeTreeView();
   renderCardPreview();
