@@ -101,11 +101,14 @@ kbd{display:inline-block;min-width:26px;padding:1px 7px;margin:0 2px;border-radi
 .modal h2{margin:0 0 18px;font-weight:800;font-size:24px;letter-spacing:.02em;text-align:center}
 .modal.side{background:none;justify-content:flex-start;padding-left:4vw;pointer-events:none}
 .modal.side .panel{position:relative;pointer-events:auto;width:min(430px,94vw);padding:22px;display:flex;flex-direction:column;gap:12px;animation:slide .5s ease-out;background:rgba(13,19,42,.9);border:1px solid rgba(255,255,255,.14);box-shadow:0 24px 60px rgba(4,8,26,.5)}
-#result .rlist li{font-size:13px;gap:9px}
-#result .rlist li span{font-size:13px;letter-spacing:-.015em}
+#result .rlist li{font-size:12.5px;gap:6px;padding:7px 8px}
+#result .rlist li span{font-size:12.5px;letter-spacing:-.02em}
 #bVerify{background:linear-gradient(180deg,#12c68e,#0e9a6f);color:#06231a;font-weight:800;border:0}
 #bHome{background:linear-gradient(180deg,#ead9ad,#cdb276);color:#161b33;font-weight:800;border:0}
-#bLookAround{background:rgba(232,208,150,.14);border:1px solid rgba(232,208,150,.5);color:#f0dcaa}
+#bLookAround{background:rgba(232,213,163,.09);border:1px solid rgba(232,213,163,.45);color:#efe1bc}
+#result .rhead b{color:#e8d5a3}
+#result .total{background:rgba(232,213,163,.11)}
+#result .total b{color:#e8d5a3}
 #bRetry{background:rgba(255,255,255,.1);border:1px solid rgba(232,208,150,.4);color:#f5ead0}
 #bStory,#bBoard2,#bCards2{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1)}
 #shot .panel{background:rgba(13,19,42,.94);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
@@ -350,7 +353,7 @@ body.paused *{animation-play-state:paused!important}
   <div class="total"><span>총점</span><b id="rTotal">0</b></div>
   <form class="namerow" id="nameForm"><input id="nameIn" maxlength="10" placeholder="이름을 남겨 주세요" autocomplete="off" enterkeyhint="done"><button class="btn sub" id="bSave" type="submit">기록 남기기</button></form>
   <div class="best" id="rBest"></div>
-  <button class="btn" id="bLookAround" style="background:rgba(255,216,77,.22);border:1px solid #ffd84d;color:#ffd84d;font-weight:700;margin-bottom:6px">주변 풍경 둘러보기 👀 (360도 회전)</button>
+  <button class="btn" id="bLookAround" style="background:rgba(232,213,163,.09);border:1px solid rgba(232,213,163,.45);color:#efe1bc;font-weight:700;margin-bottom:6px">주변 풍경 둘러보기 👀 (360도 회전)</button>
   <div class="row"><button class="btn" id="bRetry">한 번 더</button><button class="btn" id="bVerify">참여인증</button><button class="btn sub" id="bBoard2">순위표</button></div>
   <div class="row"><button class="btn sub" id="bStory">스토리로 공유</button><button class="btn sub" id="bCards2">🎄 카드 남기기</button></div>
   <a class="btn link" id="bHome" href="https://www.citkorea.co.kr/03_08_02/677" target="_blank" rel="noopener noreferrer">CiT 장학이벤트 보기 ↗</a>
