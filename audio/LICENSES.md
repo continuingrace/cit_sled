@@ -49,6 +49,23 @@ Airmen of Note(재즈 오케스트라) 2곡, Diplomats(재즈 앙상블) 3곡, �
 - https://upload.wikimedia.org/wikipedia/commons/6/6f/It_Came_Upon_the_Midnight_Clear_-_Diplomats_-_United_States_Air_Force_Band.mp3
 - https://upload.wikimedia.org/wikipedia/commons/3/3a/O_Come%2C_O_Come_Emmanuel_-_Diplomats_-_United_States_Air_Force_Band.mp3
 
+## 첫 화면(메뉴) 배경음악 (2026-11-27 추가)
+
+캐릭터를 고르는 첫 화면에서 잔잔히 흐르는 곡입니다. 완주 세리머니의 '꽃의 왈츠'와 **다른 악장**인
+《호두까기인형》 모음곡 Op. 71a의 **행진곡(March)**을 씁니다(`index.html`의 `MENU_TRACK`).
+첫 터치/클릭 뒤 재생을 시작하고(모바일 자동재생 정책), 레이스를 시작하면 레이스 캐럴로, 완주하면 꽃의 왈츠로 바뀝니다.
+
+| 파일 | 곡 | 연주·지휘 | 원본 길이 | 이 파일 | 원본(위키미디어 공용) |
+| --- | --- | --- | --- | --- | --- |
+| `menu-nutcracker.mp3` | The Nutcracker Suite, Op. 71 — 中 March (행진곡) | National Symphony Orchestra of London · 지휘 Stanford Robinson (Decca K 1142, 1945년 녹음) | 4:55 (작은 서곡+행진곡) | 1:56 | [File:PDP-CH - National Symphony Orchestra of London - Stanford Robinson … Miniature Overture, March - Decca-k1142-ar9056.flac](https://commons.wikimedia.org/wiki/File:PDP-CH_-_National_Symphony_Orchestra_of_London_-_Stanford_Robinson,_conductor_-_The_Nutcracker_Suite,_Op._71_-_Miniature_Overture,_March_-_Tchaikovsky_-_Decca-k1142-ar9056.flac) |
+
+- **곡(작곡)**: 표트르 차이코프스키(1840~1893) — 작곡 저작권 만료(퍼블릭 도메인).
+- **라이선스 근거**: 위키미디어 공용 파일 메타데이터가 `LicenseShortName: Public domain`, `Copyrighted: False`,
+  `AttributionRequired: false`로 표시된 퍼블릭 도메인 음원입니다. 공개 도메인 프로젝트(PDP)가 1945년 영국 Decca 녹음을
+  디지털화해 올린 파일이며, 공용 문서 분류는 `PD US Air Force`가 아닌 퍼블릭 도메인(PD) 음원입니다.
+- **편집**: 원본 4:55 중 2:55(작은 서곡) 뒤 **175초~291.5초 구간(행진곡)**만 잘라 1:56으로 만들고,
+  0.8초 페이드인·3.3초 페이드아웃, 모노 44.1 kHz MP3 96 kbps, −18.5 LUFS(트루피크 −1.5 dBTP)로 음량을 맞췄습니다.
+
 ## 확인 근거
 
 - 위키미디어 공용 API(`prop=imageinfo&iiprop=extmetadata`)의 각 파일 메타데이터:
