@@ -1891,7 +1891,7 @@ const cardPick = { theme: 'cream', stamp: 'tree' };
 // ---- 천공 우표/이중 원형 소인 (마스크로 모양만 그리고 색은 CSS 변수로) ----
 const STAMP_IMG = { tree: 'images/stamps/tree.png', bell: 'images/stamps/bell.png', santa: 'images/stamps/santa.png', wreath: 'images/stamps/wreath.png', star: 'images/stamps/star.png' };
 function stampArt(kind) { return STAMP_IMG[kind] || STAMP_IMG.tree; }
-function pinkingPts(W, H, a, p) { // 핑킹가위 톱니 윤곽점 — 네 변을 따라 바깥/안쪽을 번갈아 찍는다
+function pinkingPts(W, H, a, p) { // (미사용) 이전 톱니 윤곽 계산 — 반원 천공으로 대체
   const pts = [[0, 0]];
   const nX = Math.max(2, Math.round(W / p)), nY = Math.max(2, Math.round(H / p));
   const sx = W / nX, sy = H / nY;
@@ -1904,10 +1904,21 @@ function pinkingPts(W, H, a, p) { // 핑킹가위 톱니 윤곽점 — 네 변�
 function pinkingPathD(W, H, a, p) {
   return 'M' + pinkingPts(W, H, a, p).map(function (q) { return (Math.round(q[0] * 100) / 100) + ' ' + (Math.round(q[1] * 100) / 100); }).join(' L') + ' Z';
 }
-function stampMaskUri() { // 4:5 세로형 우표 — 정교한 핑킹가위(SVG 톱니) 커팅을 alpha 마스크로 (iOS는 -webkit-mask-image 동시 적용)
-  const W = 56, H = 70;
+function stampHoles(W, H, r, pitch) { // 우표 천공 — 일정 간격으로 동글동글하게 파인 반원(U자) 펀칭 좌표
+  const out = [];
+  const nX = Math.max(2, Math.round(W / pitch)), sx = W / nX;
+  const nY = Math.max(2, Math.round(H / pitch)), sy = H / nY;
+  for (let i = 0; i < nX; i++) { const x = (i + 0.5) * sx; out.push([x, 0], [x, H]); }
+  for (let i = 0; i < nY; i++) { const y = (i + 0.5) * sy; out.push([0, y], [W, y]); }
+  return out;
+}
+function stampMaskUri() { // 4:5 세로형 우표 — 네 변에 균일한 반원 천공 (evenodd로 alpha 마스크, iOS는 -webkit-mask-image 동시 적용)
+  const W = 56, H = 70, R = 2.7;
+  const holes = stampHoles(W, H, R, 7).map(function (q) {
+    return 'M' + (q[0] - R) + ' ' + q[1] + 'a' + R + ' ' + R + ' 0 1 0 ' + (2 * R) + ' 0a' + R + ' ' + R + ' 0 1 0 ' + (-2 * R) + ' 0Z';
+  }).join('');
   const svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' + W + ' ' + H + '" width="' + W + '" height="' + H + '">'
-    + '<path d="' + pinkingPathD(W, H, 3.3, 6.4) + '" fill="#fff"/></svg>';
+    + '<path d="M0 0H' + W + 'V' + H + 'H0Z' + holes + '" fill="#fff" fill-rule="evenodd"/></svg>';
   return 'url("data:image/svg+xml,' + encodeURIComponent(svg) + '")';
 }
 function postmarkMaskUri() { // 좌측 상단 소인 — 이중 원 안의 세 줄이 테두리와 겹치지 않게 안쪽 여백을 넉넉히
@@ -1962,11 +1973,11 @@ async function drawCardCanvas() {
     const im = await loadImg(stampArt(cardPick.stamp));
     const sc = document.createElement('canvas'); sc.width = 150; sc.height = 188;
     const sx = sc.getContext('2d');
-    const sp = pinkingPts(150, 188, 7, 15);              // 공유 이미지도 같은 핑킹가위 경계
-    sx.beginPath(); sp.forEach(function (q, i) { if (i) sx.lineTo(q[0], q[1]); else sx.moveTo(q[0], q[1]); }); sx.closePath(); sx.clip();
     sx.fillStyle = '#efe5cf'; sx.fillRect(0, 0, 150, 188);
     sx.drawImage(im, 12, 12, 126, 164);                    // 균일한 미색 종이 여백
     sx.strokeStyle = 'rgba(60,45,30,.22)'; sx.lineWidth = 1.5; sx.strokeRect(12, 12, 126, 164);
+    sx.globalCompositeOperation = 'destination-out';       // 공유 이미지도 같은 반원 천공
+    stampHoles(150, 188, 7.2, 18.75).forEach(function (q) { sx.beginPath(); sx.arc(q[0], q[1], 7.2, 0, Math.PI * 2); sx.fill(); });
     x.save(); x.translate(CW - 135, 150); x.rotate(0.038); x.drawImage(sc, -75, -94); x.restore();
   } catch (e) { }
   const mark = th.dark ? 'rgba(244,226,184,.8)' : 'rgba(124,35,41,.5)';
