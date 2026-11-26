@@ -1452,7 +1452,7 @@ function bgmDuck(ms) { // 팡파레가 울리는 동안만 BGM 볼륨을 낮춘�
   bgmDuckT = setTimeout(() => { try { BGA.volume = BGM_VOL; } catch (e) { } }, ms || 2200);
 }
 function bgmCelebrate() { // 결승 통과: 레이스 캐럴에서 세리머니 재즈로 넘어가 결과창까지 이어진다
-  AU.celeb = true; if (AU.celebI == null) AU.celebI = 0;
+  AU.celeb = true; AU.celebI = (AU.celebI == null) ? Math.floor(Math.random() * CELEB.length) : (AU.celebI + 1) % CELEB.length;
   bgm(true);
   bgmDuck(2200);
 }
