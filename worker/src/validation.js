@@ -2,7 +2,7 @@ const DIFFICULTIES = new Set(['easy', 'normal', 'hard']);
 
 // 빈티지 카드: 종이 테마와 우표 종류는 이 네 가지만 허용한다.
 const CARD_THEMES = new Set(['cream', 'kraft', 'sage', 'ruby']);
-const CARD_STAMPS = new Set(['tree', 'bell', 'santa', 'star']);
+const CARD_STAMPS = new Set(['tree', 'bell', 'santa', 'wreath', 'star']);
 
 // 아주 기본적인 비속어·광고/도박/대출 차단 목록 (필요하면 이 배열만 늘리면 된다).
 const CARD_BLOCKED_WORDS = [
