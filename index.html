@@ -1177,6 +1177,9 @@ function buildWorld(scene) {
     // 장식 중인 트리 · 파티 테이블 · 꼬마 눈사람
     { const Ft = fr(-7.9, 6.2); B.tree.add(L(Ft, MX(0, -0.1, 0, 1.35, 1.35, 1.35))); for (let i = 0; i < 12; i++) { const y = 1.3 + i * 0.3, rad = (1.28 * (1 - (y - 0.9) / 3.7) + 0.08) * 1.35, an = i * 2.4, p = PT(Ft, Math.cos(an) * rad, y * 1.35, Math.sin(an) * rad); if (i % 2) bulb(p, BULBC[i % 6]); else B.ball.add(MX(p.x, p.y, p.z, 0.15), BULBC[(i + 3) % 6]); }
       const tp = PT(Ft, 0, 5.95, 0); const ts = new THREE.Mesh(starGeo5(0.74, 0.18), new THREE.MeshBasicMaterial({ color: '#ffd84d', toneMapped: false, side: THREE.DoubleSide })); ts.position.copy(tp); ts.frustumCulled = false; scene.add(ts); bigGlow(tp, '#ffe98a'); bigGlow(tp, '#ffd84d');
+      // 오두막 옆 장식 트리: 빈티지 카드를 매달고, 트리를 눌러도 카드 창이 열리게 한다
+      W.hutTreeFrame = Ft;
+      W.hutTreeProxy = new THREE.Mesh(new THREE.CylinderGeometry(2.05, 2.45, 6.3, 10), new THREE.MeshBasicMaterial({ visible: false })); W.hutTreeProxy.position.copy(PT(Ft, 0, 3.1, 0)); W.hutTreeProxy.frustumCulled = false; scene.add(W.hutTreeProxy);
       const st = new THREE.Mesh(merge([bake(Box, '#a87650', MX(0, 0.5, 0, 0.8, 0.1, 0.6)), bake(Box, '#8a5a3c', MX(-0.3, 0.24, 0, 0.1, 0.5, 0.5)), bake(Box, '#8a5a3c', MX(0.3, 0.24, 0, 0.1, 0.5, 0.5))]), vc); st.matrixAutoUpdate = false; st.matrix.copy(fr(-6.5, 6.2)); st.castShadow = true; st.frustumCulled = false; scene.add(st); }
     { const Ft = fr(6.05, 9.9), b = [bake(Box, '#e2463f', MX(0, 0.95, 0, 1.15, 0.07, 2.5)), bake(Box, '#ffffff', MX(0, 0.97, 0, 0.5, 0.07, 2.52)), bake(Box, '#e2463f', MX(0, 0.72, 0, 1.17, 0.42, 2.52))];
       [[-0.48, -1.1], [0.48, -1.1], [-0.48, 1.1], [0.48, 1.1]].forEach(([x, z]) => b.push(bake(Box, '#8a5a3c', MX(x, 0.45, z, 0.1, 0.9, 0.1))));
@@ -1871,6 +1874,21 @@ function cardTexture(c) {
   cardTexCache.set(key, tex);
   return tex;
 }
+function hutRadiusAt(hw) { const y = hw / 1.35; return Math.max(0.16, (1.28 * (1 - (y - 0.9) / 3.7) + 0.08) * 1.35); }
+function hangCards(g, frameM, count, yFrom, yTo, radiusAt, scale, startIdx, links) {
+  for (let i = 0; i < count; i++) {
+    const c = CARDS[startIdx + i]; if (!c) break;
+    const t = count === 1 ? 0.62 : i / (count - 1);
+    const y = yFrom + t * (yTo - yFrom);
+    const ang = i * 2.399963229728653 + (i % 3) * 0.55;
+    const rad = radiusAt(y) * 0.97;
+    const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: cardTexture(c), transparent: true, depthWrite: false }));
+    sp.position.copy(PT(frameM, Math.cos(ang) * rad, y, Math.sin(ang) * rad));
+    sp.scale.set(scale, scale * 0.703, 1);
+    sp.userData.card = c;
+    g.add(sp); if (links) links.push(sp);
+  }
+}
 function updateTreeCards() {
   if (!W || !W.cardGroup) return;
   const g = W.cardGroup;
@@ -1878,22 +1896,13 @@ function updateTreeCards() {
     const ch = g.children[i]; g.remove(ch);
     if (ch.material) ch.material.dispose();
   }
-  W.cardLinks.length = 0; if (W.treeMesh) W.cardLinks.push(W.treeMesh);
+  W.cardLinks.length = 0;
+  if (W.treeMesh) W.cardLinks.push(W.treeMesh);
+  if (W.hutTreeProxy) W.cardLinks.push(W.hutTreeProxy);
   const n = Math.min(CARDS.length, CARD_ORNAMENT_MAX);
   if (n < 1) return;
-  for (let i = 0; i < n; i++) {
-    const c = CARDS[i];
-    const t = n === 1 ? 0.62 : i / (n - 1);
-    const y = 4.3 + t * 14.4;
-    const ang = i * 2.399963229728653 + (i % 3) * 0.55;
-    const rad = treeRadiusAt(y) * 0.97;
-    const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: cardTexture(c), transparent: true, depthWrite: false }));
-    sp.position.copy(PT(W.treeFrame, Math.cos(ang) * rad, y, Math.sin(ang) * rad));
-    const sc = 1.5 + (i % 4) * 0.13;
-    sp.scale.set(sc, sc * 0.703, 1);
-    sp.userData.card = c;
-    g.add(sp); W.cardLinks.push(sp);
-  }
+  hangCards(g, W.treeFrame, n, 4.3, 18.7, treeRadiusAt, 2.1, 0, W.cardLinks);
+  if (W.hutTreeFrame) hangCards(g, W.hutTreeFrame, Math.min(n, 6), 1.9, 5.4, hutRadiusAt, 0.62, 0, W.cardLinks);
 }
 
 // ---------- 장면 캡처 · 공유 이미지 ----------
