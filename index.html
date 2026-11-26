@@ -1282,22 +1282,31 @@ const TRACKS = [
   { ko: '한밤중에 천사 노래', name: 'It Came Upon the Midnight Clear', file: './audio/midnight-clear.mp3' },
   { ko: '임마누엘 오소서', name: 'O Come, O Come Emmanuel', file: './audio/o-come-emmanuel.mp3' }
 ];
+// 완주 세리머니용 연말 재즈 (레이스 6곡과 겹치지 않는 다른 곡 — audio/LICENSES.md 참고)
+// 결승선을 통과하면 레이스 캐럴 대신 이 곡으로 넘어가 결과창·360도 둘러보기·기념사진 화면에서 계속 흐르고,
+// 한 곡이 끝나면 다음 세리머니 곡으로 이어진다.
+const CELEB = [
+  { ko: '올드 랭 사인 (차차차)', name: 'Auld Lang Syne (Cha Cha Cha)', file: './audio/celeb-auld-lang-syne.mp3' },
+  { ko: '굿 킹 웬세슬라스', name: 'Good King Wenceslas and His Merry Band', file: './audio/celeb-good-king-wenceslas.mp3' }
+];
+const BGM_VOL = 0.68;
 const BGA = new Audio();
-BGA.loop = false; BGA.preload = 'auto'; BGA.volume = 0.68;
+BGA.loop = false; BGA.preload = 'auto'; BGA.volume = BGM_VOL;
 BGA.setAttribute('playsinline', ''); BGA.setAttribute('webkit-playsinline', '');
 let bgaUnlocked = false;
 BGA.addEventListener('error', () => { if (AU.on) { AU.synth = true; AU.idx = 0; AU.beatPos = 0; AU.next = AU.ctx ? AU.ctx.currentTime + 0.05 : 0; } });
 // 한 곡이 끝나면 같은 곡을 되풀이하지 않고 다음 캐럴로 넘어간다 (레이스 중일 때만 소리가 나므로 AU.on으로 판단)
 BGA.addEventListener('ended', () => {
   if (!AU.on) return;
-  const tr = pickCarol();
+  const tr = AU.celeb ? nextCeleb() : pickCarol();
   try {
-    BGA.src = bgmSrc(tr); BGA.muted = AU.muted; BGA.volume = 0.68; BGA.currentTime = 0;
+    BGA.src = bgmSrc(tr); BGA.muted = AU.muted; BGA.volume = BGM_VOL; BGA.currentTime = 0;
   } catch (e) { }
   try { const p = BGA.play(); if (p && p.catch) p.catch(() => { }); } catch (e) { }
-  if (G.state === 'race') pop('♪ ' + (tr.ko || tr.name), 'gold');
+  if (!AU.celeb && G.state === 'race') pop('♪ ' + (tr.ko || tr.name), 'gold');
 });
-function bgmTrack() { return AU.carol || TRACKS[0]; }
+function bgmTrack() { if (AU.celeb) return CELEB[(AU.celebI || 0) % CELEB.length]; return AU.carol || TRACKS[0]; }
+function nextCeleb() { AU.celebI = ((AU.celebI || 0) + 1) % CELEB.length; return CELEB[AU.celebI]; }
 function bgmSrc(tr) { return new URL(tr.file, location.href).href; }
 window.AU = AU; window.BGA = BGA; window.TRACKS = TRACKS; // 진단용(개발자 도구에서 상태 확인)
 // iOS 사파리는 사용자 제스처 안에서 한 번 재생해 둔 <audio>만 이후 자동 재생을 허용한다.
@@ -1435,7 +1444,7 @@ function bgm(on) {
   try {
     const want = bgmSrc(tr);
     if (BGA.src !== want) BGA.src = want;
-    BGA.muted = AU.muted; BGA.volume = 0.68;
+    BGA.muted = AU.muted; BGA.volume = BGM_VOL;
     try { BGA.currentTime = 0; } catch (e) { }
     const p = BGA.play();
     if (p && p.catch) p.catch(() => {
@@ -1443,6 +1452,17 @@ function bgm(on) {
       AU.synth = true; AU.idx = 0; AU.beatPos = 0; AU.next = AU.ctx ? AU.ctx.currentTime + 0.05 : 0;
     });
   } catch (e) { AU.synth = true; }
+}
+let bgmDuckT = 0;
+function bgmDuck(ms) { // 팡파레가 울리는 동안만 BGM 볼륨을 낮춘다
+  try { BGA.volume = BGM_VOL * 0.35; } catch (e) { }
+  clearTimeout(bgmDuckT);
+  bgmDuckT = setTimeout(() => { try { BGA.volume = BGM_VOL; } catch (e) { } }, ms || 2200);
+}
+function bgmCelebrate() { // 결승 통과: 레이스 캐럴에서 세리머니 재즈로 넘어가 결과창까지 이어진다
+  AU.celeb = true; if (AU.celebI == null) AU.celebI = 0;
+  bgm(true);
+  bgmDuck(2200);
 }
 function auEngine(v, ground, mute) { if (!AU.ctx) return; const t = AU.ctx.currentTime, k = mute ? 0 : 1; AU.sled.g.gain.setTargetAtTime(k * (ground ? Math.min(0.18, v / 183) : 0), t, 0.05); AU.sled.bq.frequency.setTargetAtTime(700 + v * 30, t, 0.1); AU.wind.g.gain.setTargetAtTime(k * Math.min(0.25, v * v / 6400), t, 0.1); AU.wind.bq.frequency.setTargetAtTime(300 + v * 14, t, 0.1); }
 
@@ -1882,14 +1902,14 @@ function whiteFade(fn) { const f = $('#fade'); f.classList.add('on'); setTimeout
 function pause(v, silent) { if (G.state !== 'race' && !G.paused) return; G.paused = v === undefined ? !G.paused : v; $('#pause').classList.toggle('hidden', !G.paused || !!silent || !$('#help').classList.contains('hidden')); document.body.classList.toggle('paused', G.paused); if (G.paused) auEngine(0, false, true); }
 function resetWorld() { Object.values(W.snowmen).forEach(m => { m.visible = true; m.position.copy(m.userData.home); m.rotation.x = m.rotation.z = 0; }); trails.forEach(t => t.reset()); W.fireOn = false; G.lastSec = -1; G.offR = 0; G.last = null; G.saved = 0; G.mine = null; G.resOpen = false; $('#endbar').classList.add('hidden'); $('#shot').classList.add('hidden'); $('#turbo').classList.remove('on'); $('#gl').style.cursor = ''; }
 function toMenu(first) {
-  G.state = 'menu'; G.R = newRace(G.diff, 1); resetWorld(); G.finT = 0; G.orbitYaw = 0; G.orbitPitch = 0; G.autoSpin = false; bgm(false); auEngine(0, false, true);
+  G.state = 'menu'; G.R = newRace(G.diff, 1); resetWorld(); G.finT = 0; G.orbitYaw = 0; G.orbitPitch = 0; G.autoSpin = false; AU.celeb = false; bgm(false); auEngine(0, false, true);
   $('#result').classList.add('hidden'); $('#board').classList.add('hidden'); $('#hud').classList.remove('on'); $('#menu').classList.remove('hidden'); requestAnimationFrame(() => $('#menu').classList.remove('out')); showBest(); $('#speedlines').style.opacity = 0;
   if (!first) setTimeout(() => { if (G.state === 'menu') $('#hud').classList.add('hidden'); }, 500); else $('#hud').classList.add('hidden');
 }
 function startRace(again) {
   if (G.state !== 'menu' && !again) return; auInit(); auResume(); setPlaybackSession(); SFX.click();
   setName($('#menuNameIn').value);
-  startOnlineSession(); pickCarol();
+  startOnlineSession(); AU.celeb = false; pickCarol();
   G.R = newRace(G.diff, 0, AUTO); resetWorld(); G.state = 'intro'; G.orbitYaw = 0; G.orbitPitch = 0; G.autoSpin = false; G.introT = again ? 1.0 : 0; G.countI = -1; G.finT = 0; G.acc = 0; G.jumpQ = false; G.hintT = 0;
   $('#menu').classList.add('out'); setTimeout(() => { if (G.state !== 'menu') $('#menu').classList.add('hidden'); }, 520);
   $('#hud').classList.remove('hidden'); requestAnimationFrame(() => $('#hud').classList.add('on')); $('#hint').style.opacity = 1; $('#pops').innerHTML = ''; hud(true);
@@ -1966,7 +1986,7 @@ function events() {
     else if (e.t === 'land') { SFX.land(e.kind); wpos(p.s, p.u, 0, fxV); W.emit(fxV, 0, 4, 0, 26, 9); if (e.kind === 'perfect') pop(e.spins ? `퍼펙트! ${e.spins}회전 +${100 + e.spins * 200}` : '퍼펙트 착지 +100', 'gold'); else if (e.kind === 'wobble') pop('흔들!', 'bad'); else if (e.kind === 'miss') pop('미스…', 'bad'); }
     else if (e.t === 'crash') { if (e.who === 0) { SFX.crash(); pop(e.o.id[0] === 's' ? '눈사람 쾅!' : '나무에 쿵!', 'bad'); } wpos(e.o.s, e.o.u, 0.8, fxV); W.emit(fxV, 0, 5, 0, 30, 10); }
     else if (e.t === 'bump') SFX.crash();
-    else if (e.t === 'finish') { G.state = 'finish'; G.finT = 0; W.fireOn = true; SFX.fanfare(); bgm(false); pop('골인!', 'gold'); }
+    else if (e.t === 'finish') { G.state = 'finish'; G.finT = 0; W.fireOn = true; SFX.fanfare(); bgmCelebrate(); pop('골인!', 'gold'); }
   }
   R.events.length = 0;
 }
@@ -2019,7 +2039,7 @@ function devShot(v) { // 개발용: ?shot=<s|result>
   window.__dbg = { W, camera };
   if (v === 'menu') return; $('#menu').classList.add('hidden'); $('#hud').classList.remove('hidden'); $('#hud').classList.add('on'); G.R = newRace(G.diff, 5);
   const R = G.R, s = v === 'result' ? 1990 : (+v || 0); R.racers.forEach((r, i) => { r.s = s - i * 7 + (i === 2 ? 16 : 0); r.u = [0.5, -3, 3.4, -1][i]; r.v = 31 - i * 2; r.gprev = rampAt(r.s, r.u); r.hr = r.gprev; }); R.t = s / 30; G.state = 'race'; G.lastSec = -1; G.hintT = 0; setCam(0, true);
-  if (v === 'end') { R.racers.forEach((r, i) => { r.s = i ? 2059.5 : 2063; r.u = [0.4, -3.2, 3.0, -0.6][i]; r.v = 0; r.fin = true; r.time = 66.4 + i * 6.3; r.gateI = 99; }); const p0 = R.racers[0]; p0.gifts = 21; p0.gates = 13; p0.tricks = 4; p0.trickPts = 800; p0.vmax = 48; G.state = 'finish'; G.finT = 4.3; W.fireOn = true; return; }
+  if (v === 'end') { R.racers.forEach((r, i) => { r.s = i ? 2059.5 : 2063; r.u = [0.4, -3.2, 3.0, -0.6][i]; r.v = 0; r.fin = true; r.time = 66.4 + i * 6.3; r.gateI = 99; }); const p0 = R.racers[0]; p0.gifts = 21; p0.gates = 13; p0.tricks = 4; p0.trickPts = 800; p0.vmax = 48; G.state = 'finish'; G.finT = 4.3; W.fireOn = true; bgmCelebrate(); return; }
   if (v === 'result') { R.racers[0].gifts = 21; R.racers[0].gates = 13; R.racers[0].tricks = 4; R.racers[0].trickPts = 800; }
   if (Q.get('freeze')) { const st = raceStep; setTimeout(() => { G.paused = true; }, +Q.get('freeze')); }
 }
