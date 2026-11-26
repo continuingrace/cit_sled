@@ -204,6 +204,11 @@ body.paused *{animation-play-state:paused!important}
 #cards .vin-head{position:relative;padding:0 44px 0 0;text-align:left}
 #cards .vin-head .vin-eyebrow,#cards .vin-head .vin-title,#cards .vin-head .vin-count{text-align:left;margin-left:0;padding-left:0}
 #cards .vin-eyebrow{display:block;margin:0;padding:0;text-indent:-1px;font-size:10px;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:var(--iv-brass)}
+/* 키커는 타이틀 폭에 맞춰 양끝을 맞춤 (왼쪽 C ↔ 트, 오른쪽 T ↔ 기) */
+#cards .vin-head-top{width:fit-content;max-width:100%}
+#cards .vin-eyebrow{display:flex;justify-content:space-between;align-items:baseline;width:100%;gap:0}
+#cards .vin-eyebrow>span{letter-spacing:.24em}
+#cards .vin-eyebrow>span:last-child{margin-right:-.24em}
 #cards h2.vin-title{margin:0 0 6px;padding:0;font-size:21px;font-weight:800;line-height:1.32;letter-spacing:-.012em;text-align:left!important;color:var(--iv-burgundy)}
 #cards .vin-count{margin:0;font-size:12.5px;font-weight:500;color:var(--iv-sub);letter-spacing:-.005em}
 #cards .vin-count b{font-weight:800;color:var(--iv-green)}
@@ -377,8 +382,10 @@ body.paused *{animation-play-state:paused!important}
 <div id="cards" class="modal hidden"><div class="panel vint"><div class="vint-sheet">
   <div class="vin-head">
     <button class="vin-close" id="cardsX" title="닫기" aria-label="카드 창 닫기">✕</button>
-    <span class="vin-eyebrow">CiT 2026 · Christmas Post</span>
-    <h2 class="vin-title">트리에 빈티지 카드 남기기</h2>
+    <div class="vin-head-top">
+      <span class="vin-eyebrow"><span class="k-a">CiT 2026</span><span class="k-dot">·</span><span class="k-b">Christmas Post</span></span>
+      <h2 class="vin-title">트리에 빈티지 카드 남기기</h2>
+    </div>
     <p class="vin-count" id="cardCount">트리에 <b>0</b>장의 카드가 걸려 있어요</p>
   </div>
   <div class="vin-preview" id="cardPreview">
