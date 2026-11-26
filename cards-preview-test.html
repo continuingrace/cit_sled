@@ -167,10 +167,10 @@ body.paused *{animation-play-state:paused!important}
 @media (max-height:520px){.logo{font-size:26px}.mcol{gap:8px;width:min(380px,58vw)}.lbl,#diffDesc,.best{display:none}.card{gap:8px;padding:12px}.char img{aspect-ratio:1.7}.char span{padding:4px 2px 5px;font-size:12px}.btn.big{font-size:17px;padding:10px}.btn.sub{padding:8px 6px;font-size:13px}.diff{padding:7px 4px;font-size:13px}.modal.side .panel{gap:8px;padding:14px}}
 
 /* ===== 빈티지 크리스마스 카드 (트리에 거는 엽서) — 에디토리얼 홀리데이 팔레트 ===== */
-#cards{--iv-bg:#faf5ea;--iv-surface:#fffdf8;--iv-ink:#261d16;--iv-sub:#75685a;--iv-line:rgba(120,90,55,.18);--iv-burgundy:#7c2329;--iv-green:#1e4631;--iv-brass:#a67c37}
+#cards{--iv-bg:#fbf7ef;--iv-surface:#fffdf8;--iv-ink:#221a14;--iv-sub:#7b7166;--iv-line:rgba(60,45,30,.13);--iv-burgundy:#6f2b30;--iv-green:#23483a;--iv-brass:#9c7a4a;--iv-noise:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E")}
 #cards .panel.vint{width:min(680px,96vw);max-width:min(680px,96vw);max-height:94vh;overflow:auto;padding:0;background:transparent;border:0;box-shadow:none;scrollbar-width:none}
 #cards .panel.vint::-webkit-scrollbar{width:0;height:0}
-#cards .vint-sheet{position:relative;background:var(--iv-bg);color:var(--iv-ink);border:1px solid var(--iv-line);border-radius:18px;padding:22px 22px 20px;box-shadow:0 24px 60px rgba(5,9,30,.45)}
+#cards .vint-sheet{position:relative;color:var(--iv-ink);border:1px solid var(--iv-line);border-radius:20px;padding:26px 26px 22px;background-color:var(--iv-bg);background-image:var(--iv-noise);box-shadow:0 26px 64px rgba(5,9,30,.42),inset 0 1px 0 rgba(255,255,255,.6)}
 #cards .vin-head{position:relative;padding-right:40px}
 #cards .vin-eyebrow{display:block;font-size:10px;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:var(--iv-brass)}
 #cards h2.vin-title{margin:8px 0 6px;font-size:21px;font-weight:800;line-height:1.32;letter-spacing:-.012em;text-align:left;color:var(--iv-burgundy)}
@@ -179,33 +179,34 @@ body.paused *{animation-play-state:paused!important}
 #cards .vin-close{position:absolute;right:0;top:0;width:30px;height:30px;padding:0;border-radius:50%;border:1px solid var(--iv-line);background:var(--iv-surface);color:var(--iv-sub);font-size:14px;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:color .15s,border-color .15s}
 #cards .vin-close:hover{color:var(--iv-burgundy);border-color:rgba(124,35,41,.4)}
 /* 실시간 미리보기 엽서 */
-#cards .vin-preview{position:relative;margin-top:16px;border-radius:14px;padding:15px 16px 11px;display:flex;flex-direction:column;gap:9px;border:1px solid var(--pv-edge,#d9cbb0);background:var(--pv-bg,#f6efdf);color:var(--pv-ink,#2c2218);box-shadow:0 12px 32px rgba(45,30,15,.10);transition:background .18s ease,color .18s ease,border-color .18s ease}
+#cards .vin-preview{position:relative;margin-top:18px;border-radius:14px;padding:18px 18px 13px;display:flex;flex-direction:column;gap:11px;border:1px solid var(--pv-edge,#e2d7c4);background-color:var(--pv-bg,#f8f2e6);background-image:var(--iv-noise);color:var(--pv-ink,#2b221a);box-shadow:0 12px 30px rgba(45,30,15,.09);transition:background-color .18s ease,color .18s ease,border-color .18s ease}
 #cards .vin-preview:before{content:'';position:absolute;inset:5px;border:1px solid rgba(255,255,255,.5);border-radius:10px;pointer-events:none}
 #cards .vp-top{display:flex;justify-content:flex-end;align-items:flex-start;gap:10px;min-height:56px}
 #cards .vp-post{width:54px;height:54px;margin-right:auto;border:1px solid rgba(124,35,41,.22);border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;font-size:6.5px;font-weight:700;letter-spacing:.12em;line-height:1.3;text-align:center;color:rgba(124,35,41,.5);transform:rotate(-8deg)}
-#cards .vp-stamp{display:flex;flex-direction:column;align-items:center;gap:2px;width:52px;padding:6px 3px 5px;border:1px dashed rgba(120,90,55,.4);border-radius:4px;background:rgba(255,253,248,.85);font-size:7px;font-weight:700;letter-spacing:.1em;color:var(--iv-green);text-align:center}
+#cards .vp-stamp{display:flex;flex-direction:column;align-items:center;gap:2px;width:52px;padding:7px 3px 6px;border:1px solid rgba(60,45,30,.18);border-radius:2px;background:rgba(255,253,248,.92);box-shadow:inset 0 0 0 3px rgba(255,255,255,.7);font-size:7px;font-weight:700;letter-spacing:.1em;color:var(--iv-green);text-align:center}
 #cards .vp-stamp .ic{font-size:17px;line-height:1.05}
 #cards .vp-msg{margin:0;flex:1;min-height:38px;font-size:13.5px;font-weight:500;line-height:1.68;letter-spacing:-.005em;white-space:pre-wrap;word-break:break-word;color:inherit}
 #cards .vp-msg.empty{opacity:.42}
-#cards .vp-foot{display:flex;justify-content:space-between;align-items:flex-end;gap:8px;padding-top:9px;border-top:1px solid rgba(120,90,55,.16);font-size:10px;font-weight:600;letter-spacing:.06em;color:inherit;opacity:.62}
+#cards .vp-foot{display:flex;justify-content:space-between;align-items:flex-end;gap:8px;padding-top:10px;border-top:1px solid var(--pv-line,rgba(60,45,30,.14));font-size:10px;font-weight:600;letter-spacing:.06em;color:inherit;opacity:.66}
 #cards .vp-name{max-width:66%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11.5px;font-weight:700;letter-spacing:-.005em;opacity:1}
 #cards .vin-tree{width:100%;margin-top:10px;padding:11px;display:flex;align-items:center;justify-content:center;gap:7px;border:1px solid var(--iv-line);border-radius:11px;background:var(--iv-surface);color:var(--iv-green);font-family:inherit;font-size:12.5px;font-weight:700;letter-spacing:.01em;cursor:pointer;transition:border-color .15s,box-shadow .15s}
 #cards .vin-tree:hover{border-color:rgba(30,70,49,.42);box-shadow:0 4px 14px rgba(30,70,49,.10)}
 /* 작성 폼 */
-#cards .vin-form{display:flex;flex-direction:column;gap:13px;margin-top:18px}
-#cards .vin-field{display:flex;flex-direction:column;gap:6px;min-width:0}
+#cards .vin-form{display:flex;flex-direction:column;gap:16px;margin-top:22px}
+#cards .vin-field{display:flex;flex-direction:column;gap:8px;min-width:0}
 #cards .vin-label{font-size:10px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--iv-sub)}
-#cards input.vin-in,#cards textarea.vin-ta{width:100%;font-family:inherit;font-weight:500;font-size:14px;line-height:1.6;letter-spacing:-.005em;color:var(--iv-ink);background:var(--iv-surface);border:1px solid var(--iv-line);border-radius:11px;padding:11px 13px;outline:none;transition:border-color .15s,box-shadow .15s}
+#cards input.vin-in,#cards textarea.vin-ta{width:100%;font-family:inherit;font-weight:500;font-size:14px;line-height:1.6;letter-spacing:-.005em;color:var(--iv-ink);background:var(--iv-surface);border:1px solid var(--iv-line);border-radius:12px;padding:13px 15px;outline:none;transition:border-color .15s,box-shadow .15s}
 #cards input.vin-in::placeholder,#cards textarea.vin-ta::placeholder{color:rgba(117,104,90,.66);font-weight:500}
 #cards input.vin-in:focus,#cards textarea.vin-ta:focus{border-color:rgba(124,35,41,.42);box-shadow:0 0 0 3px rgba(124,35,41,.07)}
 #cards textarea.vin-ta{min-height:84px;resize:vertical}
 #cards .vin-meta{align-self:flex-end;font-size:10.5px;font-weight:600;letter-spacing:.06em;color:var(--iv-sub);font-variant-numeric:tabular-nums}
-#cards .vin-picks{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
-#cards .vin-chip{display:flex;align-items:center;justify-content:center;gap:5px;white-space:nowrap;overflow:hidden;border:1px solid var(--iv-line);background:var(--iv-surface);color:var(--iv-sub);border-radius:9px;padding:9px 4px;font-family:inherit;font-size:11.5px;font-weight:600;letter-spacing:-.012em;cursor:pointer;transition:border-color .15s,color .15s,box-shadow .15s,background .15s}
+#cards .vin-picks{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+#cards .vin-picks.trio{grid-template-columns:repeat(3,1fr)}
+#cards .vin-chip{display:flex;align-items:center;justify-content:center;gap:6px;white-space:nowrap;overflow:hidden;border:1px solid var(--iv-line);background:var(--iv-surface);color:var(--iv-sub);border-radius:11px;padding:11px 6px;font-family:inherit;font-size:12px;font-weight:600;letter-spacing:-.012em;cursor:pointer;transition:border-color .15s,color .15s,box-shadow .15s,background .15s}
 #cards .vin-chip:hover{border-color:rgba(124,35,41,.32)}
 #cards .vin-chip.on{border-color:rgba(124,35,41,.5);color:var(--iv-burgundy);background:#fff;box-shadow:0 2px 10px rgba(124,35,41,.1)}
 #cards .vin-chip .sw{width:11px;height:11px;border-radius:3px;border:1px solid rgba(0,0,0,.1);flex:none}
-#cards .vin-send{margin-top:2px;border:0;border-radius:12px;padding:14px;font-family:inherit;font-size:14.5px;font-weight:800;letter-spacing:.01em;color:#fff8ef;background:linear-gradient(180deg,#8f2b30,#6f1f24);box-shadow:0 10px 24px rgba(124,35,41,.22),inset 0 1px 0 rgba(255,255,255,.14);cursor:pointer;transition:filter .15s}
+#cards .vin-send{margin-top:4px;border:0;border-radius:13px;padding:15px;font-family:inherit;font-size:14.5px;font-weight:800;letter-spacing:.01em;color:#fff8ef;background:linear-gradient(180deg,#7b3036,#5d2228);box-shadow:0 12px 26px rgba(93,34,40,.2),inset 0 1px 0 rgba(255,255,255,.12);cursor:pointer;transition:filter .15s}
 #cards .vin-send:hover{filter:brightness(1.06)}
 #cards .vin-send:disabled{opacity:.55;cursor:default;box-shadow:none;filter:none}
 #cards .vin-note{margin:0;font-size:11px;font-weight:500;line-height:1.5;letter-spacing:-.005em;color:var(--iv-sub)}
@@ -215,10 +216,10 @@ body.paused *{animation-play-state:paused!important}
 #cards .vin-sep{display:flex;align-items:center;gap:10px;margin:20px 0 12px;font-size:10px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--iv-sub)}
 #cards .vin-sep:before,#cards .vin-sep:after{content:'';flex:1;height:1px;background:var(--iv-line)}
 #cards .vin-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(146px,1fr));gap:10px;max-height:34vh;overflow-y:auto;padding:2px;scrollbar-width:thin;touch-action:pan-y}
-#cards .vcard{position:relative;border-radius:10px;border:1px solid;padding:13px 12px 11px;display:flex;flex-direction:column;gap:8px;box-shadow:0 8px 20px rgba(45,30,15,.07)}
+#cards .vcard{position:relative;border-radius:12px;border:1px solid;padding:15px 14px 12px;display:flex;flex-direction:column;gap:9px;background-image:var(--iv-noise);box-shadow:0 8px 20px rgba(45,30,15,.06)}
 #cards .vcard .vc-stamp{position:absolute;right:9px;top:9px;font-size:13px;line-height:1;opacity:.85}
 #cards .vcard .vc-msg{position:relative;flex:1;margin:0;padding-right:15px;font-size:12.5px;font-weight:500;line-height:1.55;letter-spacing:-.005em;white-space:pre-wrap;word-break:break-word;color:inherit}
-#cards .vcard .vc-foot{position:relative;display:flex;justify-content:space-between;align-items:center;gap:6px;padding-top:7px;border-top:1px solid rgba(120,90,55,.16);font-size:10px;font-weight:600;letter-spacing:.02em;opacity:.72}
+#cards .vcard .vc-foot{position:relative;display:flex;justify-content:space-between;align-items:center;gap:6px;padding-top:8px;border-top:1px solid;font-size:10px;font-weight:600;letter-spacing:.02em;opacity:.75}
 #cards .vcard .vc-foot b{font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 #cards .vin-empty{grid-column:1/-1;margin:0;text-align:center;font-size:12px;font-weight:500;line-height:1.6;color:var(--iv-sub);padding:22px 6px}
 /* 첫 화면에서 트리 구경하기 바 */
@@ -354,7 +355,7 @@ body.paused *{animation-play-state:paused!important}
   <div class="vin-form">
     <div class="vin-field"><label class="vin-label" for="cardName">이름</label><input id="cardName" class="vin-in" maxlength="12" placeholder="닉네임 (12자까지)" autocomplete="off" enterkeyhint="next" aria-label="카드에 남길 이름"></div>
     <div class="vin-field"><label class="vin-label" for="cardMsg">내용</label><textarea id="cardMsg" class="vin-ta" maxlength="140" placeholder="따뜻한 한마디를 적어 주세요 (140자까지)" aria-label="카드 내용"></textarea><div class="vin-meta" id="cardCounter">0 / 140</div></div>
-    <div class="vin-field"><span class="vin-label">종이</span><div class="vin-picks" id="cardThemePick"><button type="button" class="vin-chip on" data-theme="cream"><i class="sw" style="background:#f6efdf"></i>크림</button><button type="button" class="vin-chip" data-theme="kraft"><i class="sw" style="background:#e8d5b8"></i>크라프트</button><button type="button" class="vin-chip" data-theme="sage"><i class="sw" style="background:#e3e8db"></i>세이지</button><button type="button" class="vin-chip" data-theme="ruby"><i class="sw" style="background:#f2dcd9"></i>루비</button></div></div>
+    <div class="vin-field"><span class="vin-label">종이</span><div class="vin-picks trio" id="cardThemePick"><button type="button" class="vin-chip on" data-theme="cream"><i class="sw" style="background:#f8f2e6"></i>아이보리</button><button type="button" class="vin-chip" data-theme="kraft"><i class="sw" style="background:#ecdfc9"></i>크라프트</button><button type="button" class="vin-chip" data-theme="sage"><i class="sw" style="background:#22412f"></i>딥그린</button></div></div>
     <div class="vin-field"><span class="vin-label">우표</span><div class="vin-picks" id="cardStampPick"><button type="button" class="vin-chip on" data-stamp="tree">🎄 트리</button><button type="button" class="vin-chip" data-stamp="bell">🔔 종</button><button type="button" class="vin-chip" data-stamp="santa">🎅 산타</button><button type="button" class="vin-chip" data-stamp="star">⭐ 별</button></div></div>
     <button type="button" class="vin-send" id="cardSend">트리에 걸기</button>
     <p class="vin-note" id="cardNote">등록할 때 보안 확인(Turnstile)이 자동으로 함께 진행돼요.</p>
@@ -1782,22 +1783,21 @@ function saveName() {
 }
 // ---------- 빈티지 크리스마스 카드 (결승 트리에 거는 엽서) ----------
 const CARD_THEMES = {
-  cream: { label: '크림', bg: '#f6efdf', ink: '#2c2218', edge: '#d9cbb0' },
-  kraft: { label: '크라프트', bg: '#e8d5b8', ink: '#33261a', edge: '#c9ab83' },
-  sage: { label: '세이지', bg: '#e3e8db', ink: '#263524', edge: '#b9c6a8' },
-  ruby: { label: '루비', bg: '#f2dcd9', ink: '#4c1f22', edge: '#d9b1ab' }
+  cream: { label: '아이보리', bg: '#f8f2e6', ink: '#2b221a', edge: '#e2d7c4', dark: false },
+  kraft: { label: '크라프트', bg: '#ecdfc9', ink: '#3a2c1d', edge: '#d3bd9d', dark: false },
+  sage: { label: '딥그린', bg: '#22412f', ink: '#f1ecdf', edge: '#3b5d48', dark: true }
 };
 const CARD_STAMPS = { tree: '🎄', bell: '🔔', santa: '🎅', star: '⭐' };
 const CARD_MSG_MAX = 140, CARD_NAME_MAX = 12, CARD_ORNAMENT_MAX = 48;
 let CARDS = [], CARDS_TOTAL = 0, CARDS_STATE = 'idle';
 CARDS = [
   { id: 101, name: '정영', message: '메리 크리스마스! 다들 올해도 수고 많았어요 🎄', theme: 'cream', stamp: 'tree', createdAt: 1764123000 },
-  { id: 102, name: 'HR둥이', message: '트리에 카드를 걸고 갑니다. 내년에도 함께 달려요!', theme: 'sage', stamp: 'star', createdAt: 1764119000 },
-  { id: 103, name: '이환승', message: '완주 축하해요! 썰매대작전 최고 🎅', theme: 'ruby', stamp: 'santa', createdAt: 1764114000 },
+  { id: 102, name: 'HR둥이', message: '트리에 카드를 걸고 갑니다. 내년에도 함께 달려요!', theme: 'kraft', stamp: 'star', createdAt: 1764119000 },
+  { id: 103, name: '이환승', message: '완주 축하해요! 썰매대작전 최고 🎅', theme: 'sage', stamp: 'santa', createdAt: 1764114000 },
   { id: 104, name: '이코칭', message: '따뜻한 연말 보내세요. 복 많이 받으세요!', theme: 'kraft', stamp: 'bell', createdAt: 1764109000 },
   { id: 105, name: '디자이너리', message: '우리 팀 모두 건강하고 행복한 한 해 되길 🌟', theme: 'cream', stamp: 'star', createdAt: 1764103000 },
   { id: 106, name: 'CiT코칭연구소', message: '2026년에도 좋은 배움으로 만나요. 메리 크리스마스!', theme: 'sage', stamp: 'tree', createdAt: 1764097000 },
-  { id: 107, name: '민수', message: '카드 남기고 갑니다~ 모두 즐거운 연말!', theme: 'ruby', stamp: 'bell', createdAt: 1764091000 },
+  { id: 107, name: '민수', message: '카드 남기고 갑니다~ 모두 즐거운 연말!', theme: 'sage', stamp: 'bell', createdAt: 1764091000 },
   { id: 108, name: '수진', message: '올해도 무사히 완주! 내년엔 더 빨리 달려볼게요', theme: 'kraft', stamp: 'tree', createdAt: 1764085000 },
   { id: 109, name: '지은', message: '눈길 조심하고 따뜻하게 지내요 ❄️', theme: 'cream', stamp: 'bell', createdAt: 1764079000 },
   { id: 110, name: '현우', message: '올 한 해 정말 고생 많았습니다. 새해 복 많이 받으세요!', theme: 'sage', stamp: 'santa', createdAt: 1764073000 }
@@ -1813,6 +1813,7 @@ function renderCardPreview() {
   pv.style.setProperty('--pv-bg', th.bg);
   pv.style.setProperty('--pv-ink', th.ink);
   pv.style.setProperty('--pv-edge', th.edge);
+  pv.style.setProperty('--pv-line', th.dark ? 'rgba(255,255,255,.22)' : 'rgba(60,45,30,.14)');
   const m = $('#vpMsg'); m.textContent = msg || '따뜻한 한마디를 적으면 이 엽서에 그대로 담겨요.'; m.classList.toggle('empty', !msg);
   $('#vpName').textContent = name || '보내는 사람';
   $('#vpStampIc').textContent = CARD_STAMPS[cardPick.stamp] || '🎄';
@@ -1853,7 +1854,7 @@ function paintCards() {
   }
   list.innerHTML = CARDS.map(c => {
     const th = CARD_THEMES[c.theme] || CARD_THEMES.cream;
-    return '<article class="vcard" style="background:' + th.bg + ';color:' + th.ink + ';border-color:' + th.edge + '">'
+    return '<article class="vcard" style="background-color:' + th.bg + ';color:' + th.ink + ';border-color:' + th.edge + '">'
       + '<span class="vc-stamp">' + (CARD_STAMPS[c.stamp] || '🎄') + '</span>'
       + '<p class="vc-msg">' + esc(c.message) + '</p>'
       + '<div class="vc-foot"><b>' + esc(c.name) + '</b><span>' + esc(cardWhen(c.createdAt)) + '</span></div></article>';
