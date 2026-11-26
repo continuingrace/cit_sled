@@ -24,6 +24,8 @@ button,input{font-family:inherit;letter-spacing:.02em;line-height:1.35}
 #bStart{margin-top:2px;background:linear-gradient(180deg,#f45c62,#dc3b44 58%,#c62f38);box-shadow:0 12px 28px rgba(214,58,65,.36),inset 0 1px 0 rgba(255,255,255,.32),inset 0 -2px 0 rgba(0,0,0,.18);letter-spacing:.02em}
 #bStart:hover{background:linear-gradient(180deg,#ff6d73,#e6454e 58%,#cf3540)}
 #bStart small{border-color:rgba(255,255,255,.55);background:rgba(0,0,0,.14)}
+#bVerify{background:linear-gradient(180deg,#10b981,#059669);color:#fff;font-weight:800;border:1px solid rgba(255,255,255,.35);box-shadow:0 8px 20px rgba(16,185,129,.45);text-shadow:0 1px 2px rgba(4,60,40,.35)}
+#bVerify:hover{background:linear-gradient(180deg,#16cf90,#05a877);box-shadow:0 10px 24px rgba(16,185,129,.55)}
 .btn.link{background:var(--acc);color:var(--ink);width:100%}.btn.link:hover{background:#ffe27a}
 .btn:disabled{opacity:.55;cursor:default}
 .btn small{font-size:11px;font-weight:700;opacity:.7;border:1px solid currentColor;padding:1px 6px;border-radius:6px;letter-spacing:.06em}
@@ -216,7 +218,7 @@ body.paused *{animation-play-state:paused!important}
   <form class="namerow" id="nameForm"><input id="nameIn" maxlength="10" placeholder="이름을 남겨 주세요" autocomplete="off" enterkeyhint="done"><button class="btn sub" id="bSave" type="submit">기록 남기기</button></form>
   <div class="best" id="rBest"></div>
   <button class="btn" id="bLookAround" style="background:rgba(255,216,77,.22);border:1px solid #ffd84d;color:#ffd84d;font-weight:700;margin-bottom:6px">주변 풍경 둘러보기 👀 (360도 회전)</button>
-  <div class="row"><button class="btn" id="bRetry">한 번 더</button><button class="btn sub" id="bMenu">메인으로</button><button class="btn sub" id="bBoard2">순위표</button></div>
+  <div class="row"><button class="btn" id="bRetry">한 번 더</button><button class="btn" id="bVerify">참여인증</button><button class="btn sub" id="bBoard2">순위표</button></div>
   <div class="row"><button class="btn sub" id="bStory">스토리로 공유</button></div>
   <a class="btn link" id="bHome" href="https://www.citkorea.co.kr/03_08_02/677" target="_blank" rel="noopener noreferrer">CiT 장학이벤트 보기 ↗</a>
 </div></div>
@@ -1449,6 +1451,8 @@ const Q = new URLSearchParams(location.search), SPEED = +Q.get('speed') || 1, AU
 const ROSTER = [{ key: 'kapi', name: '정영', col: '#e2463f' }, { key: 'hr', name: 'HR둥이', col: '#f4b63a' }, { key: 'hwan', name: '이환승', col: '#3b7fe6' }, { key: 'coach', name: '이코칭', col: '#f07aa5' }];
 const DIFF_DESC = { easy: '친구들이 느긋하게 달려요. 처음이라면 여기서!', normal: '적당히 겨루는 기본 난이도예요. (가산점 +250점)', hard: '친구들이 빠르고 장애물도 잘 피해요. (가산점 +700점)' };
 const HOME = 'https://www.citkorea.co.kr/03_08_02/677';
+// 결과창 '참여인증' 버튼이 여는 구글폼 주소. URL을 넣으면 버튼이 바로 그 링크로 이동한다.
+const VERIFY_URL = '';
 const G = { state: 'boot', diff: 'normal', pick: 0, order: [0, 1, 2, 3], thumbs: [], R: null, time: 0, camMode: 0, introT: 0, finT: 0, offR: 0, resOpen: false, shot: null, lastSec: -1, acc: 0, jumpQ: false, paused: false, countI: -1, last: null, saved: 0, pname: '' };
 window.G = G;
 
@@ -1856,14 +1860,18 @@ function buildUI() {
     });
   };
   $('#bRetry').onclick = $('#bRetry2').onclick = $('#bRetry3').onclick = doRetry;
-  $('#bMenu').onclick = doRetry;
+  // 결과창 '참여인증' — 구글폼 URL이 채워지면 바로 이동, 아직 비어 있으면 안내만
+  $('#bVerify').onclick = () => {
+    if (VERIFY_URL) window.open(VERIFY_URL, '_blank', 'noopener');
+    else toast('참여인증 링크 준비 중이에요!', '구글폼 링크가 연결되면 바로 이동해요.');
+  };
   const la = document.getElementById('bLookAround');
   if (la) la.onclick = () => {
     setResOpen(false);
     G.autoSpin = true;
     toast('360도 파노라마 회전 중!', '화면 드래그나 방향키로도 조절할 수 있어요 👀');
   };
-  $('#bMenu').onclick = $('#bMenu2').onclick = () => whiteFade(() => { pause(false, true); toMenu(); });
+  $('#bMenu2').onclick = () => whiteFade(() => { pause(false, true); toMenu(); });
   // 마지막 장면의 팻말·간판을 누르면 홈페이지로
   const ray = new THREE.Raycaster(), nd = new THREE.Vector2(), hitOn = (e, list) => { if (G.state !== 'result' || !list || !list.length) return false; nd.set(e.clientX / innerWidth * 2 - 1, -(e.clientY / innerHeight) * 2 + 1); ray.setFromCamera(nd, camera); return ray.intersectObjects(list, false).length > 0; }, hit = (e) => hitOn(e, W.links), hitPhoto = (e) => hitOn(e, W.photoLinks);
   $('#gl').addEventListener('click', (e) => { if (hitPhoto(e)) { takePolaroid(); return; } if (hit(e)) window.open(HOME, '_blank', 'noopener'); });
