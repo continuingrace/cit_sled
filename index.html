@@ -2453,6 +2453,7 @@ function closeTreeView() {
   const tb = $('#treeCount'); if (tb) { tb.classList.remove('on'); tb.innerHTML = ''; }
   if (back === 'result') { // 결과 화면(세리머니)으로 복귀 — 결과창·하단 독 상태와 세리머니 음악을 그대로 되살린다
     G.state = 'result'; G.finT = 4.5; G.resOpen = false;
+    G.orbitYaw = 0; G.orbitPitch = 0; G.orbitFocus = 0.45; G.orbitDist = 22; G.autoSpin = false; // 트리에서 돌린 시선을 결과 화면 기본값으로
     $('#menu').classList.add('hidden');
     $('#hud').classList.add('hidden');
     setResOpen(backResOpen);
