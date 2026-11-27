@@ -1999,7 +1999,7 @@ function makeVillager(o) {
 }
 
 // ===== 버전 표기 (배포할 때마다 이 값만 올린다) =====
-const APP_VER = 'v1.16';
+const APP_VER = 'v1.17';
 try { const av = document.getElementById('appVer'); if (av) av.textContent = APP_VER; } catch (e) { }
 
 // ===== 사운드 (효과음: Web Audio 직접 합성 / BGM: 실제 캐럴 MP3) =====
@@ -2794,14 +2794,54 @@ async function drawCardCanvas(card) { // card를 넘기면 그 카드(내 카드
     holes.forEach(function (q) { sx.beginPath(); sx.arc(q[0], q[1], 7, 0, Math.PI * 2); sx.stroke(); });
     x.save(); x.translate(CW - 135, 184); x.rotate(0.038); x.shadowColor = 'rgba(36,22,8,.22)'; x.shadowBlur = 7; x.shadowOffsetY = 2; x.drawImage(sc, -75, -94); x.restore();
   } catch (e) { }
-  const mark = th.dark ? 'rgba(244,226,184,.8)' : 'rgba(124,35,41,.5)';
-  x.save(); x.translate(CW - 300, 186); x.rotate(-0.12); x.strokeStyle = mark;
-  x.lineWidth = 4; x.beginPath(); x.arc(0, 0, 46, 0, Math.PI * 2); x.stroke();
-  x.lineWidth = 1.8; x.beginPath(); x.arc(0, 0, 36, 0, Math.PI * 2); x.stroke();
-  x.lineWidth = 4; for (let i = -1; i <= 1; i++) { x.beginPath(); const yy0 = i * 26; for (let t = 0; t <= 190; t += 4) { const xx = 56 + t, yy = yy0 + Math.sin(t / 18) * 7; if (t === 0) x.moveTo(xx, yy); else x.lineTo(xx, yy); } x.stroke(); }
-  x.fillStyle = mark; x.textAlign = 'center'; x.font = '700 10px ' + FONT_K; x.fillText('CHRISTMAS POST', 0, -8);
-  x.font = '700 11px ' + FONT_K; x.fillText('DEC 25 · 2026', 0, 6);
-  x.font = '700 9px ' + FONT_K; x.fillText('CiT WINTER', 0, 22);
+  // 소인(도장): 종이에 실제로 찍은 듯한 빈티지 잉크 — 거친 원호, 번짐, 알갱이
+  const INK = th.dark ? '244,226,184' : '124,35,41', PPR = th.bg;
+  const rnd = (a, b) => a + Math.random() * (b - a);
+  x.save(); x.translate(CW - 300, 186); x.rotate(-0.12);
+  x.strokeStyle = 'rgba(' + INK + ',1)'; x.fillStyle = 'rgba(' + INK + ',1)'; x.lineCap = 'round'; x.lineJoin = 'round';
+  const ring = (rad, lw, alpha, jit, gaps) => {
+    for (let pass = 0; pass < 2; pass++) {                    // 두 번 겹찍어 잉크 농도 차이
+      x.globalAlpha = pass ? alpha * 0.4 : alpha;
+      x.lineWidth = pass ? lw * 0.55 : lw;
+      let pen = false;
+      for (let a = 0; a <= 360; a += 3) {
+        if (gaps && Math.random() < gaps) { pen = false; continue; }
+        const t2 = a * Math.PI / 180, rr = rad + rnd(-jit, jit);
+        const px = Math.cos(t2) * rr, py = Math.sin(t2) * rr;
+        if (!pen) { x.beginPath(); x.moveTo(px, py); pen = true; } else x.lineTo(px, py);
+      }
+      x.stroke();
+    }
+  };
+  ring(46, 3.8, 0.42, 0.85, 0.05);
+  ring(36, 1.7, 0.36, 0.55, 0.06);
+  x.lineWidth = 3.2;                                          // 소인파선 — 구간마다 잉크 농도가 다르게
+  for (let i = -1; i <= 1; i++) {
+    let prev = null;
+    for (let t = 0; t <= 186; t += 6) {
+      const xx = 56 + t, yy = i * 26 + Math.sin(t / 18) * 7 + rnd(-0.25, 0.25);
+      if (prev) { x.globalAlpha = rnd(0.18, 0.45); x.beginPath(); x.moveTo(prev[0], prev[1]); x.lineTo(xx, yy); x.stroke(); }
+      prev = [xx, yy];
+    }
+  }
+  x.textAlign = 'center';                                     // 안쪽 원 안에 다 들어오게 줄인 글자, 겹찍어 번진 잉크
+  [['CHRISTMAS POST', 7.4, -5, 0.55], ['DEC 25 · 2026', 8.2, 4.2, 0.62], ['CiT WINTER', 7.2, 12.6, 0.45]].forEach(([txt, sz, yy, al]) => {
+    x.font = '700 ' + sz + 'px ' + FONT_K;
+    for (let k = 0; k < 3; k++) {
+      x.globalAlpha = al * (k === 0 ? 1 : 0.15);
+      x.fillText(txt, k ? rnd(-0.35, 0.35) : 0, yy + (k ? rnd(-0.3, 0.3) : 0));
+    }
+  });
+  for (let i = 0; i < 220; i++) {                             // 잉크 알갱이·종이결
+    const t2 = Math.random() * Math.PI * 2, rr = rnd(0, 47);
+    x.globalAlpha = rnd(0.03, 0.13);
+    x.beginPath(); x.arc(Math.cos(t2) * rr, Math.sin(t2) * rr, rnd(0.35, 1.4), 0, Math.PI * 2); x.fill();
+  }
+  for (let i = 0; i < 46; i++) {                              // 살짝 벗겨져 종이가 보이는 자리
+    const t2 = Math.random() * Math.PI * 2, rr = rnd(20, 48);
+    x.globalAlpha = rnd(0.18, 0.5); x.fillStyle = PPR;
+    x.beginPath(); x.arc(Math.cos(t2) * rr, Math.sin(t2) * rr, rnd(0.6, 1.8), 0, Math.PI * 2); x.fill();
+  }
   x.restore();
   x.fillStyle = th.ink; x.textAlign = 'left'; x.font = '500 44px ' + FONT_T;
   wrapCanvasText(x, msg, CW - 210).slice(0, 12).forEach((t, i) => x.fillText(t, 100, 470 + i * 68));
