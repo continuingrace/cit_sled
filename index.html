@@ -1596,7 +1596,7 @@ function buildWorld(scene) {
       }
       B.win.add(L(F, MX(k * 3.0, 2.15, zf + 0.06, 1.75, 1.75, 1))); bigGlow(PT(F, k * 3.0, 2.15, zf + 0.5), '#ffcf70'); bigGlow(PT(F, k * 3.0, 2.15, zf + 0.5), '#ffb860');
       B.win.add(L(F, MX(k * (w / 2 + 0.05), 2.15, 0.4, 1.6, 1.6, 1, 0, k * Math.PI / 2, 0))); bigGlow(PT(F, k * (w / 2 + 0.4), 2.15, 0.4), '#ffcf70');
-      const lp = PT(F, k * 3.0, 2.72, zf + 2.3); B.lampHead.add(MX(lp.x, lp.y, lp.z, 0.5)); bigGlow(lp, '#ffd890');                                   // 기둥 랜턴
+      const lp = PT(F, k * 3.0, 2.72, zf + 2.3); B.lampHead.add(MX(lp.x, lp.y, lp.z, 0.5)); bigGlow(lp, '#d8b070');                                   // 기둥 랜턴
       for (let i = 0; i <= 10; i++) { const t = i / 10; bulb(PT(F, k * w * 0.61 * (1 - t), h + rh * t - 0.1, d * 0.58 + 0.3), WBULB[i % 6], 0.52, WGLOW); }    // 처마 전구 (따뜻한 샴페인)
       B.cane.add(L(fr(k * 2.0, zf + 3.6), MX(0, -0.2, 0, 0.85, 0.85, 0.85, 0, k > 0 ? Math.PI : 0, 0))); });
     a.push(bake(Box, '#a8443c', MX(0, 3.2, zf + 1.2, 7.0, 0.18, 2.7, 0.22, 0, 0)), bake(Box, '#ffffff', MX(0, 3.36, zf + 1.12, 6.8, 0.16, 2.3, 0.22, 0, 0)));  // 포치 지붕 + 눈
@@ -1733,7 +1733,7 @@ function buildWorld(scene) {
     skyMat.uniforms.top.value.copy(a[1]).lerp(b[1], t); skyMat.uniforms.hor.value.copy(a[2]).lerp(b[2], t); scene.fog.color.copy(a[3]).lerp(b[3], t); W.sun.color.copy(a[4]).lerp(b[4], t); W.sun.intensity = lerp(a[5], b[5], t); W.hemi.intensity = lerp(a[6], b[6], t); W.hemi.color.copy(a[7]).lerp(b[7], t); W.hemi.groundColor.copy(W.hemi.color).multiplyScalar(0.8);
     const n = W.night = sst(0.42, 0.84, p); scene.fog.far = lerp(560, 430, n);
     W.winMat.color.copy(wDay).lerp(wNight, sst(0.1, 0.7, n)); W.bulbMat.color.setScalar(lerp(0.82, 1, n)); W.gS.material.opacity = lerp(0.35, 1, n); W.gS.material.size = lerp(1.5, 2.6, n); W.gB.material.opacity = lerp(0.12, 0.9, n); W.gB.material.size = lerp(5, 9, n);
-    W.stars.material.opacity = sst(0.5, 1, n); W.smokeMat.uniforms.tint.value.set('#e7ebf7').lerp(tmp.set('#9a97b6'), n); if (W.warm) W.warm.intensity = 70 * sst(0.3, 0.9, n); if (W.treeLight) W.treeLight.intensity = 95 * sst(0.3, 0.9, n); if (W.starLight) W.starLight.intensity = 85 * sst(0.3, 0.9, n); W.aurora.material.uniforms.op.value = sst(0.5, 0.95, n); W.signMats.forEach(m => m.color.setScalar(lerp(1, 0.86, n))); };
+    W.stars.material.opacity = sst(0.5, 1, n); W.smokeMat.uniforms.tint.value.set('#e7ebf7').lerp(tmp.set('#9a97b6'), n); if (W.warm) W.warm.intensity = 34 * sst(0.3, 0.9, n); if (W.treeLight) W.treeLight.intensity = 95 * sst(0.3, 0.9, n); if (W.starLight) W.starLight.intensity = 85 * sst(0.3, 0.9, n); W.aurora.material.uniforms.op.value = sst(0.5, 0.95, n); W.signMats.forEach(m => m.color.setScalar(lerp(1, 0.86, n))); };
   // ---------- 파티클 ----------
   const pts = (n, size, map, add, colors) => { const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(new Float32Array(n * 3).fill(-9999), 3)); if (colors) g.setAttribute('color', new THREE.BufferAttribute(new Float32Array(n * 3), 3)); const m = new THREE.Points(g, new THREE.PointsMaterial({ map, size, transparent: true, depthWrite: false, vertexColors: !!colors, blending: add ? THREE.AdditiveBlending : THREE.NormalBlending, fog: !add, opacity: 0.9 })); m.frustumCulled = false; scene.add(m); return m; };
   const NSN = 2300, snowO = new Float32Array(NSN * 4); for (let i = 0; i < NSN * 4; i++) snowO[i] = r(); W.snow = pts(NSN, 0.34, TEX.glow);
@@ -1782,6 +1782,16 @@ function buildWorld(scene) {
     fw.p.geometry.attributes.position.needsUpdate = true; fw.p.geometry.attributes.color.needsUpdate = true;
   };
   { const v = new THREE.Vector3(); wpos(2080, 0, 0, v); W.baseY = v.y; W.floorY = v.y + 1.3; } // 오두막 마당 바닥 높이 (카메라 하한선)
+  { // 지면 높이 그리드 — 카메라가 눈밭 아래로 파고들지 않게 실제 지형 높이를 조회
+    const cell = 4, map = new Map(), v = new THREE.Vector3();
+    for (let s = S0; s <= S1; s += 4) for (let u = -90; u <= 90; u += 4) { wpos(s, u, 0, v); const k = Math.round(v.x / cell) + ',' + Math.round(v.z / cell), y = v.y, cur = map.get(k); if (cur === undefined || y > cur) map.set(k, y); }
+    W.groundGrid = { cell, map };
+    W.groundY = (x, z) => {
+      const cx = Math.round(x / cell), cz = Math.round(z / cell); let best = null;
+      for (let i = -1; i <= 1; i++) for (let j = -1; j <= 1; j++) { const y = map.get((cx + i) + ',' + (cz + j)); if (y !== undefined && (best === null || y > best)) best = y; }
+      return best;
+    };
+  }
   return W;
 }
 // 썰매 자국
@@ -2267,6 +2277,10 @@ function setCam(dt, snap) {
       }
       G.offR += (((st === 'result' && wide && G.resOpen) ? 0.17 : 0) - G.offR) * Math.min(1, dt * 2.2); off = G.offR; } }
   if ((st === 'finish' || st === 'result') && W.floorY && oP.y < W.floorY) oP.y = W.floorY; // 어떤 각도에서도 카메라가 설면을 뚫지 않게
+  if (W && W.groundY) { // 경사진 눈밭에서도 카메라·시선이 지면 아래로 내려가지 않게 실제 지형 높이 기준으로 강제
+    const gy = W.groundY(oP.x, oP.z); if (gy != null && oP.y < gy + 1.0) oP.y = gy + 1.0;
+    const gt = W.groundY(oL.x, oL.z); if (gt != null && oL.y < gt + 0.5) oL.y = gt + 0.5;
+  }
   camera.position.copy(oP); camera.lookAt(oL); camera.fov = fov;
   if (off > 0.002) camera.setViewOffset(innerWidth, innerHeight, -off * innerWidth, 0, innerWidth, innerHeight); else if (camera.view) camera.clearViewOffset();
   camera.updateProjectionMatrix();
