@@ -850,12 +850,12 @@ function makeHuman(THREE, spec, root) {
   addFace(THREE, head, dims, spec);
   addHair(THREE, head, dims, spec);
   let hatTip = null; if (spec.hat) hatTip = addHat(THREE, head, 0.5);
-  if (spec.beanie) { // 겨울 방울 비니
-    const cap = new THREE.Mesh(new THREE.SphereGeometry(1, 26, 18, 0, Math.PI * 2, 0, Math.PI * 0.56), mat(THREE, spec.beanie, 0.94, { side: 2 }));
-    cap.scale.set(0.578, 0.53, 0.54); cap.position.y = 0.006; cap.castShadow = true; head.add(cap);
-    const br = new THREE.Mesh(new THREE.TorusGeometry(0.556, 0.048, 10, 30), mat(THREE, spec.beanie, 0.95));
-    br.rotation.x = Math.PI / 2; br.scale.set(1, 0.93, 1); br.position.y = 0.055; head.add(br);
-    head.add(ell(THREE, spec.beanieTip || '#fff7ec', [0.072, 0.072, 0.072], [0, 0.6, 0], null, 1));
+  if (spec.beanie) { // 겨울 방울 비니 — 앞머리·눈을 가리지 않게 정수리에 쓰고, 챙은 다른 색으로
+    const cap = new THREE.Mesh(new THREE.SphereGeometry(1, 26, 18, 0, Math.PI * 2, 0, Math.PI * 0.42), mat(THREE, spec.beanie, 0.94, { side: 2 }));
+    cap.scale.set(0.585, 0.53, 0.55); cap.position.y = 0.05; cap.castShadow = true; head.add(cap);
+    const br = new THREE.Mesh(new THREE.TorusGeometry(0.552, 0.045, 10, 30), mat(THREE, spec.beanieBrim || spec.beanie, 0.95));
+    br.rotation.x = Math.PI / 2; br.scale.set(1, 0.94, 1); br.position.y = 0.175; head.add(br);
+    head.add(ell(THREE, spec.beanieTip || '#fff7ec', [0.07, 0.07, 0.07], [0, 0.57, 0], null, 1));
   }
   if (spec.earmuffs) { // 털 귀마개
     const band = new THREE.Mesh(new THREE.TorusGeometry(0.5, 0.026, 8, 26, Math.PI), mat(THREE, spec.earmuffs, 0.9));
@@ -916,7 +916,7 @@ function makeRacer(THREE, spec) {
 const CAST = {
   kapi: { name: '정영', skin: '#fddcc4', hair: '#2a282e', hairStyle: 'bob', eyes: 'big', brows: '#2a282e', browUp: 0.3, mouth: 'open', glasses: true, top: '#efe3ca', scarf: '#8e2f36', scarfTip: '#efe3ca', pants: '#303038', shoes: '#141417', hat: true, sled: '#e2463f' },
   hr: { name: 'HR둥이', type: 'mascot', eyes: 'arc', eyeX: 0.34, eyeY: 0.02, nose: '#232328', noseY: -0.13, mouth: 'mascot', mouthY: -0.36, blushX: 0.72, blushY: -0.22, scarf: '#c8343f', scarfTip: '#fff6ea', hat: 'santa', sled: '#f4b63a' },
-  hwan: { name: '이환승', skin: '#fddcc4', hair: '#27262b', hairStyle: 'short', ears: true, eyes: 'dot', brows: '#27262b', browUp: 0.3, mouth: 'flat', top: '#33513f', scarf: '#b23a3a', scarfTip: '#f4ecdd', beanie: '#2c4a3c', beanieTip: '#f7f1e2', pants: '#2b2b31', shoes: '#141417', sled: '#3b7fe6' },
+  hwan: { name: '이환승', skin: '#fddcc4', hair: '#27262b', hairStyle: 'short', ears: true, eyes: 'dot', brows: '#27262b', browUp: 0.3, mouth: 'flat', top: '#36456f', scarf: '#b23a3a', scarfTip: '#f4ecdd', beanie: '#efe4d0', beanieBrim: '#b0303a', beanieTip: '#b0303a', pants: '#2b2b31', shoes: '#141417', sled: '#3b7fe6' },
   coach: { name: '이코칭', skin: '#fee0cb', hair: '#7d4f3b', hairStyle: 'long', hairRough: 0.5, eyes: 'dot', nose: '#f3a996', mouth: 'smile', top: '#7c2530', scarf: '#f0e3cd', scarfTip: '#c9a24a', earmuffs: '#efd9b6', cuff: '#f0e3cd', skirt: '#2c2c34', shoes: '#141417', sled: '#f07aa5' }
 };
 
