@@ -2595,7 +2595,7 @@ function setName(v) {
 }
 function sndIcon() { const i = $('#bSnd').querySelector('.ic'), l = $('#bSnd').querySelector('.lb'); if (i) i.textContent = AU.muted ? '🔇' : '🔊'; else $('#bSnd').textContent = AU.muted ? '🔇' : '🔊'; if (l) l.textContent = AU.muted ? '음소거' : '소리'; const s2 = $('#bSnd2'); if (s2) s2.textContent = AU.muted ? '소리 끔' : '소리 켬'; const s3 = $('#bSnd3'); if (s3) s3.textContent = AU.muted ? '🔇' : '🔊'; }
 function setDiff(d) { G.diff = d; try { localStorage.setItem('sledDiff', d); } catch (e) { } document.querySelectorAll('.diff').forEach(b => b.classList.toggle('on', b.dataset.d === d)); $('#diffDesc').textContent = DIFF_DESC[d]; }
-function showBest() { const b = getBest(); $('#best').innerHTML = b ? `내 최고 기록 <span class="num">${b.score}</span>점 · <span class="num">${fmt(b.time)}</span>` : '아직 기록이 없어요. 첫 기록을 세워 보세요.'; }
+function showBest() { const b = getBest(); $('#best').innerHTML = b ? `내 최고 기록 <span class="num">${Number(b.score) || 0}</span>점 · <span class="num">${fmt(Number(b.time) || 0)}</span>` : '아직 기록이 없어요. 첫 기록을 세워 보세요.'; }
 function setPick(i) { // 캐릭터 선택: 고른 캐릭터가 0번(플레이어), 나머지가 친구
   G.pick = i; G.order = [i].concat(ROSTER.map((q, k) => k).filter(k => k !== i)); try { localStorage.setItem('sledChar', i); } catch (e) { }
   document.querySelectorAll('.char').forEach((b, k) => b.classList.toggle('on', k === i));
@@ -3705,7 +3705,9 @@ function shareCard(kind) { // 인스타그램 스토리(9:16) · 피드(4:5) 크
   x.fillStyle = 'rgba(255,255,255,.6)'; x.font = `500 42px ${FONT_K}`; x.fillText(fmt(G.last.time), w - 104, cy + 250);
   // ── 맨 아래 여백에 아주 작고 가벼운 크레딧만
   x.textAlign = 'center'; x.fillStyle = 'rgba(255,255,255,.45)'; x.font = `400 ${story ? 26 : 24}px ${FONT_K}`;
+  x.save(); x.shadowColor = 'rgba(6,12,32,.5)'; x.shadowBlur = 10;
   x.fillText('CiT코칭연구소 · citkorea.co.kr', w / 2, h - (story ? 78 : 58));
+  x.restore();
   openShot(c, story ? '스토리용 이미지' : '피드용 이미지', story ? 'cit-sled-story.jpg' : 'cit-sled-feed.jpg');
 }
 const IS_IOS = /\b(iPad|iPhone|iPod)\b/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -4129,7 +4131,7 @@ function showResult() {
   updateResultRoster();
   $('#rStats').innerHTML = [['시간', fmt(p.time)], ['선물', p.gifts + '개'], ['깃발 통과', p.gates + '/' + COURSE.gates.length], ['트릭', p.tricks + '회'], ['최고속도', Math.round(p.vmax * 3.6) + 'km/h'], ['순위 보너스', '+' + sc.bonus], ['난이도 보너스', '+' + sc.diffBonus]].map(([a, b]) => `<div>${a}<b>${b}</b></div>`).join('');
   $('#rTotal').textContent = sc.total; const b = getBest(); let msg;
-  if (!b || sc.total > b.score) { try { localStorage.setItem('sledBest', JSON.stringify({ score: sc.total, time: p.time, diff: G.diff })); } catch (e) { } msg = '내 최고 기록을 새로 썼어요. 이름을 남겨 보세요.'; } else msg = `내 최고 기록 <span class="num">${b.score}</span>점 · 이름을 남기면 순위표에 올라가요.`;
+  if (!b || sc.total > b.score) { try { localStorage.setItem('sledBest', JSON.stringify({ score: sc.total, time: p.time, diff: G.diff })); } catch (e) { } msg = '내 최고 기록을 새로 썼어요. 이름을 남겨 보세요.'; } else msg = `내 최고 기록 <span class="num">${Number(b.score) || 0}</span>점 · 이름을 남기면 순위표에 올라가요.`;
   $('#rBest').innerHTML = msg; G.last = { score: sc.total, time: p.time }; G.saved = 0;
   $('#bSave').textContent = '기록 남기기'; $('#bSave').disabled = false; $('#nameIn').disabled = false; try { $('#nameIn').value = localStorage.getItem('sledName') || ''; } catch (e) { $('#nameIn').value = ''; }
   $('#hud').classList.remove('on'); G.state = 'result'; setResOpen(true);
