@@ -1354,7 +1354,11 @@ function buildWorld(scene) {
       C[k * 3] = c.r; C[k * 3 + 1] = c.g; C[k * 3 + 2] = c.b; } }
     for (let i = 0; i < ns - 1; i++) for (let j = 0; j < nu - 1; j++) { const a = i * nu + j, b = a + 1, d = a + nu, e = d + 1; idx.push(a, b, d, b, e, d); }
     const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(P, 3)); g.setAttribute('color', new THREE.BufferAttribute(C, 3)); g.setAttribute('uv', new THREE.BufferAttribute(UV, 2)); g.setIndex(idx); g.computeVertexNormals();
-    const m = new THREE.Mesh(g, std({ map: TEX.snow, bumpMap: TEX.snowBump, bumpScale: 1.6, vertexColors: true, roughness: 0.78 })); m.receiveShadow = true; m.frustumCulled = false; scene.add(m); W.terrain = m;
+    const m = new THREE.Mesh(g, std({ map: TEX.snow, bumpMap: TEX.snowBump, bumpScale: 1.6, vertexColors: true, roughness: 0.78, side: THREE.DoubleSide })); m.receiveShadow = true; m.frustumCulled = false; scene.add(m); W.terrain = m;
+    // 설면 아래 공간 메우기 — 지형이 종이처럼 떠 보이지 않게 바닥 아래를 깊은 눈/안개 판으로 덮는다
+    { const c0 = new THREE.Vector3(); wpos(2112, 0, 0, c0); let minY = Infinity; for (let i = 0; i < NN; i++) if (TY[i] < minY) minY = TY[i];
+      const plate = new THREE.Mesh(new THREE.PlaneGeometry(3000, 3000), std({ color: '#b9cbe6', roughness: 1, side: THREE.DoubleSide }));
+      plate.rotation.x = -Math.PI / 2; plate.position.set(c0.x, minY - 10, c0.z); plate.frustumCulled = false; scene.add(plate); W.underSnow = plate; }
   }
   // ---------- 먼 설산 ----------
   {
@@ -1785,7 +1789,7 @@ function buildWorld(scene) {
     for (let i = 0; i < NF; i++) { if (fw.l[i] <= 0) continue; fw.l[i] -= dt; if (fw.l[i] <= 0) { Fp[i * 3 + 1] = -9999; continue; } fw.v[i * 3 + 1] -= 5 * dt; const d = 1 - 1.2 * dt; fw.v[i * 3] *= d; fw.v[i * 3 + 1] *= d; fw.v[i * 3 + 2] *= d; Fp[i * 3] += fw.v[i * 3] * dt; Fp[i * 3 + 1] += fw.v[i * 3 + 1] * dt; Fp[i * 3 + 2] += fw.v[i * 3 + 2] * dt; if (fw.l[i] < 0.5) { Fc[i * 3] *= 0.94; Fc[i * 3 + 1] *= 0.94; Fc[i * 3 + 2] *= 0.94; } }
     fw.p.geometry.attributes.position.needsUpdate = true; fw.p.geometry.attributes.color.needsUpdate = true;
   };
-  { const v = new THREE.Vector3(); wpos(2080, 0, 0, v); W.baseY = v.y; W.floorY = v.y + 1.3; } // 오두막 마당 바닥 높이 (카메라 하한선)
+  { const v = new THREE.Vector3(); wpos(2080, 0, 0, v); W.baseY = v.y; W.floorY = v.y + 0.4; } // 오두막 마당 바닥 높이 (카메라 하한선)
   { // 지면 높이 그리드 — 카메라가 눈밭 아래로 파고들지 않게 실제 지형 높이를 조회
     const cell = 4, map = new Map(), v = new THREE.Vector3();
     for (let s = S0; s <= S1; s += 4) for (let u = -90; u <= 90; u += 4) { wpos(s, u, 0, v); const k = Math.round(v.x / cell) + ',' + Math.round(v.z / cell), y = v.y, cur = map.get(k); if (cur === undefined || y > cur) map.set(k, y); }
@@ -2264,7 +2268,7 @@ function setCam(dt, snap) {
       const pitEff = pit - Math.max(0, 0.45 - fy) * (wide ? 0.5 : 0.58); // 아래를 볼 땐 카메라도 낮춰 가지 밑을 가리지 않게
       oP.set(eP.x + Math.sin(yaw) * Math.cos(pitEff) * dist, ty + Math.sin(pitEff) * dist, eP.z + Math.cos(yaw) * Math.cos(pitEff) * dist);
       oL.set(eP.x, ty, eP.z);
-      if (oP.y < eP.y + 1.15) oP.y = eP.y + 1.15; // 발치 선물·조명을 눈높이에서 볼 수 있게, 지면 아래로는 내려가지 않음
+      if (oP.y < eP.y + 0.35) oP.y = eP.y + 0.35; // 눈 표면을 살짝만 스치게 — 시선은 자유롭게
       fov = wide ? 48 : 62;
     } else if (st === 'finish' || st === 'result') { // 오두막 앞 마지막 장면으로 천천히 이동
       const e = sst(0.4, 4.2, G.finT), sw = Math.sin(G.time * 0.22), wide = innerWidth / innerHeight > 1.15;
@@ -2281,9 +2285,9 @@ function setCam(dt, snap) {
       }
       G.offR += (((st === 'result' && wide && G.resOpen) ? 0.17 : 0) - G.offR) * Math.min(1, dt * 2.2); off = G.offR; } }
   if ((st === 'finish' || st === 'result') && W.floorY && oP.y < W.floorY) oP.y = W.floorY; // 어떤 각도에서도 카메라가 설면을 뚫지 않게
-  if (W && W.groundY) { // 경사진 눈밭에서도 카메라·시선이 지면 아래로 내려가지 않게 실제 지형 높이 기준으로 강제
-    const gy = W.groundY(oP.x, oP.z); if (gy != null && oP.y < gy + 1.0) oP.y = gy + 1.0;
-    const gt = W.groundY(oL.x, oL.z); if (gt != null && oL.y < gt + 0.5) oL.y = gt + 0.5;
+  if (W && W.groundY) { // 경사진 눈밭에서도 카메라·시선이 지면 아래로 내려가지 않게 실제 지형 높이 기준으로 가볍게만
+    const gy = W.groundY(oP.x, oP.z); if (gy != null && oP.y < gy + 0.35) oP.y = gy + 0.35;
+    const gt = W.groundY(oL.x, oL.z); if (gt != null && oL.y < gt + 0.25) oL.y = gt + 0.25;
   }
   camera.position.copy(oP); camera.lookAt(oL); camera.fov = fov;
   if (off > 0.002) camera.setViewOffset(innerWidth, innerHeight, -off * innerWidth, 0, innerWidth, innerHeight); else if (camera.view) camera.clearViewOffset();
