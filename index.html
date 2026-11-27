@@ -315,6 +315,9 @@ body.paused *{animation-play-state:paused!important}
 #menu .row .btn.sub{display:flex;align-items:center;justify-content:center;text-align:center;height:46px;font-size:13.5px;font-weight:700;letter-spacing:-.01em;padding:0 6px;white-space:nowrap;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.06);border-radius:11px}
 #menu .row .btn.sub:hover{background:rgba(255,255,255,.12)}
 #menu .lbl{font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:rgba(170,180,216,.9);margin-bottom:-2px}
+#menu .lblrow{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:-2px}
+#menu .lblrow .lbl{margin-bottom:0;flex:0 0 auto}
+#menu #diffDesc{flex:1 1 auto;min-width:0;font-size:11px;font-weight:500;line-height:1.35;text-align:right;color:rgba(215,221,245,.72);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:0}
 #menu #diffDesc{font-size:13px;font-weight:500;line-height:1.6;color:rgba(215,221,245,.85)}
 #menu .namefield{border-radius:11px;height:46px;font-weight:500;font-size:14px}
 #menu .best{font-size:12.5px;font-weight:500;letter-spacing:-.005em;color:rgba(170,180,216,.85)}
@@ -428,9 +431,8 @@ body.paused *{animation-play-state:paused!important}
     <div class="panel card">
       <div class="lbl">캐릭터 선택</div>
       <div class="chars" id="chars"></div>
-      <div class="lbl">난이도</div>
+      <div class="lblrow"><div class="lbl">난이도</div><div id="diffDesc"></div></div>
       <div class="diffs"><button class="diff" data-d="easy">쉬움</button><button class="diff" data-d="normal">보통</button><button class="diff" data-d="hard">어려움</button></div>
-      <div id="diffDesc"></div>
       <div class="lbl">내 이름 / 닉네임 <span style="font-weight:500;opacity:.7">(순위표에 남을 이름)</span></div>
       <input id="menuNameIn" class="namefield" maxlength="10" placeholder="이름 또는 닉네임을 입력해 주세요" autocomplete="off" enterkeyhint="done" aria-label="내 이름 또는 닉네임">
       <button class="btn big" id="bStart">출발 <small>ENTER</small></button>
@@ -735,9 +737,9 @@ const HAIR = {
   },
   short: { // 한국 남자 댄디 — 옆으로 넘긴 가르마와 둥근 앞머리·윗머리 퍼프, 귀 앞 구레나룻
     thick: (p, t) => 0.060 + 0.032 * Math.exp(-((p / 1.0) ** 2)) + 0.026 * Math.exp(-(((Math.abs(p) - 0.9) / 0.5) ** 2)) + 0.048 * Math.sin(Math.min(t, 1.3)) * Math.exp(-((p / 1.35) ** 2)),
-    ymin: (p) => { const a = Math.abs(p); return 0.02 - 0.21 * Math.exp(-(((a - 1.18) / 0.22) ** 2)) - 0.34 * sst(1.55, 2.3, a); },
-    L: 0.34, bulge: 0.03, tuck: 0.15, lip: 0.05, n: 17, twist: 0.06, part: 0.55, win: [1.05, 1.35],
-    fringe: (p) => 0.245 + 0.06 * sst(-0.9, 0.9, p) + 0.025 * Math.exp(-(((p - 0.55) / 0.3) ** 2)) - 0.02 * Math.exp(-(((p + 0.7) / 0.45) ** 2))
+    ymin: (p) => { const a = Math.abs(p); return 0.02 - 0.12 * Math.exp(-(((a - 1.2) / 0.18) ** 2)) - 0.34 * sst(1.55, 2.3, a); },
+    L: 0.34, bulge: 0.03, tuck: 0.15, lip: 0.04, n: 17, twist: 0.06, part: 0.55, win: [1.05, 1.35],
+    fringe: (p) => 0.232 + 0.05 * sst(-0.9, 0.9, p) + 0.02 * Math.exp(-(((p - 0.55) / 0.28) ** 2)) - 0.015 * Math.exp(-(((p + 0.7) / 0.45) ** 2))
   }
 };
 function hairShell(THREE, dims, o) {
@@ -2128,7 +2130,7 @@ function auEngine(v, ground, mute) { if (!AU.ctx) return; const t = AU.ctx.curre
 // ===== 메인: 렌더 · 카메라 · UI · 게임 흐름 =====
 const Q = new URLSearchParams(location.search), SPEED = +Q.get('speed') || 1, AUTO = !!Q.get('auto');
 const ROSTER = [{ key: 'kapi', name: '정영', col: '#e2463f' }, { key: 'hr', name: 'HR둥이', col: '#f4b63a' }, { key: 'hwan', name: '이환승', col: '#3b7fe6' }, { key: 'coach', name: '이코칭', col: '#f07aa5' }];
-const DIFF_DESC = { easy: '친구들이 느긋하게 달려요. 처음이라면 여기서!', normal: '적당히 겨루는 기본 난이도예요. (가산점 +250점)', hard: '친구들이 빠르고 장애물도 잘 피해요. (가산점 +700점)' };
+const DIFF_DESC = { easy: '느긋한 페이스 · 가산점 없음', normal: '적당한 페이스 · 가산점 +250', hard: '빠른 페이스 · 가산점 +700' };
 const HOME = 'https://www.citkorea.co.kr/03_08_02/677';
 // 결과창 '참여인증' 버튼이 여는 구글폼 주소. URL을 넣으면 버튼이 바로 그 링크로 이동한다.
 const VERIFY_URL = '';
@@ -2273,9 +2275,9 @@ function toast(name, sub) { const t = $('#toast'); t.innerHTML = `<small>${sub}<
 function nowPlaySet(title) {
   const el = $('#nowPlay'); if (!el) return;
   const b = el.querySelector('b');
-  if (!title) { el.classList.remove('on'); return; }
+  if (!title) { el.classList.remove('on'); el.classList.add('hidden'); return; }
   if (b && b.textContent !== title) b.textContent = title;
-  el.classList.add('on');
+  el.classList.remove('hidden'); el.classList.add('on');
 }
 function nowPlayRefresh() {
   try {
