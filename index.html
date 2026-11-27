@@ -2171,14 +2171,17 @@ function initCards() {
 }
 // 완주 트리 가지에 미니 엽서를 매다는 장식 (등록 카드 수만큼)
 const CARD_LAYERS = [[8, 7], [6.6, 6.4], [5.2, 5.8], [3.8, 5.2], [2.4, 4.6]];
-function treeRadiusAt(y) {
-  let base = 3;
-  for (let i = 0; i < CARD_LAYERS.length; i++) {
-    const rad = CARD_LAYERS[i][0], h = CARD_LAYERS[i][1];
-    if (y >= base && y <= base + h) { const k = (y - base) / h; return Math.max(0.7, rad * (1 - k) * 0.9 + 0.35); }
-    base += h * 0.62;
+const TREE_LAYER_BASES = (() => { // 결승 트리 가지가 쌓이는 높이(코드의 y += h*0.62와 동일)
+  let b = 3; return CARD_LAYERS.map(([rad, h]) => { const base = b; b += h * 0.62; return { base, h, rad }; });
+})();
+function treeRadiusAt(y) { // 겹친 가지 중 가장 바깥 실루엣 반경 — 엽서가 가지 밖으로 걸려 보이도록
+  let r = 0;
+  for (const L of TREE_LAYER_BASES) {
+    if (y < L.base || y > L.base + L.h) continue;
+    const rr = L.rad * (1 - (y - L.base) / L.h);
+    if (rr > r) r = rr;
   }
-  return 0.9;
+  return Math.max(0.7, r) + 0.35;
 }
 const cardTexCache = new Map();
 function cardTexture(c) {
