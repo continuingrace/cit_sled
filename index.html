@@ -909,13 +909,9 @@ function makeHuman(THREE, spec, root) {
 // ===== HR둥이: 흰 공 + 굵은 먹선 마스코트 =====
 function makeMascot(THREE, spec, root) {
   const body = new THREE.Group(); root.add(body);
-  const ink = '#2f3240', hull = new THREE.MeshBasicMaterial({ color: ink, side: THREE.BackSide });
-  const outlined = (s, p, w) => { // 뒤집힌 껍질로 굵은 먹선 외곽선
-    const g = new THREE.Group(); g.position.set(...p);
-    g.add(ell(THREE, '#ffffff', s, null, null, 0.62));
-    const h = new THREE.Mesh(sph(THREE), hull); h.scale.set(s[0] + w, s[1] + w, s[2] + w); g.add(h);
-    return g;
-  };
+  // 검은 먹선 외곽선 대신 부드러운 입체 음영만 — 흰 몸이 눈위에서도 자연스럽게 보이도록 살짝 아이스 톤
+  const snowleg = '#f4f8ff';
+  const outlined = (s, p, w) => { const g = new THREE.Group(); g.position.set(...p); g.add(ell(THREE, snowleg, s, null, null, 0.55)); return g; };
   const head = new THREE.Group(); head.position.set(0, 0.9, 0.0); body.add(head);
   const dims = [0.56, 0.53, 0.53];
   const ball = outlined(dims, [0, 0, 0], 0.038); ball.children[0].geometry = sphHi(THREE); head.add(ball);
@@ -932,9 +928,7 @@ function makeMascot(THREE, spec, root) {
   [-1, 1].forEach(s => {
     const a = new THREE.Group(); a.position.set(0.5 * s, -0.2, 0); head.add(a);
     const pts = [[0, 0, 0], [0.2 * s, 0.0, 0.01], [0.36 * s, 0.17, 0.02], [0.4 * s, 0.42, 0.02], [0.33 * s, 0.6, 0.02]];
-    a.add(tube(THREE, '#ffffff', pts, 0.07, 0.62, 28));
-    const c = new THREE.CatmullRomCurve3(pts.map(p => new THREE.Vector3(...p)));
-    a.add(new THREE.Mesh(new THREE.TubeGeometry(c, 32, 0.098, 16, false), hull));
+    a.add(tube(THREE, snowleg, pts, 0.07, 0.55, 28));
     const tipP = pts[pts.length - 1];
     a.add(outlined([0.07, 0.07, 0.07], tipP, 0.028));
     arms.push(a);
