@@ -1999,7 +1999,7 @@ function makeVillager(o) {
 }
 
 // ===== 버전 표기 (배포할 때마다 이 값만 올린다) =====
-const APP_VER = 'v1.20';
+const APP_VER = 'v1.21';
 try { const av = document.getElementById('appVer'); if (av) av.textContent = APP_VER; } catch (e) { }
 
 // ===== 사운드 (효과음: Web Audio 직접 합성 / BGM: 실제 캐럴 MP3) =====
@@ -3046,7 +3046,7 @@ function cardCount() { // 몇 명이 카드를 걸었는지(이름 기준) + 장
   const partial = total > CARDS.length;
   const el = $('#cardCount');
   if (el) el.innerHTML = total
-    ? '지금까지 <b>' + people + '</b>명이 트리에 카드를 걸었어요 · <b>' + total + '</b>장' + (partial ? ' (최근 ' + CARDS.length + '장 표시)' : '')
+    ? '지금까지 <b>' + people + '</b>명이 트리에 카드를 걸었어요' + (partial ? ' (최근 ' + CARDS.length + '장 표시)' : '')
     : '아직 트리에 걸린 카드가 없어요';
   const tb = $('#treeCount');
   if (tb) { if (total && G.treeView) { tb.innerHTML = '<b>' + total + '</b>장의 카드가 트리에 있어요'; tb.classList.add('on'); } else if (G.treeView) { tb.innerHTML = '아직 트리에 걸린 카드가 없어요'; tb.classList.add('on'); } else { tb.innerHTML = ''; tb.classList.remove('on'); } }
@@ -3609,45 +3609,280 @@ function loadOrns() {
   } catch (e) { ORNS = []; }
 }
 function saveOrns() { try { localStorage.setItem(ORN_KEY, JSON.stringify(ORNS.slice(0, ORN_MAX))); } catch (e) { } }
-function caneTexture() {
-  const c = document.createElement('canvas'); c.width = 64; c.height = 8;
-  const x = c.getContext('2d');
-  for (let i = 0; i < 8; i++) { x.fillStyle = i % 2 ? '#f8f4ea' : '#cf2f3a'; x.fillRect(i * 8, 0, 8, 8); }
-  const t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(7, 1);
-  try { if ('SRGBColorSpace' in THREE) t.colorSpace = THREE.SRGBColorSpace; } catch (e) { }
-  return t;
+// ---------- 오너먼트 절차 텍스처 · 지오메트리 (외부 이미지 없이 100% 코드 생성) ----------
+function ornCanvas(w, h) { const c = document.createElement('canvas'); c.width = w; c.height = h; return c; }
+function ornSRGB(t) { try { if ('SRGBColorSpace' in THREE) t.colorSpace = THREE.SRGBColorSpace; } catch (e) { } return t; }
+function ornRnd(seed) { let s = seed >>> 0; return () => { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; }; }
+function ornFiligree(x, cx, cy, r, col, lw) { // 눈송이 필리그리 문양
+  x.save(); x.strokeStyle = col; x.fillStyle = col; x.lineWidth = lw; x.lineCap = 'round';
+  for (let i = 0; i < 6; i++) {
+    const a = i / 6 * Math.PI * 2, dx = Math.cos(a), dy = Math.sin(a);
+    x.beginPath(); x.moveTo(cx, cy); x.lineTo(cx + dx * r, cy + dy * r); x.stroke();
+    x.beginPath(); x.moveTo(cx + dx * r * 0.46, cy + dy * r * 0.46); x.lineTo(cx + dx * r * 0.74 - dy * r * 0.24, cy + dy * r * 0.74 + dx * r * 0.24); x.stroke();
+    x.beginPath(); x.moveTo(cx + dx * r * 0.46, cy + dy * r * 0.46); x.lineTo(cx + dx * r * 0.74 + dy * r * 0.24, cy + dy * r * 0.74 - dx * r * 0.24); x.stroke();
+    x.beginPath(); x.arc(cx + dx * r, cy + dy * r, lw * 1.5, 0, Math.PI * 2); x.fill();
+  }
+  x.restore();
+}
+function ornBallTexture(kind) { // 512×256 — 버건디 래커 / 샴페인 골드 유리 볼
+  const W = 512, H = 256, c = ornCanvas(W, H), x = c.getContext('2d'), rnd = ornRnd(kind === 'red' ? 9173 : 4421);
+  const g = x.createLinearGradient(0, 0, 0, H);
+  if (kind === 'red') {
+    g.addColorStop(0, '#1d0306'); g.addColorStop(0.16, '#5b0d18'); g.addColorStop(0.40, '#8f1b29');
+    g.addColorStop(0.60, '#741523'); g.addColorStop(0.82, '#3d0811'); g.addColorStop(1, '#180204');
+  } else {
+    g.addColorStop(0, '#2f240d'); g.addColorStop(0.16, '#8a6a26'); g.addColorStop(0.40, '#e7c97c');
+    g.addColorStop(0.60, '#c4a052'); g.addColorStop(0.82, '#7a5f24'); g.addColorStop(1, '#2a1f0a');
+  }
+  x.fillStyle = g; x.fillRect(0, 0, W, H);
+  if (kind === 'gold') { // 브러시드 결
+    for (let i = 0; i < 340; i++) {
+      const y = rnd() * H, a = 0.03 + rnd() * 0.10;
+      x.strokeStyle = rnd() > 0.45 ? 'rgba(255,248,220,' + a.toFixed(3) + ')' : 'rgba(60,42,12,' + a.toFixed(3) + ')';
+      x.lineWidth = 0.6 + rnd() * 1.6;
+      x.beginPath(); x.moveTo(rnd() * W * 0.4, y); x.lineTo(W * (0.6 + rnd() * 0.4), y); x.stroke();
+    }
+  }
+  const hl = x.createRadialGradient(W * 0.30, H * 0.26, 0, W * 0.30, H * 0.26, W * 0.44); // 유리 하이라이트
+  hl.addColorStop(0, kind === 'red' ? 'rgba(255,205,205,0.55)' : 'rgba(255,252,232,0.72)');
+  hl.addColorStop(0.42, kind === 'red' ? 'rgba(255,170,170,0.12)' : 'rgba(255,244,205,0.20)');
+  hl.addColorStop(1, 'rgba(255,255,255,0)');
+  x.fillStyle = hl; x.fillRect(0, 0, W, H);
+  for (let i = 0; i < 1500; i++) { // 미세 글리터
+    const a = 0.05 + rnd() * 0.35, s = 0.5 + rnd() * 1.5;
+    x.fillStyle = rnd() > 0.35 ? 'rgba(255,250,236,' + a.toFixed(3) + ')' : 'rgba(255,226,160,' + (a * 0.8).toFixed(3) + ')';
+    x.fillRect(rnd() * W, rnd() * H, s, s);
+  }
+  const by0 = 108, by1 = 148; // 허리 금색 세공 띠
+  const band = x.createLinearGradient(0, by0, 0, by1);
+  band.addColorStop(0, '#8c6a24'); band.addColorStop(0.18, '#f6e3a8'); band.addColorStop(0.5, '#d8b463');
+  band.addColorStop(0.82, '#f6e3a8'); band.addColorStop(1, '#8c6a24');
+  x.fillStyle = band; x.fillRect(0, by0, W, by1 - by0);
+  x.fillStyle = 'rgba(255,240,200,0.85)'; x.fillRect(0, by0 - 3, W, 2); x.fillRect(0, by1 + 1, W, 2);
+  if (kind === 'red') {
+    for (let i = 0; i < 8; i++) ornFiligree(x, 32 + i * 64, (by0 + by1) / 2 + 1.2, 12, 'rgba(52,26,4,0.75)', 1.9);
+    for (let i = 0; i < 8; i++) ornFiligree(x, 32 + i * 64, (by0 + by1) / 2, 12, 'rgba(255,247,216,0.95)', 1.15);
+  } else {
+    for (let i = 0; i < 16; i++) { // 다이아몬드 세공
+      const cx = 16 + i * 32, cy = (by0 + by1) / 2;
+      x.save(); x.translate(cx, cy); x.rotate(Math.PI / 4);
+      x.fillStyle = i % 2 ? 'rgba(255,253,240,0.92)' : 'rgba(120,90,30,0.5)';
+      x.fillRect(-5.5, -5.5, 11, 11);
+      x.strokeStyle = 'rgba(255,250,225,0.8)'; x.lineWidth = 1; x.strokeRect(-5.5, -5.5, 11, 11);
+      x.restore();
+    }
+  }
+  [24, 232].forEach(yy => { // 위아래 점선 띠
+    x.fillStyle = 'rgba(255,236,186,0.5)';
+    for (let i = 0; i < 64; i++) x.fillRect(i * 8 + 2, yy, 2.2, 2.2);
+  });
+  const t = new THREE.CanvasTexture(c); t.anisotropy = 4; return ornSRGB(t);
+}
+function caneTexture() { // 사선 레드·크림 + 가는 골드 스트라이프 (유리사탕)
+  const W = 256, H = 64, c = ornCanvas(W, H), x = c.getContext('2d');
+  x.fillStyle = '#fbf6ea'; x.fillRect(0, 0, W, H);
+  const per = 16, slant = 32; // 이음매 없이 감기도록 주기의 배수로 기울임
+  for (let sx = -per * 3; sx < W + per * 3; sx += per) {
+    x.fillStyle = '#c1262f';
+    x.beginPath(); x.moveTo(sx, 0); x.lineTo(sx + per / 2, 0); x.lineTo(sx + per / 2 + slant, H); x.lineTo(sx + slant, H); x.closePath(); x.fill();
+  }
+  x.fillStyle = 'rgba(214,178,96,0.85)';
+  for (let sx = -per * 3; sx < W + per * 3; sx += per) {
+    x.beginPath(); x.moveTo(sx - 2.2, 0); x.lineTo(sx + 0.4, 0); x.lineTo(sx + slant + 0.4, H); x.lineTo(sx + slant - 2.2, H); x.closePath(); x.fill();
+  }
+  const sh = x.createLinearGradient(0, 0, 0, H); // 원통 광택
+  sh.addColorStop(0, 'rgba(255,255,255,0.32)'); sh.addColorStop(0.22, 'rgba(255,255,255,0.05)');
+  sh.addColorStop(0.62, 'rgba(0,0,0,0.02)'); sh.addColorStop(1, 'rgba(40,20,10,0.26)');
+  x.fillStyle = sh; x.fillRect(0, 0, W, H);
+  const t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(2, 1); t.anisotropy = 4;
+  return ornSRGB(t);
+}
+let ORN_ENV;
+function ornEnvMap() { // 오너먼트 전용 환경 반사(따뜻한 조명 점 + 밤하늘) — 씬 전체에는 영향 없음
+  if (ORN_ENV !== undefined) return ORN_ENV;
+  ORN_ENV = null;
+  try {
+    if (!renderer || !THREE.PMREMGenerator) return ORN_ENV;
+    const W = 256, H = 128, c = ornCanvas(W, H), x = c.getContext('2d');
+    const g = x.createLinearGradient(0, 0, 0, H);
+    g.addColorStop(0, '#1b2536'); g.addColorStop(0.40, '#33415a'); g.addColorStop(0.50, '#6d5b3a');
+    g.addColorStop(0.58, '#c8a86c'); g.addColorStop(0.74, '#2b2116'); g.addColorStop(1, '#100c08');
+    x.fillStyle = g; x.fillRect(0, 0, W, H);
+    [[0.16, 0.48], [0.60, 0.46], [0.88, 0.52]].forEach(([u, v]) => {
+      const rr = H * 0.30, rg = x.createRadialGradient(u * W, v * H, 0, u * W, v * H, rr);
+      rg.addColorStop(0, 'rgba(255,242,208,0.95)'); rg.addColorStop(1, 'rgba(255,216,150,0)');
+      x.fillStyle = rg; x.fillRect(0, 0, W, H);
+    });
+    const tex = new THREE.CanvasTexture(c); tex.mapping = THREE.EquirectangularReflectionMapping; ornSRGB(tex);
+    const pm = new THREE.PMREMGenerator(renderer); pm.compileEquirectangularShader();
+    ORN_ENV = pm.fromEquirectangular(tex).texture;
+    pm.dispose(); tex.dispose();
+  } catch (e) { ORN_ENV = null; }
+  return ORN_ENV;
+}
+function ornUseEnv() {
+  const env = ornEnvMap(); if (!env) return;
+  Object.keys(ORN_MAT).forEach(k => {
+    const m = ORN_MAT[k];
+    if (m && m.isMeshStandardMaterial && m.envMap !== env) { m.envMap = env; m.needsUpdate = true; }
+  });
+}
+const ornV = (x, y, z) => new THREE.Vector3(x, y, z);
+function ribbonGeom(curve, segs, halfW, halfT, radial, wf) { // 폭·두께·테이퍼가 있는 입체 리본 띠
+  const pts = curve.getPoints(segs), n = pts.length, frames = [];
+  let up = new THREE.Vector3(0, 0, 1);
+  for (let i = 0; i < n; i++) {
+    const a = pts[Math.max(0, i - 1)], b = pts[Math.min(n - 1, i + 1)];
+    const tan = new THREE.Vector3().subVectors(b, a).normalize();
+    let u = up.clone().addScaledVector(tan, -up.dot(tan));
+    if (u.lengthSq() < 1e-6) u.set(1, 0, 0).addScaledVector(tan, -tan.x);
+    u.normalize();
+    const w = new THREE.Vector3().crossVectors(tan, u).normalize();
+    frames.push([u, w]); up = u.clone();
+  }
+  const pos = [], idx = [], R = radial;
+  for (let i = 0; i < n; i++) {
+    const t = i / (n - 1), s = wf(t), hw = halfW * s, ht = halfT * (0.5 + 0.5 * Math.min(1, s));
+    const [u, w] = frames[i];
+    for (let j = 0; j < R; j++) {
+      const ang = j / R * Math.PI * 2, cx = Math.cos(ang), sy = Math.sin(ang);
+      const px = hw * Math.sign(cx) * Math.pow(Math.abs(cx), 0.42);
+      const py = ht * Math.sign(sy) * Math.pow(Math.abs(sy), 0.42);
+      pos.push(pts[i].x + w.x * px + u.x * py, pts[i].y + w.y * px + u.y * py, pts[i].z + w.z * px + u.z * py);
+    }
+  }
+  for (let i = 0; i < n - 1; i++) for (let j = 0; j < R; j++) {
+    const a = i * R + j, b = i * R + (j + 1) % R, d = (i + 1) * R + j, e = (i + 1) * R + (j + 1) % R;
+    idx.push(a, d, b, b, d, e);
+  }
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+  g.setIndex(idx); g.computeVertexNormals();
+  return g;
+}
+function ornBowGeom() { // 벨벳 리본 — 둥글게 말린 두 날개 + 주름진 매듭 + 휘어지는 두 꼬리
+  const parts = [];
+  const wingW = t => 0.62 + 0.38 * Math.sin(Math.PI * Math.min(1, t * 1.02));
+  [-1, 1].forEach(s => {
+    parts.push(ribbonGeom(new THREE.CatmullRomCurve3([
+      ornV(0.012 * s, 0.010, 0.010), ornV(0.052 * s, 0.052, 0.028), ornV(0.126 * s, 0.082, 0.046),
+      ornV(0.198 * s, 0.050, 0.054), ornV(0.206 * s, -0.016, 0.048), ornV(0.150 * s, -0.058, 0.032),
+      ornV(0.070 * s, -0.038, 0.016), ornV(0.014 * s, -0.008, 0.008)
+    ], false, 'catmullrom', 0.5), 26, 0.052, 0.013, 8, wingW));
+  });
+  [-1, 1].forEach((s, i) => {
+    const sp = i ? 0.028 : 0.010;
+    parts.push(ribbonGeom(new THREE.CatmullRomCurve3([
+      ornV(0.010 * s, -0.012, 0.006), ornV(0.028 * s, -0.098, 0.014), ornV(0.062 * s + sp * s, -0.176, 0.022),
+      ornV(0.090 * s + sp * s, -0.246, 0.020), ornV(0.100 * s + sp * s, -0.318, 0.010)
+    ], false, 'catmullrom', 0.5), 24, 0.048, 0.012, 8, t => 1.02 - 0.55 * t));
+  });
+  const knot = [];
+  for (let i = 0; i < 20; i++) {
+    const a = i / 20 * Math.PI * 2;
+    knot.push(ornV(Math.cos(a) * 0.050, Math.sin(a) * 0.040, 0.006 + Math.sin(a * 2) * 0.007));
+  }
+  parts.push(ribbonGeom(new THREE.CatmullRomCurve3(knot, true, 'catmullrom', 0.5), 22, 0.030, 0.016, 8, () => 1));
+  parts.push(bake(new THREE.SphereGeometry(0.034, 14, 10).applyMatrix4(MX(0, 0, 0.010, 1.1, 0.92, 0.78)), '#ffffff'));
+  return merge(parts.map(g => bake(g, '#ffffff')));
+}
+function ornStarGeom(R, dep, inner) { // 베벨 살아있는 5각 별
+  const sh = new THREE.Shape();
+  for (let i = 0; i < 10; i++) {
+    const a = i * Math.PI / 5, r = (i % 2 ? inner : 1) * R, px = Math.sin(a) * r, py = Math.cos(a) * r;
+    if (i) sh.lineTo(px, py); else sh.moveTo(px, py);
+  }
+  sh.closePath();
+  const g = new THREE.ExtrudeGeometry(sh, { depth: dep, bevelEnabled: true, bevelSize: R * 0.03, bevelThickness: R * 0.085, bevelSegments: 3, curveSegments: 1, steps: 1 });
+  g.translate(0, 0, -dep / 2); g.computeVertexNormals();
+  return g;
+}
+function ornCrownGeom() { // 빈티지 오너먼트 금속 캡 — 꽃잎 물결 테두리 + 단차 링 + 매다는 고리
+  const prof = [[0.134, -0.034], [0.130, -0.024], [0.112, -0.012], [0.090, -0.002], [0.072, 0.008],
+  [0.060, 0.018], [0.056, 0.030], [0.070, 0.040], [0.072, 0.050], [0.058, 0.058], [0.045, 0.072], [0.028, 0.085], [0.0, 0.093]]
+    .map(p => new THREE.Vector2(p[0], p[1]));
+  const parts = [new THREE.LatheGeometry(prof, 32)];
+  for (let i = 0; i < 12; i++) { // 꽃잎(scallop) 물결 테두리
+    const a = i / 12 * Math.PI * 2;
+    parts.push(new THREE.SphereGeometry(0.030, 8, 6).applyMatrix4(MX(Math.cos(a) * 0.129, -0.030, Math.sin(a) * 0.129, 1.15, 0.52, 0.86, 0, -a, 0)));
+  }
+  parts.push(new THREE.TorusGeometry(0.062, 0.0075, 6, 22).applyMatrix4(MX(0, 0.047, 0, 1, 1, 1, Math.PI / 2, 0, 0))); // 상단 단차 링
+  parts.push(new THREE.TorusGeometry(0.040, 0.0095, 8, 18).applyMatrix4(MX(0, 0.130, 0, 1, 1, 1, 0, 0, 0))); // 고리
+  return merge(parts.map(g => bake(g, '#ffffff')));
+}
+function ornHangerGeom() { // 별·지팡이·리본용 작은 금속 고리
+  return merge([
+    new THREE.TorusGeometry(0.040, 0.0095, 8, 18).applyMatrix4(MX(0, 0.052, 0, 1, 1, 1, 0, 0, 0)),
+    new THREE.CylinderGeometry(0.012, 0.017, 0.036, 8).applyMatrix4(MX(0, 0.012, 0, 1, 1, 1, 0, 0, 0))
+  ].map(g => bake(g, '#ffffff')));
+}
+function ornCaneGeom() { // 매끈한 캔디케인 — 양 끝 구형 엔드캡
+  const curve = new THREE.CatmullRomCurve3([[0, -0.06, 0], [0, 0.24, 0], [0.02, 0.38, 0], [0.1, 0.44, 0], [0.18, 0.38, 0], [0.2, 0.3, 0]].map(q => ornV(q[0], q[1], q[2])));
+  return new THREE.TubeGeometry(curve, 40, 0.058, 16, false);
 }
 const ORN_GEO = {
-  ball: new THREE.SphereGeometry(0.29, 20, 14),
-  cap: new THREE.CylinderGeometry(0.08, 0.1, 0.09, 10),
-  ring: new THREE.TorusGeometry(0.062, 0.016, 6, 12),
-  star: starGeo3D(0.38, 0.1, 0.42),
-  cane: new THREE.TubeGeometry(new THREE.CatmullRomCurve3([[0, -0.06, 0], [0, 0.24, 0], [0.02, 0.38, 0], [0.1, 0.44, 0], [0.18, 0.38, 0], [0.2, 0.3, 0]].map(q => new THREE.Vector3(q[0], q[1], q[2]))), 22, 0.06, 7),
-  bow: merge([
-    bake(new THREE.TorusGeometry(0.118, 0.04, 10, 22), '#ffffff', MX(-0.118, 0.015, 0, 1, 0.88, 0.85, 0, 0.5, 0.12)),
-    bake(new THREE.TorusGeometry(0.118, 0.04, 10, 22), '#ffffff', MX(0.118, 0.015, 0, 1, 0.88, 0.85, 0, -0.5, -0.12)),
-    bake(new THREE.SphereGeometry(0.062, 12, 8), '#ffffff', MX(0, 0.012, 0.03, 1, 1, 0.85)),
-    bake(new THREE.BoxGeometry(0.056, 0.17, 0.026), '#ffffff', MX(-0.088, -0.155, 0.008, 1, 1, 1, 0.12, 0, 0.34)),
-    bake(new THREE.BoxGeometry(0.056, 0.17, 0.026), '#ffffff', MX(0.088, -0.155, 0.008, 1, 1, 1, 0.12, 0, -0.34))
-  ]),
-  thread: new THREE.CylinderGeometry(0.014, 0.014, 1, 5)
+  ball: new THREE.SphereGeometry(0.29, 36, 26),
+  crown: ornCrownGeom(),
+  hanger: ornHangerGeom(),
+  star: ornStarGeom(0.38, 0.10, 0.44),
+  starCore: (function () { const g = new THREE.OctahedronGeometry(0.135, 0); g.scale(1, 1.1, 0.62); g.translate(0, 0, 0.082); return g; })(),
+  cane: ornCaneGeom(),
+  caneEnd: new THREE.SphereGeometry(0.0585, 12, 9),
+  caneKnot: merge([
+    new THREE.TorusGeometry(0.046, 0.015, 8, 16).applyMatrix4(MX(0.030, 0.235, 0.055, 1, 1, 0.72, 0, 0.55, 0.25)),
+    new THREE.TorusGeometry(0.040, 0.013, 8, 16).applyMatrix4(MX(-0.026, 0.245, 0.048, 1, 1, 0.72, 0, -0.5, -0.2)),
+    new THREE.SphereGeometry(0.019, 10, 8).applyMatrix4(MX(0.002, 0.240, 0.052, 1.2, 1, 0.9)),
+    new THREE.BoxGeometry(0.016, 0.070, 0.008).applyMatrix4(MX(0.052, 0.196, 0.056, 1, 1, 1, 0.16, 0, 0.42)),
+    new THREE.BoxGeometry(0.014, 0.060, 0.008).applyMatrix4(MX(-0.044, 0.200, 0.050, 1, 1, 1, 0.16, 0, -0.38))
+  ].map(g => bake(g, '#ffffff'))),
+  bow: ornBowGeom(),
+  thread: new THREE.CylinderGeometry(0.010, 0.010, 1, 6)
 };
 // 트리 전체 샷에서도 또렷하게 보이도록 오너먼트 전체를 1.5배로 (돌출 오프셋도 같이 키움)
-const ORN_SCALE = 1.5;
-['ball', 'cap', 'ring', 'star'].forEach(k => ORN_GEO[k].scale(ORN_SCALE, ORN_SCALE, ORN_SCALE));
-ORN_GEO.cane.scale(1.45 * ORN_SCALE, 1.45 * ORN_SCALE, 1.45 * ORN_SCALE); ORN_GEO.bow.scale(1.4 * ORN_SCALE, 1.4 * ORN_SCALE, 1.4 * ORN_SCALE);
+const ORN_SCALE = 1.5, ORN_CANE_S = 1.45 * ORN_SCALE, ORN_BOW_S = 1.02 * ORN_SCALE;
+ORN_GEO.ball.scale(ORN_SCALE, ORN_SCALE * 1.03, ORN_SCALE);
+ORN_GEO.crown.scale(ORN_SCALE, ORN_SCALE, ORN_SCALE);
+ORN_GEO.hanger.scale(ORN_SCALE, ORN_SCALE, ORN_SCALE);
+ORN_GEO.star.scale(ORN_SCALE, ORN_SCALE, ORN_SCALE);
+ORN_GEO.starCore.scale(ORN_SCALE, ORN_SCALE, ORN_SCALE);
+ORN_GEO.cane.scale(ORN_CANE_S, ORN_CANE_S, ORN_CANE_S);
+ORN_GEO.caneKnot.scale(ORN_CANE_S, ORN_CANE_S, ORN_CANE_S);
+ORN_GEO.bow.scale(ORN_BOW_S, ORN_BOW_S, ORN_BOW_S);
+const _ornBB = g => { g.computeBoundingBox(); return g.boundingBox; };
+function ornTopPoint(geo) { // 지오메트리에서 가장 높은 꼭짓점(고리 위치) — 캔디케인 갈고리 끝
+  const p = geo.attributes.position; let best = -1e9, bi = 0;
+  for (let i = 0; i < p.count; i++) { const y = p.getY(i); if (y > best) { best = y; bi = i; } }
+  return new THREE.Vector3(p.getX(bi), best, p.getZ(bi));
+}
+const ORN_BALL_TOP = _ornBB(ORN_GEO.ball).max.y, ORN_CROWN_H = _ornBB(ORN_GEO.crown).max.y;
+const ORN_HANG_H = _ornBB(ORN_GEO.hanger).max.y;
+const ORN_HOOK = { // 각 오너먼트에서 금실·고리가 걸리는 지점(로컬)
+  red: new THREE.Vector3(0, ORN_BALL_TOP, 0), gold: new THREE.Vector3(0, ORN_BALL_TOP, 0),
+  star: new THREE.Vector3(0, _ornBB(ORN_GEO.star).max.y, 0),
+  cane: ornTopPoint(ORN_GEO.cane),
+  bow: new THREE.Vector3(0, 0.062 * ORN_BOW_S, 0)
+};
+const ORN_TOP = {};
+['red', 'gold'].forEach(k => { ORN_TOP[k] = ORN_BALL_TOP + ORN_CROWN_H; });
+['star', 'cane', 'bow'].forEach(k => { ORN_TOP[k] = ORN_HOOK[k].y + ORN_HANG_H; });
+const ORN_STAR_TOP = _ornBB(ORN_GEO.star).max.y;
+// 벨벳 — 부드러운 섄 광택
+const ORN_VELVET = { color: '#a81f31', roughness: 0.74, metalness: 0.02, sheen: 0.92, sheenRoughness: 0.45, sheenColor: '#ffd2d9', clearcoat: 0.16, clearcoatRoughness: 0.5 };
 const ORN_MAT = {
-  red: new THREE.MeshStandardMaterial({ color: '#d5353c', roughness: 0.16, metalness: 0.45, emissive: '#3a0a0c', emissiveIntensity: 0.4 }),
-  gold: new THREE.MeshStandardMaterial({ color: '#f2c65f', roughness: 0.18, metalness: 0.9, emissive: '#4a3408', emissiveIntensity: 0.5 }),
-  trim: new THREE.MeshStandardMaterial({ color: '#e9c880', roughness: 0.25, metalness: 0.85, emissive: '#3a2a08', emissiveIntensity: 0.35 }),
-  star: new THREE.MeshStandardMaterial({ color: '#ffd75a', roughness: 0.22, metalness: 0.75, emissive: '#8a5a10', emissiveIntensity: 0.65, flatShading: true }),
-  cane: new THREE.MeshStandardMaterial({ map: caneTexture(), roughness: 0.3, metalness: 0.05 }),
-  bow: new THREE.MeshStandardMaterial({ color: '#c62b3a', roughness: 0.35, metalness: 0.15, emissive: '#3a0a0e', emissiveIntensity: 0.35 }),
-  thread: new THREE.MeshStandardMaterial({ color: '#d9b25c', roughness: 0.4, metalness: 0.65 })
+  red: new THREE.MeshPhysicalMaterial({ map: ornBallTexture('red'), roughness: 0.16, metalness: 0.12, clearcoat: 1.0, clearcoatRoughness: 0.06, emissive: '#2a0508', emissiveIntensity: 0.35, envMapIntensity: 1.15 }),
+  gold: new THREE.MeshPhysicalMaterial({ map: ornBallTexture('gold'), roughness: 0.15, metalness: 0.62, clearcoat: 1.0, clearcoatRoughness: 0.07, emissive: '#2e1f05', emissiveIntensity: 0.3, envMapIntensity: 1.2 }),
+  trim: new THREE.MeshPhysicalMaterial({ color: '#f0cf8c', roughness: 0.22, metalness: 0.9, clearcoat: 0.7, clearcoatRoughness: 0.12, emissive: '#3a2a08', emissiveIntensity: 0.35, envMapIntensity: 1.3 }),
+  star: new THREE.MeshPhysicalMaterial({ color: '#ffd98d', roughness: 0.18, metalness: 0.92, clearcoat: 0.65, clearcoatRoughness: 0.1, emissive: '#6a4a12', emissiveIntensity: 0.5, envMapIntensity: 1.3, flatShading: true }),
+  starCore: new THREE.MeshPhysicalMaterial({ color: '#fff0c4', roughness: 0.12, metalness: 0.95, clearcoat: 0.8, clearcoatRoughness: 0.08, emissive: '#c98c22', emissiveIntensity: 0.8, envMapIntensity: 1.4, flatShading: true }),
+  cane: new THREE.MeshPhysicalMaterial({ map: caneTexture(), roughness: 0.18, metalness: 0.04, clearcoat: 0.95, clearcoatRoughness: 0.08, envMapIntensity: 0.9 }),
+  caneEnd: new THREE.MeshPhysicalMaterial({ color: '#f7f0e0', roughness: 0.2, metalness: 0.03, clearcoat: 0.95, clearcoatRoughness: 0.08, envMapIntensity: 0.9 }),
+  caneKnot: new THREE.MeshPhysicalMaterial(Object.assign({}, ORN_VELVET)),
+  bow: new THREE.MeshPhysicalMaterial(Object.assign({}, ORN_VELVET, { side: THREE.DoubleSide })),
+  thread: new THREE.MeshStandardMaterial({ color: '#d9b25c', roughness: 0.35, metalness: 0.75 })
 };
 const ORN_DROP = 0.45, ORN_GAP = 0.14;
 // 종류별 오너먼트 반높이/반너비 — 원뿔 경사면에서도 아래·옆이 파묻히지 않게 이만큼을 더 띄운다
-const ORN_EXT = { red: 0.45, gold: 0.45, star: 0.6, cane: 0.5, bow: 0.46 };
+const ORN_EXT = { red: 0.47, gold: 0.47, star: 0.6, cane: 0.5, bow: 0.5 };
 const _ornAxis = new THREE.Vector3();
 function ornPlace(o) {
   const n = new THREE.Vector3(o.nx || 0, 0, o.nz || 1); if (n.lengthSq() < 1e-6) n.set(0, 0, 1); n.normalize();
@@ -3671,33 +3906,58 @@ function rebuildOrnaments() {
   if (!ORN_GROUP) { ORN_GROUP = new THREE.Group(); ORN_GROUP.frustumCulled = false; scene.add(ORN_GROUP); }
   const g = ORN_GROUP;
   for (let i = g.children.length - 1; i >= 0; i--) g.remove(g.children[i]);
+  ornUseEnv();
   if (!ORNS.length) return;
   const mk = (geo, mat, mats) => { if (!mats.length) return; const im = new THREE.InstancedMesh(geo, mat, mats.length); mats.forEach((m, i) => im.setMatrixAt(i, m)); im.instanceMatrix.needsUpdate = true; im.frustumCulled = false; g.add(im); };
-  const I = new THREE.Quaternion(), S = new THREE.Vector3(1, 1, 1);
+  const I = new THREE.Quaternion(), S = new THREE.Vector3(1, 1, 1), S_S = new THREE.Vector3(ORN_SCALE, ORN_SCALE, ORN_SCALE);
   const by = {}; ORNS.forEach(o => { (by[o.k] = by[o.k] || []).push(o); });
+  const tm = []; // 금실은 오너먼트 고리 위에서 짧게 수직으로만 놓아 옆으로 튀어나오지 않게
+  const threadAt = (center, top) => tm.push(new THREE.Matrix4().compose(center.clone().add(new THREE.Vector3(0, top - 0.02 + 0.17, 0)), I, new THREE.Vector3(1, 0.34, 1)));
   ['red', 'gold'].forEach(k => {
     const arr = by[k]; if (!arr) return;
-    const bm = [], cm = [], rm = [];
+    const bm = [], cm = [];
     arr.forEach(o => {
-      const center = ornPlace(o).center;
-      bm.push(new THREE.Matrix4().compose(center, I, S));
-      cm.push(new THREE.Matrix4().compose(center.clone().add(new THREE.Vector3(0, 0.44, 0)), I, S));
-      rm.push(new THREE.Matrix4().compose(center.clone().add(new THREE.Vector3(0, 0.56, 0)), I, S));
+      const q = ornPlace(o);
+      bm.push(new THREE.Matrix4().compose(q.center, I, S));
+      cm.push(new THREE.Matrix4().compose(q.center.clone().add(new THREE.Vector3(0, ORN_BALL_TOP, 0)), I, S));
+      threadAt(q.center, ORN_TOP[k]);
     });
-    mk(ORN_GEO.ball, ORN_MAT[k], bm); mk(ORN_GEO.cap, ORN_MAT.trim, cm); mk(ORN_GEO.ring, ORN_MAT.trim, rm);
+    mk(ORN_GEO.ball, ORN_MAT[k], bm); mk(ORN_GEO.crown, ORN_MAT.trim, cm);
   });
-  ['star', 'bow'].forEach(k => {
-    const arr = by[k]; if (!arr) return;
-    const ms = arr.map(o => { const q = ornPlace(o); return new THREE.Matrix4().compose(q.center, new THREE.Quaternion().setFromEuler(new THREE.Euler(-0.2, Math.atan2(q.n.x, q.n.z), 0, 'YXZ')), S); });
-    mk(ORN_GEO[k], ORN_MAT[k], ms);
-  });
-  if (by.cane) mk(ORN_GEO.cane, ORN_MAT.cane, by.cane.map(o => new THREE.Matrix4().compose(ornPlace(o).center, I, S)));
-  const tm = ORNS.map(o => {
-    const q = ornPlace(o);
-    // 금실은 오너먼트 고리 위에서 짧게 수직으로만 놓아 옆으로 튀어나오지 않게
-    const base = q.center.clone().add(new THREE.Vector3(0, 0.56, 0));
-    return new THREE.Matrix4().compose(base.clone().add(new THREE.Vector3(0, 0.14, 0)), I, new THREE.Vector3(1, 0.28, 1));
-  });
+  if (by.star) {
+    const ms = [], cs = [], hs = [];
+    by.star.forEach(o => {
+      const q = ornPlace(o), rot = new THREE.Quaternion().setFromEuler(new THREE.Euler(-0.2, Math.atan2(q.n.x, q.n.z), 0, 'YXZ'));
+      ms.push(new THREE.Matrix4().compose(q.center, rot, S));
+      cs.push(new THREE.Matrix4().compose(q.center, rot, S));
+      hs.push(new THREE.Matrix4().compose(q.center.clone().add(ORN_HOOK.star.clone().applyQuaternion(rot)), rot, S));
+      threadAt(q.center, ORN_TOP.star);
+    });
+    mk(ORN_GEO.star, ORN_MAT.star, ms); mk(ORN_GEO.starCore, ORN_MAT.starCore, cs); mk(ORN_GEO.hanger, ORN_MAT.trim, hs);
+  }
+  if (by.cane) {
+    const ms = [], es = [], ks = [], hs = [];
+    by.cane.forEach(o => {
+      const q = ornPlace(o);
+      ms.push(new THREE.Matrix4().compose(q.center, I, S));
+      [[0, -0.06, 0], [0.2, 0.30, 0]].forEach(p2 => es.push(new THREE.Matrix4().compose(q.center.clone().add(ornV(p2[0] * ORN_CANE_S, p2[1] * ORN_CANE_S, p2[2] * ORN_CANE_S)), I, S_S)));
+      ks.push(new THREE.Matrix4().compose(q.center, I, S));
+      hs.push(new THREE.Matrix4().compose(q.center.clone().add(ORN_HOOK.cane), I, S));
+      threadAt(q.center, ORN_TOP.cane);
+    });
+    mk(ORN_GEO.cane, ORN_MAT.cane, ms); mk(ORN_GEO.caneEnd, ORN_MAT.caneEnd, es);
+    mk(ORN_GEO.caneKnot, ORN_MAT.caneKnot, ks); mk(ORN_GEO.hanger, ORN_MAT.trim, hs);
+  }
+  if (by.bow) {
+    const ms = [], hs = [];
+    by.bow.forEach(o => {
+      const q = ornPlace(o), rot = new THREE.Quaternion().setFromEuler(new THREE.Euler(-0.15, Math.atan2(q.n.x, q.n.z) + 0.12, 0, 'YXZ'));
+      ms.push(new THREE.Matrix4().compose(q.center, rot, S));
+      hs.push(new THREE.Matrix4().compose(q.center.clone().add(ORN_HOOK.bow.clone().applyQuaternion(rot)), rot, S));
+      threadAt(q.center, ORN_TOP.bow);
+    });
+    mk(ORN_GEO.bow, ORN_MAT.bow, ms); mk(ORN_GEO.hanger, ORN_MAT.trim, hs);
+  }
   mk(ORN_GEO.thread, ORN_MAT.thread, tm);
   const tip = document.querySelector('#ornbar .orn-tip');
   if (tip) tip.textContent = ORNS.length ? '오너먼트 ' + ORNS.length + '개 · 나뭇가지를 눌러 더 달아 보세요' : '나뭇가지를 눌러 오너먼트를 달아 보세요';
@@ -3897,7 +4157,7 @@ async function takePolaroid() { // 지금 화면 구도 그대로 한 장 찍어
   if (!src) return;
   _polarRaw = src;                                              // 3D 원본은 그대로 두고 문구만 다시 합성한다
   const nm = (G.pname || '').trim();
-  _polarMsg = nm ? `${nm} 님, 메리 크리스마스! 🎄` : '메리 크리스마스! 🎄';
+  _polarMsg = nm ? `${nm} 님, 메리 크리스마스!` : '메리 크리스마스!';
   _polarLast = _polarMsg;
   const inp = $('#shotMsg'); if (inp) inp.value = _polarMsg;
   openShot(polaroidCanvas(_polarRaw, _polarMsg), '폴라로이드 기념사진', 'cit-sled-polaroid.jpg', true);
