@@ -286,6 +286,10 @@ body.paused *{animation-play-state:paused!important}
 #treebar button.primary{background:linear-gradient(180deg,rgba(214,186,124,.96),rgba(160,128,68,.96));border-color:rgba(248,236,205,.72);color:#241d12;box-shadow:0 14px 30px rgba(4,8,26,.44),inset 0 1px 0 rgba(255,255,255,.5)}
 #treebar button:hover{border-color:rgba(240,220,170,.7);background:rgba(20,31,52,.86)}
 #treebar button.primary:hover{background:linear-gradient(180deg,#e6cf9b,#ae8c4d)}
+@media (max-width:480px){
+  #treebar{gap:5px;padding:10px 6px calc(12px + env(safe-area-inset-bottom,0px))}
+  #treebar button{padding:9px 9px;font-size:11.5px;gap:4px}
+}
 #treeCount{position:fixed;left:50%;transform:translateX(-50%);top:calc(12px + env(safe-area-inset-top,0px));bottom:auto;z-index:18;display:none;padding:9px 16px;border-radius:999px;background:rgba(13,19,42,.84);border:1px solid rgba(255,255,255,.16);color:#f6f2e8;font-family:inherit;font-size:12.5px;font-weight:700;letter-spacing:.01em;box-shadow:0 12px 30px rgba(4,8,26,.44);pointer-events:none;white-space:nowrap}
 #treeCount.on{display:block}
 #treeCount b{color:#ffd84d}
