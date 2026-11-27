@@ -4226,7 +4226,7 @@ function polaroidCanvas(raw, customText) { // 3D 원본 장면 + 실제 폴라�
   // 바닥 푸터(citkorea.co.kr / 날짜)의 실제 활자 윗선을 재서, 사진 아래 여백과 푸터 사이의 '보이는' 빈 공간 가운데에 앉힌다
   x.font = `500 21px ${FONT_P}`; const mFoot = x.measureText('citkorea.co.kr');
   const footCap = PH - 34 - (mFoot.actualBoundingBoxAscent || 15);
-  const areaTop = IY + IW, areaBot = footCap - 12;
+  const areaTop = IY + IW, areaBot = footCap - 7;   // 사진 아래 여백과 바닥 푸터 사이의 보이는 빈 공간
   const yTop = areaTop + Math.max(30, (areaBot - areaTop - blockH) / 2);
   const titleBase = yTop + tAsc, inkMid = yTop + inkH / 2, subBase = yTop + inkH + GAP_TS + sAsc;
   {
