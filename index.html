@@ -1999,7 +1999,7 @@ function makeVillager(o) {
 }
 
 // ===== 버전 표기 (배포할 때마다 이 값만 올린다) =====
-const APP_VER = 'v1.21';
+const APP_VER = 'v1.22';
 try { const av = document.getElementById('appVer'); if (av) av.textContent = APP_VER; } catch (e) { }
 
 // ===== 사운드 (효과음: Web Audio 직접 합성 / BGM: 실제 캐럴 MP3) =====
@@ -2056,19 +2056,21 @@ MGA.addEventListener('ended', () => {
 });
 function playMenuTrack() {
   try {
+    if (!wantMenuBgm()) { stopMenuBgm(); return; }  // 이미 다른 화면이면 시작하지 않는다
+    stopRaceBgm(); stopTreeBgm();                   // 메인 곡 하나만 남긴다
     const want = bgmSrc(MENU_TRACKS[menuI]);
     if (MGA.src !== want) MGA.src = want;   // 이미 받아 둔 곡이면 다시 받지 않는다
     MGA.muted = AU.muted; MGA.volume = BGM_VOL * 0.7;
-    const p = MGA.play(); if (p && p.catch) p.catch(() => { });
+    playMenuGuarded();
   } catch (e) { }
 }
 function menuBgm(on) {
   try {
-    MGA.muted = AU.muted;
-    if (!on) { MGA.pause(); return; }
-    if (AU.muted) return;
+    if (!on || !wantMenuBgm()) { stopMenuBgm(); return; }  // 끄기·다른 화면: 대기 중 play()까지 취소
+    stopRaceBgm(); stopTreeBgm();                          // 메인 곡 하나만
+    MGA.muted = AU.muted; MGA.volume = BGM_VOL * 0.7;
     if (!MGA.getAttribute('src')) { playMenuTrack(); return; }
-    if (MGA.paused) { const p = MGA.play(); if (p && p.catch) p.catch(() => { }); }
+    if (MGA.paused) playMenuGuarded();
   } catch (e) { }
 }
 // 3D 트리 보기 전용 BGM — O Christmas Tree (미 공군 Heartland of America Band 'Raptor' 재즈 연주, PD-USGov)
@@ -2085,12 +2087,11 @@ function prepareTreeBgm() {
 function treeBgm(on) {
   try { nowPlayRefresh(); } catch (e) { }
   try {
-    if (!on) { TGA.pause(); return; }
-    if (AU.muted) { TGA.muted = true; TGA.pause(); return; }
+    if (!on || AU.muted || !G.treeView) { stopTreeBgm(); return; }  // 끄기·음소거·다른 화면: 대기 중 play()까지 취소
     prepareTreeBgm();
-    try { if (!BGA.paused) BGA.pause(); } catch (e) { } // 세리머니 곡·트리 곡이 겹치지 않게
+    stopMenuBgm(); stopRaceBgm();                     // 트리 곡 하나만 (세리머니 곡·메인 곡과 겹치지 않게)
     TGA.muted = false; TGA.volume = BGM_VOL * 0.62;
-    if (TGA.paused) { const p = TGA.play(); if (p && p.catch) p.catch(() => { if (!tgaUnlocked) tgaUnlockNow(); }); }
+    if (TGA.paused) playTreeGuarded();
   } catch (e) { }
   try { nowPlayRefresh(); } catch (e) { }
 }
@@ -2112,8 +2113,43 @@ function tgaUnlockNow() { // 사용자 제스처 안에서만 호출 — 무음�
   } catch (e) { tgaUnlocked = true; tgaUnlockPending = false; }
 }
 TGA.addEventListener('canplay', () => { // iOS에서 첫 재생이 로딩에 막히면 준비되는 대로 다시 튼다
-  try { if (G.treeView && !AU.muted && TGA.paused) { TGA.muted = false; const p = TGA.play(); if (p && p.catch) p.catch(() => { }); } } catch (e) { }
+  try { if (G.treeView && !AU.muted && TGA.paused) treeBgm(true); } catch (e) { }
 });
+
+// ===== BGM 배타 규칙: 한 화면에 배경음악은 항상 한 곡만 =====
+// 새 화면의 곡을 켜는 쪽에서 나머지 곡을 먼저 확실히 멈춘다.
+// play()는 비동기라서, 멈춘 뒤에 늦게 끝난 play()가 소리를 되살리는 경쟁 조건까지 막으려고
+// 요소마다 세대 번호(gen)를 두고, 세대가 바뀌었거나 화면이 다르면 resolve 직후 다시 pause() 한다.
+let menuPlayGen = 0, racePlayGen = 0, treePlayGen = 0;
+function hardPause(el) { try { el.pause(); } catch (e) { } }
+function stopMenuBgm() { menuPlayGen++; hardPause(MGA); }
+function stopRaceBgm() { racePlayGen++; hardPause(BGA); }
+function stopTreeBgm() { treePlayGen++; hardPause(TGA); }
+function wantMenuBgm() { return !AU.muted && !G.treeView && G.state === 'menu'; }
+function playMenuGuarded() {
+  const gen = ++menuPlayGen;
+  try {
+    const p = MGA.play();
+    if (p && p.then) p.then(() => { if (gen !== menuPlayGen || !wantMenuBgm()) hardPause(MGA); }).catch(() => { });
+    else if (p && p.catch) p.catch(() => { });
+  } catch (e) { }
+}
+function playRaceGuarded(onFail) {
+  const gen = ++racePlayGen;
+  try {
+    const p = BGA.play();
+    if (p && p.then) p.then(() => { if (gen !== racePlayGen) hardPause(BGA); }).catch(() => { if (gen === racePlayGen && onFail) onFail(); });
+    else if (p && p.catch) p.catch(() => { if (onFail) onFail(); });
+  } catch (e) { if (onFail) onFail(); }
+}
+function playTreeGuarded() {
+  const gen = ++treePlayGen;
+  try {
+    const p = TGA.play();
+    if (p && p.then) p.then(() => { if (gen !== treePlayGen) hardPause(TGA); }).catch(() => { if (gen === treePlayGen && !tgaUnlocked) tgaUnlockNow(); });
+    else if (p && p.catch) p.catch(() => { if (!tgaUnlocked) tgaUnlockNow(); });
+  } catch (e) { }
+}
 function bgmTrack() { if (AU.celeb) return CELEB[(AU.celebI || 0) % CELEB.length]; return AU.carol || TRACKS[0]; }
 function nextCeleb() { AU.celebI = ((AU.celebI || 0) + 1) % CELEB.length; return CELEB[AU.celebI]; }
 function bgmSrc(tr) { return new URL(tr.file, location.href).href; }
@@ -2140,7 +2176,11 @@ function setPlaybackSession() {
 setPlaybackSession();
 function auResume() {
   // 첫 제스처에서 메뉴 음악이 실제 소리로 나오도록 음소거 상태를 맞춰 둔다
-  try { MGA.muted = AU.muted; TGA.muted = AU.muted; if (G.state === 'menu' && !AU.muted) menuBgm(true); if (G.treeView && !AU.muted) treeBgm(true); } catch (e) { }
+  try {
+    MGA.muted = AU.muted; TGA.muted = AU.muted;
+    if (wantMenuBgm()) menuBgm(true); else if (G.state === 'menu') stopMenuBgm();
+    if (G.treeView) treeBgm(!AU.muted);
+  } catch (e) { }
   const c = AU.ctx; if (!c) return;
   if (c.state === 'suspended' || c.state === 'interrupted') {
     try { const p = c.resume(); if (p && p.catch) p.catch(() => { }); } catch (e) { }
@@ -2155,7 +2195,7 @@ function auResume() {
 });
 document.addEventListener('visibilitychange', () => {
   if (document.hidden) { try { BGA.pause(); } catch (e) { } }
-  else if (AU.on) { try { const p = BGA.play(); if (p && p.catch) p.catch(() => { }); } catch (e) { } }
+  else if (AU.on && !G.treeView) { try { const p = BGA.play(); if (p && p.catch) p.catch(() => { }); } catch (e) { } }
 });
 
 function auInit() {
@@ -2173,7 +2213,17 @@ function auInit() {
   AU.music = c.createGain(); AU.music.gain.value = 0.55; AU.music.connect(AU.master);
   auResume();
 }
-function auMute(m) { AU.muted = m; BGA.muted = m; MGA.muted = m; try { TGA.muted = m; if (m) TGA.pause(); else if (G.treeView) treeBgm(true); } catch (e) { } if (m) MGA.pause(); else if (G.state === 'menu') menuBgm(true); try { localStorage.setItem('sledMute', m ? '1' : '0'); } catch (e) { } if (AU.master) AU.master.gain.setTargetAtTime(m ? 0 : 0.85, AU.ctx.currentTime, 0.03); try { nowPlayRefresh(); } catch (e) { } }
+function auMute(m) {
+  AU.muted = m;
+  try { BGA.muted = m; MGA.muted = m; TGA.muted = m; } catch (e) { }
+  if (m) { stopMenuBgm(); stopTreeBgm(); }            // 음소거: 메인·트리 곡까지 확실히 정지
+  else if (G.treeView) treeBgm(true);
+  else if (G.state === 'menu') menuBgm(true);
+  else if (AU.on && (G.state === 'race' || G.state === 'finish' || G.state === 'result')) { try { BGA.volume = BGM_VOL; if (BGA.paused) playRaceGuarded(); } catch (e) { } }
+  try { localStorage.setItem('sledMute', m ? '1' : '0'); } catch (e) { }
+  if (AU.master) AU.master.gain.setTargetAtTime(m ? 0 : 0.85, AU.ctx.currentTime, 0.03);
+  try { nowPlayRefresh(); } catch (e) { }
+}
 function tone(f, t0, dur, type, vol, dest, f2) { const c = AU.ctx; if (!c) return; const o = c.createOscillator(), g = c.createGain(); o.type = type || 'sine'; o.frequency.setValueAtTime(f, t0); if (f2) o.frequency.exponentialRampToValueAtTime(f2, t0 + dur); g.gain.setValueAtTime(0.0001, t0); g.gain.exponentialRampToValueAtTime(vol, t0 + 0.012); g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur); o.connect(g); g.connect(dest || AU.master); o.start(t0); o.stop(t0 + dur + 0.05); }
 function nzSweep(t0, dur, f0, f1, q, vol, type, dest) { // 필터 주파수를 훑는 노이즈 (휙 지나가는 바람소리)
   const c = AU.ctx; if (!c) return; const s = c.createBufferSource(); s.buffer = AU.noise; s.loop = true;
@@ -2284,16 +2334,16 @@ function bgmTick(fast) {
 }
 function bgm(on) {
   AU.on = on;
-  if (!on) { try { BGA.pause(); } catch (e) { } return; }
+  if (!on) { stopRaceBgm(); return; }
   setPlaybackSession(); auResume();
+  stopMenuBgm(); stopTreeBgm();          // 레이스·세리머니 곡 하나만
   const tr = bgmTrack();
   try {
     const want = bgmSrc(tr);
     if (BGA.src !== want) BGA.src = want;
     BGA.muted = AU.muted; BGA.volume = BGM_VOL;
     try { BGA.currentTime = 0; } catch (e) { }
-    const p = BGA.play();
-    if (p && p.catch) p.catch(() => {
+    playRaceGuarded(() => {
       // 파일 재생이 막히면(코드 미지원·차단) 합성 멜로디로 내려간다
       AU.synth = true; AU.idx = 0; AU.beatPos = 0; AU.next = AU.ctx ? AU.ctx.currentTime + 0.05 : 0;
     });
@@ -2309,6 +2359,16 @@ function bgmCelebrate() { // 결승 통과: 레이스 캐럴에서 세리머니 
   AU.celeb = true; AU.celebI = 0;
   bgm(true);
   bgmDuck(2200);
+  try { nowPlayRefresh(); } catch (e) { }
+}
+function resumeCeremonyBgm() { // 트리 보기에서 결과 화면으로 돌아올 때 — 세리머니 곡 하나만 되살린다
+  stopMenuBgm(); stopTreeBgm();
+  try {
+    if (AU.muted) { hardPause(BGA); } else {
+      BGA.muted = false; BGA.volume = BGM_VOL;
+      if (BGA.paused) playRaceGuarded();
+    }
+  } catch (e) { }
   try { nowPlayRefresh(); } catch (e) { }
 }
 function auEngine(v, ground, mute) { if (!AU.ctx) return; const t = AU.ctx.currentTime, k = mute ? 0 : 1; AU.sled.g.gain.setTargetAtTime(k * (ground ? Math.min(0.18, v / 183) : 0), t, 0.05); AU.sled.bq.frequency.setTargetAtTime(700 + v * 30, t, 0.1); AU.wind.g.gain.setTargetAtTime(k * Math.min(0.25, v * v / 6400), t, 0.1); AU.wind.bq.frequency.setTargetAtTime(300 + v * 14, t, 0.1); }
@@ -3033,7 +3093,7 @@ function closeTreeView() {
     $('#menu').classList.add('hidden');
     $('#hud').classList.add('hidden');
     setResOpen(backResOpen);
-    try { if (!AU.muted) { BGA.muted = false; BGA.volume = BGM_VOL; const p = BGA.play(); if (p && p.catch) p.catch(() => { }); } } catch (e) { }
+    try { resumeCeremonyBgm(); } catch (e) { }
     if (backCards) setTimeout(() => { if (G.state === 'result' && !G.treeView) toggleCards(true); }, 200);
   } else {
     whiteFade(() => { toMenu(true); $('#menu').classList.remove('out'); if (backCards) setTimeout(() => { if (G.state === 'menu') toggleCards(true); }, 220); });
@@ -4395,15 +4455,18 @@ function whiteFade(fn) { const f = $('#fade'); f.classList.add('on'); setTimeout
 function pause(v, silent) { if (G.state !== 'race' && !G.paused) return; G.paused = v === undefined ? !G.paused : v; $('#pause').classList.toggle('hidden', !G.paused || !!silent || !$('#help').classList.contains('hidden')); document.body.classList.toggle('paused', G.paused); if (G.paused) auEngine(0, false, true); }
 function resetWorld() { Object.values(W.snowmen).forEach(m => { m.visible = true; m.position.copy(m.userData.home); m.rotation.x = m.rotation.z = 0; }); trails.forEach(t => t.reset()); W.fireOn = false; G.lastSec = -1; G.offR = 0; G.last = null; G.saved = 0; G.mine = null; G.resOpen = false; $('#endbar').classList.add('hidden'); orbitHint(false); $('#shot').classList.add('hidden'); $('#turbo').classList.remove('on'); $('#gl').style.cursor = ''; }
 function toMenu(first) {
-  G.state = 'menu'; G.R = newRace(G.diff, 1); resetWorld(); G.finT = 0; G.orbitYaw = 0; G.orbitPitch = 0; G.orbitFocus = 0.45; G.autoSpin = false; G.orbitDist = 22; G.snowball = false; G.ornMode = false; ['#tbSnow', '#bSnow', '#tbOrn'].forEach(q => { const b = $(q); if (b) b.classList.remove('on'); }); const ob = $('#ornbar'); if (ob) ob.classList.remove('on'); AU.celeb = false; bgm(false); auEngine(0, false, true);
+  G.state = 'menu'; G.R = newRace(G.diff, 1); resetWorld(); G.finT = 0; G.orbitYaw = 0; G.orbitPitch = 0; G.orbitFocus = 0.45; G.autoSpin = false; G.orbitDist = 22; G.snowball = false; G.ornMode = false; ['#tbSnow', '#bSnow', '#tbOrn'].forEach(q => { const b = $(q); if (b) b.classList.remove('on'); }); const ob = $('#ornbar'); if (ob) ob.classList.remove('on'); AU.celeb = false; bgm(false); stopMenuBgm(); stopTreeBgm(); auEngine(0, false, true);
   $('#result').classList.add('hidden'); $('#board').classList.add('hidden'); $('#hud').classList.remove('on'); $('#menu').classList.remove('hidden'); requestAnimationFrame(() => $('#menu').classList.remove('out')); showBest(); $('#speedlines').style.opacity = 0;
   if (!first) setTimeout(() => { if (G.state === 'menu') $('#hud').classList.add('hidden'); }, 500); else $('#hud').classList.add('hidden');
   requestAnimationFrame(fitBrand); setTimeout(fitBrand, 120);
   setTimeout(() => { if (G.state === 'menu') menuBgm(true); }, 60);
 }
 function startRace(again) {
-  menuBgm(false);
-  if (G.state !== 'menu' && !again) return; auInit(); auResume(); setPlaybackSession(); SFX.click();
+  if (G.state !== 'menu' && !again) return;
+  G.state = 'intro';        // 화면 상태를 먼저 바꿔, 아래 auInit·auResume가 메인 BGM을 다시 켜지 않게 한다
+  menuBgm(false);           // 메인 호두까기인형 BGM 즉시 정지 — 진행 중이던 play()까지 무효화
+  bgm(false);               // 남아 있던 레이스·세리머니 곡도 정지 (GO에서 새로 켠다)
+  auInit(); auResume(); setPlaybackSession(); SFX.click();
   setName($('#menuNameIn').value);
   startOnlineSession(); AU.celeb = false; pickCarol();
   G.R = newRace(G.diff, 0, AUTO); resetWorld(); G.state = 'intro'; G.orbitYaw = 0; G.orbitPitch = 0; G.autoSpin = false; G.introT = again ? 1.0 : 0; G.countI = -1; G.finT = 0; G.acc = 0; G.jumpQ = false; G.hintT = 0;
@@ -4463,9 +4526,9 @@ function bindInput() {
   addEventListener('blur', () => { for (const k in keys) keys[k] = false; if (G.state === 'race' && !G.paused) pause(true); });
   const tb = (id, key) => { const el = $(id), on = (e) => { e.preventDefault(); if (key === 'j') { if (G.state === 'race') G.jumpQ = true; } else touch[key] = true; el.classList.add('on'); }, off = (e) => { e.preventDefault(); if (key !== 'j') touch[key] = false; el.classList.remove('on'); }; el.addEventListener('pointerdown', on); el.addEventListener('pointerup', off); el.addEventListener('pointercancel', off); el.addEventListener('pointerleave', off); };
   tb('#tL', 'l'); tb('#tR', 'r'); tb('#tB', 'b'); tb('#tJ', 'j');
-  document.addEventListener('pointerdown', () => { if (G.state === 'menu' && !AU.muted && MGA.paused) menuBgm(true); }, true);
+  document.addEventListener('pointerdown', () => { if (wantMenuBgm() && MGA.paused) menuBgm(true); }, true);
   // 트리 음악이 iOS에서 막혀 멈춰 있으면 다음 터치(제스처)에서 바로 다시 틀어 준다
-  document.addEventListener('pointerdown', () => { if (G.treeView && !AU.muted && TGA.paused) { try { TGA.muted = false; TGA.volume = BGM_VOL * 0.62; const p = TGA.play(); if (p && p.catch) p.catch(() => { }); } catch (e) { } } }, true);
+  document.addEventListener('pointerdown', () => { if (G.treeView && !AU.muted && TGA.paused) treeBgm(true); }, true);
   document.addEventListener('contextmenu', (e) => { if (e.target && e.target.id === 'shotImg') return; e.preventDefault(); });
 }
 const pin = { steer: 0, brake: false, push: false, jump: false, spin: 0 };
