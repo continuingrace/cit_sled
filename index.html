@@ -235,7 +235,7 @@ body.paused *{animation-play-state:paused!important}
 #cards .vin-head .vin-title,#cards .vin-head .vin-count{text-align:left;margin-left:0;padding-left:0}
 /* 키커(CiT 2026 …) 줄은 10px 얇은 'C'의 광학 왼쪽선 때문에 1px 왼쪽으로 튀어 보여, 1px 밀어 타이틀·카드 수 줄과 시작선을 맞춤 */
 #cards .vin-head .vin-eyebrow{text-align:left;margin-left:0;padding-left:1px}
-#cards .vin-eyebrow{display:block;margin:0;padding:0;text-indent:-1px;font-size:10px;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:var(--iv-brass)}
+#cards .vin-eyebrow{display:block;margin:0;padding:0;text-indent:-1px;font-size:10px;font-weight:600;letter-spacing:.24em;color:var(--iv-brass)}
 /* 키커는 타이틀 폭에 맞춰 양끝을 맞춤 (왼쪽 C ↔ 트, 오른쪽 T ↔ 기) */
 #cards .vin-head-top{width:fit-content;max-width:100%}
 #cards .vin-eyebrow{display:flex;justify-content:space-between;align-items:baseline;width:100%;gap:0}
@@ -632,7 +632,7 @@ body.paused *{animation-play-state:paused!important}
   <div class="vin-head">
     <button class="vin-close" id="cardsX" title="닫기" aria-label="카드 창 닫기">✕</button>
     <div class="vin-head-top">
-      <span class="vin-eyebrow"><span class="k-a">CiT 2026</span><span class="k-dot">·</span><span class="k-b">Christmas Post</span></span>
+      <span class="vin-eyebrow"><span class="k-a">CiT 2026</span><span class="k-dot">·</span><span class="k-b">CHRISTMAS POST</span></span>
       <h2 class="vin-title">트리에 빈티지 카드 남기기</h2>
     </div>
     <p class="vin-count" id="cardCount">트리에 <b>0</b>장의 카드가 걸려 있어요</p>
@@ -1999,7 +1999,7 @@ function makeVillager(o) {
 }
 
 // ===== 버전 표기 (배포할 때마다 이 값만 올린다) =====
-const APP_VER = 'v1.14';
+const APP_VER = 'v1.15';
 try { const av = document.getElementById('appVer'); if (av) av.textContent = APP_VER; } catch (e) { }
 
 // ===== 사운드 (효과음: Web Audio 직접 합성 / BGM: 실제 캐럴 MP3) =====
