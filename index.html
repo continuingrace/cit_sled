@@ -3509,11 +3509,23 @@ function buildUI() {
     if (G.ornMode) { tapLock = Date.now(); auInit(); addOrnamentAt(e); return; } // 꾸미기 모드: 나뭇가지에 오너먼트
     if (G.snowball && !G.resOpen) { tapLock = Date.now(); auInit(); throwSnowball(e); }
   });
+  // 탭한 지점에서 가장 가까운 대상만 고른다 (푯말 앞에 나무가 있어도 푯말이 먼저 눌리게)
+  const nearKind = (e) => {
+    if (!camera) return null;
+    nd.set(e.clientX / innerWidth * 2 - 1, -(e.clientY / innerHeight) * 2 + 1); ray.setFromCamera(nd, camera);
+    let best = null;
+    const scan = (list, kind) => { if (!list || !list.length) return; let hs = []; try { hs = ray.intersectObjects(list, false); } catch (err) { return; } if (hs.length && (!best || hs[0].distance < best.d)) best = { kind, d: hs[0].distance }; };
+    if (G.state === 'result') scan(W.photoLinks, 'photo');
+    if (G.state === 'result' || G.state === 'menu' || G.state === 'intro') scan(W.cardLinks, 'cards');
+    if (G.state === 'result') scan(W.links, 'home');
+    return best && best.kind;
+  };
   $('#gl').addEventListener('click', (e) => {
     if (Date.now() - tapLock < 420) { e.preventDefault(); return; }
-    if (hitPhoto(e)) { takePolaroid(); return; }
-    if (hitCard(e)) { toggleCards(true); return; }
-    if (hit(e)) window.open(HOME, '_blank', 'noopener');
+    const k = nearKind(e);
+    if (k === 'photo') { takePolaroid(); return; }
+    if (k === 'cards') { toggleCards(true); return; }
+    if (k === 'home') window.open(HOME, '_blank', 'noopener');
   });
   $('#gl').addEventListener('pointermove', (e) => {
     if (!canPlay()) { $('#gl').style.cursor = ''; return; }
