@@ -365,6 +365,8 @@ body.paused *{animation-play-state:paused!important}
   #cardView .cv-post{width:96px;height:60px}
   #cardView .cv-stamp{width:48px;height:58px}
   #cardView .cv-x{top:-42px;right:0}
+  #treebar{gap:6px;padding:14px 10px calc(14px + env(safe-area-inset-bottom,0px))}
+  #treebar button{padding:11px 12px;font-size:12px;gap:5px}
 }
 * { touch-action: manipulation; }
 #gl, canvas, #touch, .tb, button, .btn { touch-action: none !important; }
@@ -2581,7 +2583,8 @@ function openCardView(c) {
   const sb = $('#cvShare');
   if (sb) sb.onclick = () => { if (!own) return; closeCardView(); shareMyCard(c.id); };
   if (G.treeView) { G.spinBeforeCard = !!G.autoSpin; G.autoSpin = false; }
-  m.classList.remove('hidden', 'closing');
+  clearTimeout(G.cardViewT);
+  m.classList.remove('hidden', 'closing'); m.setAttribute('aria-hidden', 'false');
   void m.offsetWidth;  // 애니메이션을 다시 시작
   requestAnimationFrame(() => m.classList.add('open'));
   try { SFX.paper(); } catch (e) { }
@@ -2589,8 +2592,9 @@ function openCardView(c) {
 function closeCardView() {
   const m = $('#cardView'); if (!m || m.classList.contains('hidden')) return;
   m.classList.add('closing'); m.classList.remove('open');
-  setTimeout(() => {
-    m.classList.add('hidden'); m.classList.remove('closing');
+  clearTimeout(G.cardViewT);
+  G.cardViewT = setTimeout(() => {
+    m.classList.add('hidden'); m.classList.remove('closing'); m.setAttribute('aria-hidden', 'true');
     if (G.treeView && G.spinBeforeCard) { G.autoSpin = true; G.spinBeforeCard = false; }
   }, 230);
 }
