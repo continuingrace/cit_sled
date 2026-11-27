@@ -1,0 +1,16 @@
+{
+  "name": "CiT 썰매대작전",
+  "short_name": "썰매대작전",
+  "description": "CiT 2026 크리스마스 · 눈꽃마을 썰매 레이스",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0e1729",
+  "theme_color": "#0e1729",
+  "lang": "ko",
+  "icons": [
+    { "src": "./apple-touch-icon.png", "sizes": "180x180", "type": "image/png", "purpose": "any" },
+    { "src": "./icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ]
+}
