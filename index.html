@@ -298,7 +298,7 @@ body.paused *{animation-play-state:paused!important}
   #treebar{gap:5px;padding:10px 6px calc(12px + env(safe-area-inset-bottom,0px))}
   #treebar button{padding:9px 9px;font-size:11.5px;gap:4px}
 }
-#treeCount{position:fixed;left:50%;transform:translateX(-50%);top:calc(12px + env(safe-area-inset-top,0px));bottom:auto;z-index:18;display:none;padding:9px 16px;border-radius:999px;background:rgba(13,19,42,.84);border:1px solid rgba(255,255,255,.16);color:#f6f2e8;font-family:inherit;font-size:12.5px;font-weight:700;letter-spacing:.01em;box-shadow:0 12px 30px rgba(4,8,26,.44);pointer-events:none;white-space:nowrap}
+#treeCount{position:fixed;left:50%;transform:translateX(-50%);top:calc(12px + env(safe-area-inset-top,0px));bottom:auto;z-index:18;display:none;padding:0;border:0;background:none;box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none;color:rgba(246,242,232,.92);font-family:inherit;font-size:12.5px;font-weight:700;letter-spacing:.01em;text-shadow:0 1px 5px rgba(0,0,0,.6);pointer-events:none;white-space:nowrap}
 #treeCount.on{display:block}
 #treeCount b{color:#ffd84d}
 /* 지금 나오는 음악 — 작은 다크 글래스 배지 (상단 좌측) */
@@ -307,7 +307,7 @@ body.paused *{animation-play-state:paused!important}
 #nowPlay i{font-style:normal;font-size:11px;line-height:1;opacity:.85}
 #nowPlay svg{width:11px;height:11px;flex:none;fill:#f3d58d;opacity:.92;filter:drop-shadow(0 1px 3px rgba(0,0,0,.55))}
 #nowPlay b{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-#nowPlay.under{top:calc(58px + env(safe-area-inset-top,0px))}
+#nowPlay.under{top:calc(38px + env(safe-area-inset-top,0px))}
 @media (max-width:560px){
   #treeCount{max-width:calc(100vw - 24px);overflow:hidden;text-overflow:ellipsis}
   #nowPlay{max-width:calc(100vw - 40px);font-size:11px}
@@ -2694,7 +2694,7 @@ function cardCount() { // 몇 명이 카드를 걸었는지(이름 기준) + 장
     ? '지금까지 <b>' + people + '</b>명이 트리에 카드를 걸었어요 · <b>' + total + '</b>장' + (partial ? ' (최근 ' + CARDS.length + '장 표시)' : '')
     : '아직 트리에 걸린 카드가 없어요';
   const tb = $('#treeCount');
-  if (tb) { if (total && G.treeView) { tb.innerHTML = '🎄 지금까지 <b>' + people + '</b>명 참여 · <b>' + total + '</b>장'; tb.classList.add('on'); } else { tb.innerHTML = ''; tb.classList.remove('on'); } }
+  if (tb) { if (total && G.treeView) { tb.innerHTML = '<b>' + total + '</b>장의 카드가 트리에 있어요'; tb.classList.add('on'); } else if (G.treeView) { tb.innerHTML = '아직 트리에 걸린 카드가 없어요'; tb.classList.add('on'); } else { tb.innerHTML = ''; tb.classList.remove('on'); } }
 }
 function cardNoteText(t, kind) { const el = $('#cardNote'); if (!el) return; el.className = 'vin-note' + (kind ? ' ' + kind : ''); el.textContent = t; }
 function paintCards() {
