@@ -4,7 +4,7 @@
 html,body{margin:0;background:#1b1b1b;color:#eaeaea;font:12px/1.45 ui-monospace,monospace}
 #stage{position:absolute;left:0;top:0;overflow:hidden;background:#000}
 #stage iframe{border:0;display:block}
-#out{position:absolute;left:404px;top:0;width:1400px;padding:10px 14px;white-space:pre-wrap}
+#out{position:absolute;left:404px;top:0;width:1460px;padding:10px 14px;white-space:pre-wrap}
 b{color:#ffd84d} i{color:#7ee787;font-style:normal}
 </style>
 <div id="stage"></div>
@@ -12,9 +12,8 @@ b{color:#ffd84d} i{color:#7ee787;font-style:normal}
 <script>
 const p = new URLSearchParams(location.search);
 const W = +(p.get('w') || 390), H = +(p.get('h') || 844);
-const SAT = p.get('sat') === null ? 47 : +(p.get('sat') || 0);
+const SAT = p.get('sat') === null ? 28 : +(p.get('sat') || 0);
 const SAB = p.get('sab') === null ? 34 : +(p.get('sab') || 0);
-const SCREEN = p.get('screen') || 'menu';
 const stage = document.getElementById('stage'), out = document.getElementById('out');
 stage.style.width = W + 'px'; stage.style.height = H + 'px';
 const f = document.createElement('iframe');
@@ -22,38 +21,16 @@ f.src = '../index.html';
 f.width = W; f.height = H; f.style.width = W + 'px'; f.style.height = H + 'px';
 stage.appendChild(f);
 let ready = false;
-
-function setup() {
-  const d = f.contentDocument, w = f.contentWindow;
-  d.documentElement.classList.add('st');
-  const st = d.createElement('style');
-  st.textContent = 'html{--sat:' + SAT + 'px;--sab:' + SAB + 'px;--hudtop:max(14px,calc(' + SAT + 'px + 8px))}';
-  d.head.appendChild(st);
-  const q = s => d.querySelector(s);
-  if (SCREEN === 'hud') {
-    q('#menu').classList.add('out', 'hidden');
-    q('#hud').classList.add('on');
-    q('#rankNum').textContent = '1'; q('#rankOf').textContent = '/4';
-    q('#timer').textContent = '0:00.48'; q('#spd').textContent = '67';
-    q('#cGift').textContent = '0'; q('#cGate').textContent = '0/16';
-    q('#score').textContent = '0';
-    const t = q('#toast'); t.innerHTML = '<small>CiT SNOWY VILLAGE SLED</small>CiT 눈꽃마을 썰매장'; t.classList.add('on');
-  } else if (SCREEN === 'result') {
-    q('#menu').classList.add('out', 'hidden');
-    const r = q('#result'); r.classList.remove('hidden');
-    q('#rRank').textContent = '4'; q('#rMsg').textContent = '끝까지 달렸어요!';
-    q('#rList').innerHTML = [
-      ['1', '#4b7bec', 'K코치', '1:10.47'], ['2', '#f5b942', 'HR둥이', '1:12.50'],
-      ['3', '#e5484d', '정영', '1:13.65'], ['4', '#ff8ec7', '이성장 (나)', '1:33.76']
-    ].map(([e, c, n, t]) => '<li class="' + (n.indexOf('(나)') > 0 ? 'me' : '') + '"><em>' + e + '</em><i style="background:' + c + '"></i><span>' + n + '</span><b>' + t + '</b></li>').join('');
-    q('#rStats').innerHTML = [['시간', '1:33.76'], ['선물', '16개'], ['깃발 통과', '5/16'], ['트릭', '2회'], ['최고속도', '225km/h'], ['순위 보너스', '+50'], ['난이도 보너스', '+700']].map(([a, b]) => '<div>' + a + '<b>' + b + '</b></div>').join('');
-    q('#rTotal').textContent = '1912';
-    q('#rBest').textContent = '내 최고 기록 3348점 · 이름을 남기면 순위표에 올라가요.';
-  }
-  ready = true;
-}
-f.onload = () => { try { setup(); } catch (e) { out.textContent = 'SETUP ERR ' + e; } };
-
+f.onload = () => {
+  try {
+    const d = f.contentDocument;
+    d.documentElement.classList.add('st');
+    const st = d.createElement('style');
+    st.textContent = 'html{--sat:' + SAT + 'px;--sab:' + SAB + 'px}';
+    d.head.appendChild(st);
+    ready = true;
+  } catch (e) { out.textContent = 'SETUP ERR ' + e; }
+};
 function rect(el) {
   if (!el) return null;
   const b = el.getBoundingClientRect();
@@ -61,42 +38,56 @@ function rect(el) {
   return { l: Math.round(b.left), t: Math.round(b.top), r: Math.round(b.right), b: Math.round(b.bottom), w: Math.round(b.width), h: Math.round(b.height) };
 }
 function L(n, r) { return r ? '  ' + n.padEnd(11) + ' L' + r.l + ' T' + r.t + ' R' + r.r + ' B' + r.b + ' (' + r.w + '×' + r.h + ')' : '  ' + n.padEnd(11) + ' (없음)'; }
+function vis(el) { if (!el) return false; const s = getComputedStyle(el); return s.display !== 'none' && s.visibility !== 'hidden' && +s.opacity > 0.5 && el.getBoundingClientRect().height > 0; }
 function tick() {
   if (!ready) return;
   try {
     const d = f.contentDocument, q = s => d.querySelector(s);
-    const rows = [];
-    rows.push('viewport ' + f.contentWindow.innerWidth + '×' + f.contentWindow.innerHeight + '  sat=' + SAT + ' sab=' + SAB + '  screen=' + SCREEN);
-    if (SCREEN === 'menu') {
-      const mcol = q('#menu .mcol'), card = q('#menu .card'), bv = rect(q('#appVer'));
+    const g = f.contentWindow;
+    const rows = ['viewport ' + g.innerWidth + '×' + g.innerHeight + '  sat=' + SAT + ' sab=' + SAB + '  ver=' + (q('#appVer') ? q('#appVer').textContent : '?')];
+    const menuEl = q('#menu');
+    if (menuEl && !menuEl.classList.contains('hidden') && !menuEl.classList.contains('out')) {
+      const mcol = q('#menu .mcol'), card = q('#menu .card'), bv = rect(q('#appVer')), sb = rect(q('#bSnd3'));
+      rows.push('-- 메인 시트 --');
       rows.push(L('mcol', rect(mcol)) + '  scroll ' + mcol.scrollHeight + '/' + mcol.clientHeight + (mcol.scrollHeight > mcol.clientHeight + 1 ? '  <b>스크롤 필요</b>' : '  <i>한 화면 OK</i>'));
-      rows.push(L('card', rect(card)) + '  scroll ' + card.scrollHeight + '/' + card.clientHeight);
+      rows.push(L('card', rect(card)));
       rows.push(L('3btn row', rect(q('#menu .card .row'))));
       rows.push(L('best', rect(q('#best'))));
-      rows.push(L('appver', rect(q('#appVer'))));
-      rows.push(L('soundBtn', rect(q('#bSnd3'))) + '  text=' + q('#bSnd3').textContent);
-      rows.push(rect(q('#best')) && rect(q('#best')).b <= H - 2 ? '<i>내 최고 기록 보임</i>' : '<b>내 최고 기록 잘림</b>');
-      rows.push(bv && bv.b <= H - 1 ? '<i>버전 줄 보임</i>' : '<b>버전 줄 잘림</b>');
-      rows.push('soundBtn top=' + rect(q('#bSnd3')).t + ' sat=' + SAT + ' ' + (rect(q('#bSnd3')).t >= SAT ? '<i>상태바 아래</i>' : '<b>상태바 안</b>'));
-    } else if (SCREEN === 'hud') {
+      rows.push(L('appver', bv));
+      rows.push(L('soundBtn', sb) + '  text=' + q('#bSnd3').textContent);
+      rows.push(bv && bv.b <= H - 1 ? '<i>버전 줄 화면 안</i>' : '<b>버전 줄 잘림</b>');
+      rows.push(sb && sb.t >= 44 ? '<i>소리 버튼 상태바 아래</i>' : '<b>소리 버튼 상태바 안</b>');
+    }
+    const hud = q('#hud');
+    if (hud && hud.classList.contains('on')) {
       const a = rect(q('#rankCard')), c = rect(q('#topC')), r = rect(q('#rightC')), t = rect(q('#toast'));
+      const gp = (x, y) => (x != null && y != null) ? (y - x) + 'px' : '?';
+      rows.push('-- 주행 HUD --');
       rows.push(L('rankCard', a)); rows.push(L('topC', c)); rows.push(L('rightC', r)); rows.push(L('toast', t));
-      rows.push(L('soundBtn', rect(q('#bSnd'))) + '  text=' + q('#bSnd').querySelector('.ic').textContent);
+      rows.push(L('soundBtn', rect(q('#bSnd'))) + '  ic=' + q('#bSnd').querySelector('.ic').textContent);
       rows.push(L('touch L', rect(q('#tL')))); rows.push(L('touch R', rect(q('#tR'))));
-      rows.push('<b>간격 L↔C ' + (c.l - a.r) + 'px / C↔R ' + (r.l - c.r) + 'px / toast↔R ' + (r.l - t.r) + 'px</b>');
-      rows.push(a.t >= SAT && c.t >= SAT && r.t >= SAT ? '<i>세 패널 모두 상태바(' + SAT + ') 아래</i>' : '<b>상태바 침범</b>');
-      rows.push(c.r <= r.l && a.r <= c.l ? '<i>가로 겹침 없음</i>' : '<b>가로 겹침</b>');
+      rows.push('<b>간격 L↔C ' + gp(a && a.r, c && c.l) + ' / C↔R ' + gp(c && c.r, r && r.l) + ' / toast↔R ' + gp(t && t.r, r && r.l) + '</b>');
+      rows.push(a && c && r && a.t >= 44 && c.t >= 44 && r.t >= 44 ? '<i>세 패널 모두 상태바 아래</i>' : '<b>상태바 침범</b>');
+      rows.push(c && r && a && c.r <= r.l && a.r <= c.l ? '<i>가로 겹침 없음</i>' : '<b>가로 겹침</b>');
       const tl = rect(q('#tL'));
-      rows.push('버튼 아래 여유 ' + (H - tl.b) + 'px (viewport ' + H + ')');
-    } else if (SCREEN === 'result') {
-      const pn = rect(q('#result .panel'));
-      rows.push(L('panel', pn) + '  scroll ' + q('#result .panel').scrollHeight + '/' + q('#result .panel').clientHeight);
+      rows.push('주행 버튼 아래 여유 ' + (tl ? H - tl.b : '?') + 'px');
+    }
+    const res = q('#result');
+    if (res && !res.classList.contains('hidden')) {
+      const pn = q('#result .panel'), pr = rect(pn);
+      rows.push('-- 결과창 --');
+      rows.push(L('panel', pr) + '  scroll ' + pn.scrollHeight + '/' + pn.clientHeight + (pn.scrollHeight > pn.clientHeight + 2 ? '  <b>스크롤 있음</b>' : '  <i>한 화면</i>'));
       rows.push(L('rhead', rect(q('#result .rhead'))));
       rows.push(L('×btn', rect(q('#bResX'))));
       rows.push(L('link', rect(q('#bHome'))));
       const nm = q('#rList li:last-child span');
-      rows.push('이름 span ' + nm.getBoundingClientRect().width.toFixed(1) + 'px / 글자 ' + nm.scrollWidth + 'px ' + (nm.scrollWidth <= Math.ceil(nm.getBoundingClientRect().width + 1) ? '<i>잘림 없음</i>' : '<b>뒤 잘림</b>'));
-      rows.push(pn.t >= SAT && pn.b <= H - SAB ? '<i>패널 위아래 화면 안</i>' : '<b>패널 위아래 넘침</b>');
+      if (nm) { const w = nm.getBoundingClientRect().width; rows.push('이름 span ' + w.toFixed(1) + ' / 글자 ' + nm.scrollWidth + ' ' + (nm.scrollWidth <= Math.ceil(w + 1) ? '<i>잘림 없음</i>' : '<b>뒤 잘림</b>')); }
+      rows.push(pr && pr.t >= SAT && pr.b <= H - SAB ? '<i>패널 위아래 화면 안</i>' : '<b>패널 위아래 넘침</b>');
+    }
+    const tb = q('#treebar');
+    if (tb && !tb.classList.contains('hidden')) {
+      rows.push('-- 트리 --');
+      rows.push(L('treebar', rect(tb)) + '  아래 여유 ' + (H - rect(tb).b) + 'px');
     }
     out.innerHTML = rows.join('\n');
   } catch (e) { out.textContent = 'ERR ' + e; }
