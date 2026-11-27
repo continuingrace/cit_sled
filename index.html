@@ -737,9 +737,9 @@ const HAIR = {
   },
   short: { // 한국 남자 댄디 — 옆으로 넘긴 가르마와 둥근 앞머리·윗머리 퍼프, 귀 앞 구레나룻
     thick: (p, t) => 0.060 + 0.032 * Math.exp(-((p / 1.0) ** 2)) + 0.026 * Math.exp(-(((Math.abs(p) - 0.9) / 0.5) ** 2)) + 0.048 * Math.sin(Math.min(t, 1.3)) * Math.exp(-((p / 1.35) ** 2)),
-    ymin: (p) => { const a = Math.abs(p); return 0.02 - 0.12 * Math.exp(-(((a - 1.2) / 0.18) ** 2)) - 0.34 * sst(1.55, 2.3, a); },
-    L: 0.34, bulge: 0.03, tuck: 0.15, lip: 0.04, n: 17, twist: 0.06, part: 0.55, win: [1.05, 1.35],
-    fringe: (p) => 0.232 + 0.05 * sst(-0.9, 0.9, p) + 0.02 * Math.exp(-(((p - 0.55) / 0.28) ** 2)) - 0.015 * Math.exp(-(((p + 0.7) / 0.45) ** 2))
+    ymin: (p) => { const a = Math.abs(p); return 0.06 - 0.10 * Math.exp(-(((a - 1.15) / 0.16) ** 2)) - 0.30 * sst(1.85, 2.45, a); },
+    L: 0.28, bulge: 0.03, tuck: 0.15, lip: 0.04, n: 17, twist: 0.06, part: 0.55, win: [1.02, 1.3],
+    fringe: (p) => 0.236 + 0.05 * sst(-0.9, 0.9, p) + 0.02 * Math.exp(-(((p - 0.55) / 0.28) ** 2)) - 0.015 * Math.exp(-(((p + 0.7) / 0.45) ** 2)) + 0.01 * Math.cos(p * 4.6)
   }
 };
 function hairShell(THREE, dims, o) {
@@ -2238,7 +2238,7 @@ function setCam(dt, snap) {
       const mix = Math.max(0, Math.min(1, G.spotMix || 0));
       if (mix > 0) { // 🏠 오두막·장학이벤트 팻말 쪽으로 부드럽게 비행
         wpos(2076.5, 0, 2.4, eP2);   // 오두막 앞(포치) 중앙
-        const tyH = eP2.y + (fy - 0.45) * 9;
+        const tyH = eP2.y + 2.3 + (fy - 0.45) * 7;   // 현관 눈높이(−0.45: 눈밭 ~ +1: 지봉)
         eP.lerp(eP2, mix);
         ty = ty * (1 - mix) + tyH * mix;
         if (mix > 0) ty = Math.max(eP2.y + 0.6, ty); // 오두막 앞에선 눈밭·마스코트까지 내려다볼 수 있게
@@ -2246,7 +2246,7 @@ function setCam(dt, snap) {
       const pitEff = pit - Math.max(0, 0.45 - fy) * (wide ? 0.5 : 0.58); // 아래를 볼 땐 카메라도 낮춰 가지 밑을 가리지 않게
       oP.set(eP.x + Math.sin(yaw) * Math.cos(pitEff) * dist, ty + Math.sin(pitEff) * dist, eP.z + Math.cos(yaw) * Math.cos(pitEff) * dist);
       oL.set(eP.x, ty, eP.z);
-      if (oP.y < eP.y + 1.8) oP.y = eP.y + 1.8; // 발치 선물·조명을 눈높이에서 볼 수 있게, 지면 아래로는 내려가지 않음
+      if (oP.y < eP.y + 1.15) oP.y = eP.y + 1.15; // 발치 선물·조명을 눈높이에서 볼 수 있게, 지면 아래로는 내려가지 않음
       fov = wide ? 48 : 62;
     } else if (st === 'finish' || st === 'result') { // 오두막 앞 마지막 장면으로 천천히 이동
       const e = sst(0.4, 4.2, G.finT), sw = Math.sin(G.time * 0.22), wide = innerWidth / innerHeight > 1.15;
@@ -2572,7 +2572,7 @@ function setSpot(v) {
   const to = v === undefined ? (G.spot ? 0 : 1) : (v ? 1 : 0);
   if (to === (G.spot ? 1 : 0)) return;
   G.spot = to;
-  if (to) { if (!G.spotDistTree) G.spotDistTree = G.orbitDist || defaultTreeDist(); G.spotDist = 27; }
+  if (to) { if (!G.spotDistTree) G.spotDistTree = G.orbitDist || defaultTreeDist(); G.spotDist = 27; G.orbitPitch = 0.16; } // 오두막은 정면 눈높이에서 시작
   else { G.spotDist = G.spotDistTree || defaultTreeDist(); }
   G.orbitFocus = 0.45;
   const b = $('#tbSpot');
