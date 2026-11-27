@@ -403,6 +403,13 @@ body.paused *{animation-play-state:paused!important}
 #cardView .cv-share{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-width:184px;box-sizing:border-box;padding:11px 24px;border-radius:999px;border:1px solid rgba(240,220,170,.46);background:rgba(13,22,38,.84);-webkit-backdrop-filter:blur(16px) saturate(1.1);backdrop-filter:blur(16px) saturate(1.1);color:#f7e8c3;font-family:inherit;font-size:14px;font-weight:800;letter-spacing:-.01em;line-height:1.2;cursor:pointer;box-shadow:0 12px 30px rgba(4,8,26,.5),inset 0 1px 0 rgba(255,255,255,.12);transition:border-color .15s,background .15s,transform .1s}
 #cardView .cv-share:hover{background:rgba(20,32,54,.92);border-color:rgba(240,220,170,.72)}
 #cardView .cv-share:active{transform:scale(.97)}
+#cardView .cv-copy{display:inline-flex;align-items:center;justify-content:center;margin:10px auto 0;padding:9px 16px;border-radius:999px;border:1px solid rgba(240,220,170,.28);background:rgba(13,22,38,.7);color:rgba(246,236,214,.86);font-family:inherit;font-size:12.5px;font-weight:700;cursor:pointer}
+#cardView .cv-copy.hidden{display:none}
+#cardView .cv-note{margin:10px auto 0;max-width:min(360px,88vw);font-size:11.5px;line-height:1.55;font-weight:600;letter-spacing:-.01em;text-align:center;color:rgba(246,236,214,.78);text-shadow:0 1px 4px rgba(4,8,26,.6);min-height:0}
+#cardView .cv-note.bad{color:#ffb4ab}
+#cardView .cv-note.good{color:#c8e8c2}
+.vin-copy{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 14px;border-radius:999px;border:1px solid rgba(240,220,170,.32);background:rgba(255,255,255,.06);color:#f0e4c8;font-family:inherit;font-size:12.5px;font-weight:700;cursor:pointer}
+.vin-copy.hidden{display:none}
 #cardView .cv-share{display:flex;align-items:center;justify-content:center;width:100%;box-sizing:border-box;padding:10px 12px;border-radius:999px;border:1px solid rgba(124,35,41,.4);background:rgba(255,255,255,.55);color:#6f2b30;font-family:inherit;font-size:12.5px;font-weight:800;white-space:nowrap;cursor:pointer}
 #cardView .cv-share:hover{background:#fff}
 #tbSnow.on{background:linear-gradient(180deg,#eaf6ff,#bcdcf5);color:#12233d;border-color:rgba(255,255,255,.62);box-shadow:0 12px 28px rgba(120,190,240,.36)}
@@ -644,7 +651,7 @@ body.paused *{animation-play-state:paused!important}
     <p class="vp-msg empty" id="vpMsg">크리스마스를 함께 보내고 싶은 분에게 한마디를 남겨 보세요.</p>
     <div class="vp-foot"><span class="vp-name" id="vpName">From. 익명</span><span class="vp-to" id="vpTo">To. 모두에게</span></div>
   </div>
-  <div class="vin-acts"><button type="button" class="vin-tree" id="cardTree"><span>🌲</span>3D 트리 보기</button><button type="button" class="vin-tree" id="cardShare"><span>💌</span>카드 공유하기</button></div>
+  <div class="vin-acts"><button type="button" class="vin-tree" id="cardTree"><span>🌲</span>3D 트리 보기</button><button type="button" class="vin-tree" id="cardShare"><span>💌</span>카드 공유하기</button><button type="button" class="vin-copy hidden" id="cardCopy">📋 초대 문구 복사</button></div>
   <div class="vin-form">
     <div class="vin-row2"><div class="vin-field"><label class="vin-label" for="cardName">보내는 분</label><input id="cardName" class="vin-in" maxlength="12" placeholder="닉네임" autocomplete="off" enterkeyhint="next" aria-label="카드에 남길 이름"></div><div class="vin-field"><label class="vin-label" for="cardToIn">받는 분</label><input id="cardToIn" class="vin-in" maxlength="12" placeholder="모두에게" autocomplete="off" enterkeyhint="next" aria-label="카드를 받을 사람"></div></div>
     <div class="vin-field"><label class="vin-label" for="cardMsg">내용</label><textarea id="cardMsg" class="vin-ta" maxlength="140" placeholder="따뜻한 한마디를 적어 주세요 (140자까지)" aria-label="카드 내용"></textarea><div class="vin-meta" id="cardCounter">0 / 140</div></div>
@@ -685,7 +692,7 @@ body.paused *{animation-play-state:paused!important}
     <div class="cv-foot"><b class="cv-from" id="cvFrom">From. 익명</b><span class="cv-to" id="cvTo">To. 모두에게</span></div>
     <div class="cv-when" id="cvWhen"></div>
   </div>
-  <div class="cv-own hidden" id="cvOwn"><button type="button" class="cv-share" id="cvShare" aria-label="내가 남긴 엽서 공유하기">💌 공유하기</button></div>
+  <div class="cv-own hidden" id="cvOwn"><button type="button" class="cv-share" id="cvShare" aria-label="내가 남긴 엽서 공유하기">💌 공유하기</button><button type="button" class="cv-copy hidden" id="cvCopy">📋 초대 문구 복사</button><p class="cv-note" id="cvNote"></p></div>
 </div></div>
 <div id="shot" class="modal hidden"><div class="panel shotbox">
   <button class="x" id="bShotX" title="닫기" aria-label="장면 캡처 닫기"><b>✕</b></button>
@@ -2805,6 +2812,26 @@ async function copyShareText(txt) { // 카톡은 files와 함께 보내면 text�
   return false;
 }
 const SHARE_COPIED_NOTE = ' 참여 문구·링크도 복사됐어요! 카톡에 붙여넣기 하시면 돼요';
+// PC(윈도우·맥)에서는 공유 시트가 클립보드를 PNG로 덮어쓰는 문제가 있어,
+// 이미지 파일 저장 + 초대 문구/링크 클립보드 복사를 따로 처리한다.
+const IS_DESKTOP = !/Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent) && !(navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+const SHARE_DESKTOP_NOTE = '카드 이미지를 저장하고, 초대 문구·링크를 복사했어요! 카톡에 이미지를 올리고 붙여넣기 해 주세요.';
+function downloadCardPng(cv, name) {
+  try {
+    cv.toBlob(b => {
+      if (!b) return;
+      const u = URL.createObjectURL(b);
+      const a = document.createElement('a'); a.href = u; a.download = name; a.rel = 'noopener';
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => { try { URL.revokeObjectURL(u); } catch (e) { } }, 8000);
+    }, 'image/png');
+    return true;
+  } catch (e) { return false; }
+}
+function shareNote(t, kind) { // 카드 목록 안내문 + (카드 상세를 보고 있으면) 상세 화면 안내문
+  cardNoteText(t, kind);
+  const n = $('#cvNote'); if (n) { n.textContent = t; n.className = 'cv-note' + (kind ? ' ' + kind : ''); }
+}
 async function shareVintageCard() {
   const bt = $('#cardShare'), old = bt ? bt.innerHTML : '';
   if (bt) { bt.disabled = true; bt.innerHTML = '<span>💌</span>준비 중…'; }
@@ -2813,6 +2840,11 @@ async function shareVintageCard() {
     const to = ($('#cardToIn').value || '').trim() || '모두에게';
     const text = shareCardText(to);
     const copied = await copyShareText(text);
+    if (IS_DESKTOP) {
+      downloadCardPng(cv, 'cit-christmas-card.png');
+      cardNoteText(copied ? SHARE_DESKTOP_NOTE : '카드 이미지를 저장했어요. 문구는 [📋 초대 문구 복사]로 다시 복사해 주세요.', 'good');
+      return;
+    }
     const blob = await new Promise(r => cv.toBlob(r, 'image/png'));
     const file = blob ? new File([blob], 'cit-christmas-card.png', { type: 'image/png' }) : null;
     if (file && navigator.canShare && navigator.canShare({ files: [file] })) {
@@ -2836,18 +2868,23 @@ async function shareMyCard(id) { // 내가 남긴 카드만 — 이 기기에 �
     const to = String(c.toName || '모두에게');
     const text = shareCardText(to);
     const copied = await copyShareText(text);
+    if (IS_DESKTOP) {
+      downloadCardPng(cv, 'cit-christmas-card.png');
+      shareNote(copied ? SHARE_DESKTOP_NOTE : '카드 이미지를 저장했어요. 문구는 [📋 초대 문구 복사]로 다시 복사해 주세요.', 'good');
+      return;
+    }
     const blob = await new Promise(r => cv.toBlob(r, 'image/png'));
     const file = blob ? new File([blob], 'cit-christmas-card.png', { type: 'image/png' }) : null;
     if (file && navigator.canShare && navigator.canShare({ files: [file] })) {
-      try { await navigator.share({ files: [file], title: 'CiT 크리스마스 카드', text: text }); cardNoteText('카드를 공유했어요.' + (copied ? SHARE_COPIED_NOTE : ''), 'good'); return; }
+      try { await navigator.share({ files: [file], title: 'CiT 크리스마스 카드', text: text }); shareNote('카드를 공유했어요.' + (copied ? SHARE_COPIED_NOTE : ''), 'good'); return; }
       catch (e) {
-        if (e && e.name === 'AbortError') { cardNoteText('공유를 취소했어요.' + (copied ? SHARE_COPIED_NOTE : ''), 'good'); return; }
+        if (e && e.name === 'AbortError') { shareNote('공유를 취소했어요.' + (copied ? SHARE_COPIED_NOTE : ''), 'good'); return; }
       }
     }
     openShot(cv, '카드 공유', 'cit-christmas-card.png');
-    cardNoteText('공유 시트를 쓸 수 없어 카드 이미지를 열었어요. 저장한 뒤 카톡·문자로 보내 주세요.' + (copied ? SHARE_COPIED_NOTE : ''), 'good');
+    shareNote('공유 시트를 쓸 수 없어 카드 이미지를 열었어요. 저장한 뒤 카톡·문자로 보내 주세요.' + (copied ? SHARE_COPIED_NOTE : ''), 'good');
   } catch (e) {
-    cardNoteText('카드 이미지를 만들지 못했어요. 잠시 뒤 다시 시도해 주세요.', 'bad');
+    shareNote('카드 이미지를 만들지 못했어요. 잠시 뒤 다시 시도해 주세요.', 'bad');
   }
 }
 function renderCardPreview() {
@@ -3271,8 +3308,11 @@ function openCardView(c) {
   const wh = $('#cvWhen'); if (wh) wh.textContent = c.createdAt ? cardWhen(c.createdAt) + ' · 트리에 걸린 엽서' : '';
   const own = myCardById(c.id), ow = $('#cvOwn');
   if (ow) ow.classList.toggle('hidden', !own);
+  G.cvCard = c;
+  const cn = $('#cvNote'); if (cn) { cn.textContent = ''; cn.className = 'cv-note'; }
+  const cp = $('#cvCopy'); if (cp) cp.classList.toggle('hidden', !IS_DESKTOP);
   const sb = $('#cvShare');
-  if (sb) sb.onclick = () => { if (!own) return; closeCardView(); shareMyCard(c.id); };
+  if (sb) sb.onclick = () => { if (!own) return; if (!IS_DESKTOP) closeCardView(); shareMyCard(c.id); };
   if (G.treeView) { G.spinBeforeCard = !!G.autoSpin; G.autoSpin = false; }
   clearTimeout(G.cardViewT);
   m.classList.remove('hidden', 'closing'); m.setAttribute('aria-hidden', 'false');
@@ -3983,6 +4023,19 @@ function buildUI() {
   const ou = $('#ornUndo'); if (ou) ou.onclick = (e) => { e.preventDefault(); e.stopPropagation(); if (!ORNS.length) return; ORNS.pop(); saveOrns(); rebuildOrnaments(); };
   const oc = $('#ornClear'); if (oc) oc.onclick = (e) => { e.preventDefault(); e.stopPropagation(); if (!ORNS.length) return; ORNS = []; saveOrns(); rebuildOrnaments(); };
   $('#cardViewX').onclick = closeCardView;
+  const cvCopyBtn = $('#cvCopy');
+  if (cvCopyBtn) cvCopyBtn.onclick = async () => {
+    const c = G.cvCard; const ok = await copyShareText(shareCardText(c ? c.toName : '모두에게'));
+    shareNote(ok ? '초대 문구와 링크를 클립보드에 복사했어요. 카톡에 붙여넣기 해 주세요.' : '자동 복사가 막혔어요. 브라우저 주소창에서 한 번 더 눌러 보거나 문구를 직접 선택해 복사해 주세요.', ok ? 'good' : 'bad');
+  };
+  const cardCopyBtn = $('#cardCopy');
+  if (cardCopyBtn) {
+    if (IS_DESKTOP) cardCopyBtn.classList.remove('hidden');
+    cardCopyBtn.onclick = async () => {
+      const ok = await copyShareText(shareCardText(($('#cardToIn').value || '').trim()));
+      cardNoteText(ok ? '초대 문구와 링크를 클립보드에 복사했어요. 카톡에 붙여넣기 해 주세요.' : '자동 복사가 막혔어요. 브라우저 주소창에서 한 번 더 눌러 보거나 문구를 직접 선택해 복사해 주세요.', ok ? 'good' : 'bad');
+    };
+  }
   $('#cardView').addEventListener('click', (e) => { if (e.target && e.target.id === 'cardView') closeCardView(); });
 }
 function toggleHelp(v) { const h = $('#help'); const show = v === undefined ? h.classList.contains('hidden') : v; h.classList.toggle('hidden', !show); if (show && G.state === 'race') pause(true, true); }
