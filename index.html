@@ -2165,8 +2165,8 @@ function setCam(dt, snap) {
       let ty = eP.y + 1.0 + fy * (treeH - 1.6); // 시선 높이: 선물상자(아래) ~ 꼭대기 별(위)
       const mix = Math.max(0, Math.min(1, G.spotMix || 0));
       if (mix > 0) { // 🏠 오두막·장학이벤트 팻말 쪽으로 부드럽게 비행
-        wpos(2074.5, 2.6, 0, eP2);
-        const tyH = eP2.y + (fy - 0.45) * 11;
+        wpos(2076.5, 0, 2.4, eP2);   // 오두막 앞(포치) 중앙
+        const tyH = eP2.y + (fy - 0.45) * 9;
         eP.lerp(eP2, mix);
         ty = ty * (1 - mix) + tyH * mix;
       }
@@ -3121,7 +3121,13 @@ const ORN_GEO = {
   ring: new THREE.TorusGeometry(0.062, 0.016, 6, 12),
   star: starGeo3D(0.38, 0.1, 0.42),
   cane: new THREE.TubeGeometry(new THREE.CatmullRomCurve3([[0, -0.06, 0], [0, 0.24, 0], [0.02, 0.38, 0], [0.1, 0.44, 0], [0.18, 0.38, 0], [0.2, 0.3, 0]].map(q => new THREE.Vector3(q[0], q[1], q[2]))), 22, 0.06, 7),
-  bow: merge([bake(new THREE.SphereGeometry(1, 12, 8), '#ffffff', MX(-0.13, 0.02, 0, 0.14, 0.1, 0.06)), bake(new THREE.SphereGeometry(1, 12, 8), '#ffffff', MX(0.13, 0.02, 0, 0.14, 0.1, 0.06)), bake(new THREE.SphereGeometry(1, 10, 8), '#ffffff', MX(0, 0, 0.03, 0.055, 0.055, 0.055)), bake(new THREE.BoxGeometry(1, 1, 1), '#ffffff', MX(-0.09, -0.14, 0, 0.05, 0.16, 0.03, 0, 0, 0.3)), bake(new THREE.BoxGeometry(1, 1, 1), '#ffffff', MX(0.09, -0.14, 0, 0.05, 0.16, 0.03, 0, 0, -0.3))]),
+  bow: merge([
+    bake(new THREE.TorusGeometry(0.118, 0.04, 10, 22), '#ffffff', MX(-0.118, 0.015, 0, 1, 0.88, 0.85, 0, 0.5, 0.12)),
+    bake(new THREE.TorusGeometry(0.118, 0.04, 10, 22), '#ffffff', MX(0.118, 0.015, 0, 1, 0.88, 0.85, 0, -0.5, -0.12)),
+    bake(new THREE.SphereGeometry(0.062, 12, 8), '#ffffff', MX(0, 0.012, 0.03, 1, 1, 0.85)),
+    bake(new THREE.BoxGeometry(0.056, 0.17, 0.026), '#ffffff', MX(-0.088, -0.155, 0.008, 1, 1, 1, 0.12, 0, 0.34)),
+    bake(new THREE.BoxGeometry(0.056, 0.17, 0.026), '#ffffff', MX(0.088, -0.155, 0.008, 1, 1, 1, 0.12, 0, -0.34))
+  ]),
   thread: new THREE.CylinderGeometry(0.014, 0.014, 1, 5)
 };
 // 트리 전체 샷에서도 또렷하게 보이도록 오너먼트 전체를 1.5배로 (돌출 오프셋도 같이 키움)
@@ -3137,24 +3143,26 @@ const ORN_MAT = {
   bow: new THREE.MeshStandardMaterial({ color: '#c62b3a', roughness: 0.35, metalness: 0.15, emissive: '#3a0a0e', emissiveIntensity: 0.35 }),
   thread: new THREE.MeshStandardMaterial({ color: '#d9b25c', roughness: 0.4, metalness: 0.65 })
 };
-const ORN_DROP = 0.5, ORN_BALL_R = 0.44, ORN_GAP = 0.1;
+const ORN_DROP = 0.45, ORN_GAP = 0.14;
+// 종류별 오너먼트 반높이/반너비 — 원뿔 경사면에서도 아래·옆이 파묻히지 않게 이만큼을 더 띄운다
+const ORN_EXT = { red: 0.45, gold: 0.45, star: 0.6, cane: 0.5, bow: 0.46 };
 const _ornAxis = new THREE.Vector3();
 function ornPlace(o) {
   const n = new THREE.Vector3(o.nx || 0, 0, o.nz || 1); if (n.lengthSq() < 1e-6) n.set(0, 0, 1); n.normalize();
   const p = new THREE.Vector3(o.x, o.y, o.z);
-  // 가지에 반쯤 파묻히지 않게: 오너먼트 본체가 놓이는 높이의 가지 실루엣 반경보다
-  // (본체 반지름 + 여유)만큼 더 바깥으로 띄운다 — 금실 고리가 가지에 걸리고 본체는 가지 바깥에 온전히 보인다.
-  let out = 0.36;
+  const ext = ORN_EXT[o.k] || 0.45;
+  // 트리 중심축에서 바깥으로: 오너먼트의 '가장 낮은 부분' 높이의 가지 실루엣보다 (반높이+여유)만큼 더 밖에 둔다
+  let out = Math.max(0.55, ext + 0.2);
   try {
     if (W && W.treeMesh) {
       _ornAxis.setFromMatrixPosition(W.treeMesh.matrixWorld);
       const rHere = Math.hypot(p.x - _ornAxis.x, p.z - _ornAxis.z);
-      const yBody = Math.max(0.3, p.y - _ornAxis.y - ORN_DROP);
-      const rNeed = treeRadiusAt(yBody) + ORN_BALL_R + ORN_GAP;
-      out = Math.max(0.36, Math.min(1.5, rNeed - rHere + 0.06));
+      const yBody = p.y - _ornAxis.y - ORN_DROP;
+      const rLow = treeRadiusAt(Math.max(0.3, yBody - ext));
+      out = Math.max(0.55, Math.min(1.9, rLow + ext + ORN_GAP - rHere));
     }
   } catch (e) { }
-  return { p, n, center: p.clone().addScaledVector(n, out).add(new THREE.Vector3(0, -ORN_DROP, 0)) };
+  return { p, n, ext, center: p.clone().addScaledVector(n, out).add(new THREE.Vector3(0, -ORN_DROP, 0)) };
 }
 function rebuildOrnaments() {
   if (!scene) return;
@@ -3178,16 +3186,15 @@ function rebuildOrnaments() {
   });
   ['star', 'bow'].forEach(k => {
     const arr = by[k]; if (!arr) return;
-    const ms = arr.map(o => { const q = ornPlace(o); return new THREE.Matrix4().compose(q.center, new THREE.Quaternion().setFromEuler(new THREE.Euler(0, Math.atan2(q.n.x, q.n.z), 0)), S); });
+    const ms = arr.map(o => { const q = ornPlace(o); return new THREE.Matrix4().compose(q.center, new THREE.Quaternion().setFromEuler(new THREE.Euler(-0.2, Math.atan2(q.n.x, q.n.z), 0, 'YXZ')), S); });
     mk(ORN_GEO[k], ORN_MAT[k], ms);
   });
   if (by.cane) mk(ORN_GEO.cane, ORN_MAT.cane, by.cane.map(o => new THREE.Matrix4().compose(ornPlace(o).center, I, S)));
   const tm = ORNS.map(o => {
-    const q = ornPlace(o), ring = q.center.clone().add(new THREE.Vector3(0, 0.56, 0));
-    const dir = ring.clone().sub(q.p), len = Math.max(0.02, dir.length());
-    const mid = q.p.clone().lerp(ring, 0.5);
-    const quat = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), dir.normalize());
-    return new THREE.Matrix4().compose(mid, quat, new THREE.Vector3(1, len, 1));
+    const q = ornPlace(o);
+    // 금실은 오너먼트 고리 위에서 짧게 수직으로만 놓아 옆으로 튀어나오지 않게
+    const base = q.center.clone().add(new THREE.Vector3(0, 0.56, 0));
+    return new THREE.Matrix4().compose(base.clone().add(new THREE.Vector3(0, 0.14, 0)), I, new THREE.Vector3(1, 0.28, 1));
   });
   mk(ORN_GEO.thread, ORN_MAT.thread, tm);
   const tip = document.querySelector('#ornbar .orn-tip');
