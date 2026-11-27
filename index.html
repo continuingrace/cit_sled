@@ -2808,7 +2808,7 @@ function closeCardView() {
 }
 
 // ---------- ❄️ 눈 던지기 (트리·360도 화면에서 화면을 탭해 눈덩이 투척) ----------
-const SNOWBALLS = [], SNOWBALL_GEO = new THREE.SphereGeometry(0.24, 12, 9), SNOWBALL_MAT = new THREE.MeshBasicMaterial({ color: 0xffffff }); SNOWBALL_MAT.toneMapped = false; // 조명에 따라 회색빛으로 죽지 않는 순백 눈덩이
+const SNOWBALLS = [], SNOWBALL_GEO = new THREE.SphereGeometry(0.24, 12, 9), SNOWBALL_MAT = new THREE.MeshBasicMaterial({ color: 0xffffff }); SNOWBALL_MAT.toneMapped = false; SNOWBALL_MAT.fog = false; // 조명·밤안개에 죽지 않는 순백 눈덩이
 let snowT = 0;
 function snowTargets() {
   const t = [];
