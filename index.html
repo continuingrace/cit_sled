@@ -220,7 +220,7 @@ body.paused *{animation-play-state:paused!important}
 #cards .vin-preview:before{content:'';position:absolute;inset:5px;border:1px solid rgba(255,255,255,.5);border-radius:10px;pointer-events:none}
 #cards .vp-top{position:relative;display:flex;justify-content:flex-end;align-items:flex-start;min-height:114px}
 #cards .vp-post{position:absolute;left:16px;top:12px;width:152px;height:94px;color:var(--pv-mark,rgba(124,35,41,.72));transform:rotate(-6deg);transform-origin:left top;opacity:.78;pointer-events:none;mix-blend-mode:multiply;overflow:visible}
-#cards .vp-stamp-w{position:relative;width:56px;height:70px;transform:rotate(2.2deg);filter:drop-shadow(0 3px 5px rgba(36,22,8,.42)) drop-shadow(0 0 1.4px rgba(36,22,8,.55))}
+#cards .vp-stamp-w{position:relative;width:56px;height:70px;transform:rotate(2.2deg);filter:drop-shadow(0 1px 2px rgba(60,42,24,.2))}
 #cards .vp-stamp{position:relative;width:100%;height:100%;padding:6px;box-sizing:border-box;background-color:#f6f0e2;background-image:var(--iv-noise);background-size:96px 96px;-webkit-mask-image:var(--stamp-mask);mask-image:var(--stamp-mask);-webkit-mask-size:100% 100%;mask-size:100% 100%;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-position:center;mask-position:center}
 #cards .vp-stamp i{display:block;width:100%;height:100%;background-size:cover;background-position:center;box-shadow:inset 0 0 0 1px rgba(60,45,30,.2)}
 #cards .vp-msg,#cards .vp-foot,#cards .vp-name,#cards .vp-to,#cards .vcard .vc-msg,#cards .vcard .vc-foot{font-family:'TypewriterKR','Courier New',ui-monospace,'AppleMyungjo',serif;letter-spacing:.02em;line-height:1.65}
@@ -342,9 +342,10 @@ body.paused *{animation-play-state:paused!important}
 #cardView.closing .cv-card{animation:cvCardOut .2s ease both}
 #cardView .cv-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;min-height:72px}
 #cardView .cv-post{width:118px;height:74px;flex:none;color:var(--cv-mark);transform:rotate(-7deg);opacity:.78;mix-blend-mode:multiply;overflow:visible;pointer-events:none}
-#cardView .cv-stamp{width:54px;height:66px;padding:5px;box-sizing:border-box;border:1px dashed rgba(120,90,50,.45);background:#fbf6ea;transform:rotate(2.4deg);box-shadow:0 2px 6px rgba(36,22,8,.2);flex:none}
-#cardView .cv-stamp i{display:block;width:100%;height:100%;background-size:cover;background-position:center}
-#cardView .cv-msg{margin:0;font-family:'TypewriterKR','Courier New',ui-monospace,'AppleMyungjo',serif;font-size:15px;line-height:1.8;letter-spacing:.01em;white-space:pre-wrap;word-break:keep-all;overflow-wrap:break-word;min-height:64px;text-align:left}
+#cardView .cv-stamp{width:56px;height:70px;padding:6px;box-sizing:border-box;background-color:#f6f0e2;transform:rotate(2.4deg);flex:none;-webkit-mask-image:var(--stamp-mask);mask-image:var(--stamp-mask);-webkit-mask-size:100% 100%;mask-size:100% 100%;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-position:center;mask-position:center;filter:drop-shadow(0 1px 2px rgba(60,42,24,.2))}
+#cardView .cv-stamp i{display:block;width:100%;height:100%;background-size:cover;background-position:center;box-shadow:inset 0 0 0 1px rgba(60,45,30,.2)}
+#cardView .cv-msg{margin:0;font-family:'TypewriterKR','Courier New',ui-monospace,'AppleMyungjo',serif;font-size:15px;line-height:1.75;letter-spacing:.01em;white-space:pre-wrap;word-break:keep-all;text-wrap:pretty;overflow-wrap:break-word;min-height:64px;text-align:left}
+#cardView .cv-msg .nw,#cards .vcard .vc-msg .nw{white-space:nowrap}
 #cardView .cv-foot{display:flex;justify-content:space-between;align-items:flex-end;gap:10px;border-top:1px solid var(--cv-line);padding-top:10px;font-family:'TypewriterKR','Courier New',ui-monospace,'AppleMyungjo',serif;font-size:12px;letter-spacing:.02em;color:var(--cv-soft)}
 #cardView .cv-from{font-weight:700;max-width:64%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 #cardView .cv-to{max-width:48%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:right}
@@ -353,7 +354,7 @@ body.paused *{animation-play-state:paused!important}
 #cardView .cv-own.hidden{display:none}
 #cardView .cv-share{display:flex;align-items:center;justify-content:center;width:100%;box-sizing:border-box;padding:10px 12px;border-radius:999px;border:1px solid rgba(124,35,41,.4);background:rgba(255,255,255,.55);color:#6f2b30;font-family:inherit;font-size:12.5px;font-weight:800;white-space:nowrap;cursor:pointer}
 #cardView .cv-share:hover{background:#fff}
-#treebar button.on{background:linear-gradient(180deg,#eaf6ff,#bcdcf5);color:#12233d;border-color:rgba(255,255,255,.62);box-shadow:0 12px 28px rgba(120,190,240,.36)}
+#tbSnow.on{background:linear-gradient(180deg,#eaf6ff,#bcdcf5);color:#12233d;border-color:rgba(255,255,255,.62);box-shadow:0 12px 28px rgba(120,190,240,.36)}
 #endbar button.btn.on{background:linear-gradient(180deg,#eaf6ff,#bcdcf5);color:#12233d;border-color:rgba(255,255,255,.62)}
 @keyframes cvIn{0%{opacity:0;transform:translateY(34px) scale(.84) rotateX(-20deg)}55%{opacity:1}100%{opacity:1;transform:translateY(0) scale(1) rotateX(0)}}
 @keyframes cvOut{0%{opacity:1;transform:none}100%{opacity:0;transform:translateY(22px) scale(.9) rotateX(-12deg)}}
@@ -364,7 +365,6 @@ body.paused *{animation-play-state:paused!important}
   #cardView .cv-card{padding:18px 16px 14px}
   #cardView .cv-msg{font-size:14px;line-height:1.74}
   #cardView .cv-post{width:96px;height:60px}
-  #cardView .cv-stamp{width:48px;height:58px}
   #cardView .cv-x{top:-42px;right:0}
   #treebar{gap:6px;padding:13px 8px calc(13px + env(safe-area-inset-bottom,0px))}
   #treebar button{padding:11px 13px;font-size:12.5px;gap:5px;letter-spacing:-.015em}
@@ -372,17 +372,21 @@ body.paused *{animation-play-state:paused!important}
 
 /* ---------- 트리 오너먼트 꾸미기 ---------- */
 #tbOrn.on{background:linear-gradient(180deg,rgba(226,203,148,.96),rgba(170,138,76,.96));color:#241d12;border-color:rgba(248,236,205,.72);box-shadow:0 12px 28px rgba(4,8,26,.4),inset 0 1px 0 rgba(255,255,255,.45)}
-#ornbar{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(80px + env(safe-area-inset-bottom,0px));z-index:19;display:none;flex-direction:column;gap:7px;padding:9px;border-radius:16px;background:rgba(13,22,38,.86);border:1px solid rgba(240,220,170,.28);box-shadow:0 16px 40px rgba(4,8,26,.55),inset 0 1px 0 rgba(255,255,255,.08);backdrop-filter:blur(18px) saturate(1.15);-webkit-backdrop-filter:blur(18px) saturate(1.15);width:min(94vw,430px);box-sizing:border-box}
+#ornbar{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(72px + env(safe-area-inset-bottom,0px));z-index:19;display:none;align-items:center;gap:5px;padding:6px 8px;border-radius:18px;background:rgba(13,22,38,.82);border:1px solid rgba(240,220,170,.26);box-shadow:0 16px 36px rgba(4,8,26,.5),inset 0 1px 0 rgba(255,255,255,.08);backdrop-filter:blur(18px) saturate(1.15);-webkit-backdrop-filter:blur(18px) saturate(1.15);box-sizing:border-box;max-width:calc(100vw - 16px)}
 #ornbar.on{display:flex}
-#ornbar .orn-picks{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
-#ornbar .orn-chip{display:flex;flex-direction:column;align-items:center;gap:2px;padding:7px 2px 6px;border-radius:11px;border:1px solid rgba(240,220,170,.16);background:rgba(255,255,255,.04);color:#efe8d8;font-family:inherit;font-size:10.5px;font-weight:700;letter-spacing:-.01em;white-space:nowrap;cursor:pointer;overflow:hidden}
-#ornbar .orn-chip em{font-style:normal;font-size:17px;line-height:1}
-#ornbar .orn-chip.on{border-color:rgba(240,220,170,.8);background:rgba(232,208,150,.16);color:#ffe9b8;box-shadow:inset 0 0 0 1px rgba(240,220,170,.24)}
-#ornbar .orn-acts{display:flex;gap:6px}
-#ornbar .orn-acts button{flex:1;padding:8px 6px;border-radius:10px;border:1px solid rgba(240,220,170,.16);background:rgba(255,255,255,.04);color:#efe8d8;font-family:inherit;font-size:11.5px;font-weight:700;white-space:nowrap;cursor:pointer}
+#ornbar .orn-picks{display:flex;align-items:center;gap:4px}
+#ornbar .orn-chip{position:relative;width:42px;height:42px;padding:0;display:flex;align-items:center;justify-content:center;border-radius:13px;border:1px solid rgba(240,220,170,.14);background:rgba(255,255,255,.035);cursor:pointer;transition:border-color .16s,background .16s,box-shadow .16s,transform .1s}
+#ornbar .orn-chip svg{width:27px;height:32px;display:block;filter:drop-shadow(0 2px 3px rgba(4,8,26,.45))}
+#ornbar .orn-chip:hover{background:rgba(255,255,255,.08);border-color:rgba(240,220,170,.36)}
+#ornbar .orn-chip:active{transform:scale(.96)}
+#ornbar .orn-chip.on{border-color:rgba(240,220,170,.85);background:rgba(232,208,150,.14);box-shadow:0 0 0 1px rgba(240,220,170,.22),0 8px 18px rgba(4,8,26,.42)}
+#ornbar .orn-sep{flex:none;width:1px;height:24px;margin:0 4px;background:linear-gradient(180deg,rgba(240,220,170,0),rgba(240,220,170,.35),rgba(240,220,170,0))}
+#ornbar .orn-acts{display:flex;align-items:center;gap:4px}
+#ornbar .orn-acts button{width:38px;height:38px;padding:0;display:flex;align-items:center;justify-content:center;border-radius:11px;border:1px solid rgba(240,220,170,.14);background:rgba(255,255,255,.035);color:#efe8d8;cursor:pointer;transition:border-color .16s,background .16s}
+#ornbar .orn-acts button svg{width:17px;height:17px;display:block}
 #ornbar .orn-acts button:hover{background:rgba(232,208,150,.12);border-color:rgba(240,220,170,.4)}
-#ornbar .orn-tip{margin:0;text-align:center;font-size:10.5px;font-weight:600;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:rgba(230,220,198,.8)}
-@media (max-width:520px){ #ornbar{bottom:calc(74px + env(safe-area-inset-bottom,0px));padding:8px} #ornbar .orn-chip{font-size:10px;padding:6px 1px 5px} }
+#ornbar .orn-tip{display:none}
+@media (max-width:520px){ #ornbar{bottom:calc(66px + env(safe-area-inset-bottom,0px));gap:4px;padding:5px 7px} #ornbar .orn-chip{width:38px;height:38px;border-radius:12px} #ornbar .orn-chip svg{width:24px;height:28px} #ornbar .orn-acts button{width:34px;height:34px} #ornbar .orn-acts button svg{width:15px;height:15px} }
 * { touch-action: manipulation; }
 #gl, canvas, #touch, .tb, button, .btn { touch-action: none !important; }
 </style>
@@ -505,7 +509,7 @@ body.paused *{animation-play-state:paused!important}
   <div class="vin-sep">트리에 걸린 카드</div>
   <div class="vin-grid" id="cardList"></div>
 </div></div></div>
-<div id="ornbar" aria-label="오너먼트 꾸미기"><div class="orn-picks"><button type="button" class="orn-chip on" data-k="red"><em>🔴</em>빨강</button><button type="button" class="orn-chip" data-k="gold"><em>🟡</em>골드</button><button type="button" class="orn-chip" data-k="star"><em>⭐</em>별</button><button type="button" class="orn-chip" data-k="cane"><em>🍬</em>캔디</button><button type="button" class="orn-chip" data-k="bow"><em>🎀</em>리본</button></div><div class="orn-acts"><button type="button" id="ornUndo">↩ 되돌리기</button><button type="button" id="ornClear">🗑 초기화</button></div><p class="orn-tip">나뭇가지를 눌러 오너먼트를 달아 보세요</p></div>
+<div id="ornbar" aria-label="오너먼트 꾸미기"><div class="orn-picks"><button type="button" class="orn-chip on" data-k="red" title="버건디 오너먼트" aria-label="버건디 오너먼트"><svg viewBox="0 0 26 30" aria-hidden="true" focusable="false"><defs><radialGradient id="ogRed" cx="36%" cy="26%" r="80%"><stop offset="0" stop-color="#ff9ba1"/><stop offset=".44" stop-color="#c62c36"/><stop offset="1" stop-color="#5a0f16"/></radialGradient></defs><path d="M13 7.2c5.2 0 8.8 4.5 8.8 10.1 0 5.9-3.9 10.8-8.8 10.8S4.2 23.2 4.2 17.3c0-5.6 3.6-10.1 8.8-10.1Z" fill="url(#ogRed)"/><rect x="10.7" y="4.1" width="4.6" height="3.7" rx="1.1" fill="#e9c982"/><path d="M13 4.1V2" stroke="#e9c982" stroke-width="1.2" stroke-linecap="round"/><ellipse cx="9.5" cy="12.6" rx="1.9" ry="3" transform="rotate(-20 9.5 12.6)" fill="#fff" opacity=".36"/></svg></button><button type="button" class="orn-chip" data-k="gold" title="샴페인 골드 오너먼트" aria-label="샴페인 골드 오너먼트"><svg viewBox="0 0 26 30" aria-hidden="true" focusable="false"><defs><radialGradient id="ogGold" cx="36%" cy="26%" r="80%"><stop offset="0" stop-color="#fff6d9"/><stop offset=".46" stop-color="#e3bb66"/><stop offset="1" stop-color="#8a5f1c"/></radialGradient></defs><path d="M13 7.2c5.2 0 8.8 4.5 8.8 10.1 0 5.9-3.9 10.8-8.8 10.8S4.2 23.2 4.2 17.3c0-5.6 3.6-10.1 8.8-10.1Z" fill="url(#ogGold)"/><rect x="10.7" y="4.1" width="4.6" height="3.7" rx="1.1" fill="#f3dfa6"/><path d="M13 4.1V2" stroke="#f3dfa6" stroke-width="1.2" stroke-linecap="round"/><ellipse cx="9.5" cy="12.6" rx="1.9" ry="3" transform="rotate(-20 9.5 12.6)" fill="#fff" opacity=".5"/></svg></button><button type="button" class="orn-chip" data-k="star" title="샴페인 별" aria-label="샴페인 별"><svg viewBox="0 0 26 30" aria-hidden="true" focusable="false"><defs><linearGradient id="ogStar" x1="0" y1="0" x2="0.2" y2="1"><stop offset="0" stop-color="#fffaea"/><stop offset=".5" stop-color="#ecd096"/><stop offset="1" stop-color="#a97a2c"/></linearGradient></defs><path d="M13 2.6l2.9 6.5 7.1.6-5.4 4.7 1.7 7-6.3-3.8-6.3 3.8 1.7-7L2.9 9.7l7.1-.6Z" fill="url(#ogStar)" stroke="#fff3d6" stroke-width=".7" stroke-linejoin="round"/><path d="M13 7l1.4 3.2 3.5.3-2.7 2.3.9 3.4-3.1-1.9-3.1 1.9.9-3.4-2.7-2.3 3.5-.3Z" fill="#fff" opacity=".26"/></svg></button><button type="button" class="orn-chip" data-k="cane" title="캔디케인" aria-label="캔디케인"><svg viewBox="0 0 26 30" aria-hidden="true" focusable="false"><path d="M9.4 26.4V13.6a4.2 4.2 0 0 1 8.4 0v1.4" fill="none" stroke="#f7eeda" stroke-width="5.2" stroke-linecap="round"/><path d="M9.4 26.4V13.6a4.2 4.2 0 0 1 8.4 0v1.4" fill="none" stroke="#c4333f" stroke-width="5.2" stroke-linecap="butt" stroke-dasharray="2.1 3.3"/><path d="M9.4 26.4V13.6a4.2 4.2 0 0 1 8.4 0v1.4" fill="none" stroke="#3d0d12" stroke-opacity=".18" stroke-width="5.2" stroke-linecap="round" stroke-dasharray="0.4 5"/></svg></button><button type="button" class="orn-chip" data-k="bow" title="벨벳 리본" aria-label="벨벳 리본"><svg viewBox="0 0 26 30" aria-hidden="true" focusable="false"><defs><linearGradient id="ogBow" x1="0" y1="0" x2="0.3" y2="1"><stop offset="0" stop-color="#e5606b"/><stop offset=".55" stop-color="#b32a37"/><stop offset="1" stop-color="#79151f"/></linearGradient></defs><path d="M12.2 12.4C9.4 7.6 3.2 6.4 2.4 10.4c-.8 3.8 5 6.6 9.8 6.4Z" fill="url(#ogBow)"/><path d="M13.8 12.4c2.8-4.8 9-6 9.8-2 .8 3.8-5 6.6-9.8 6.4Z" fill="url(#ogBow)"/><path d="M12.1 14.8l-2.8 8.9 3.4-1.6Z" fill="#9c1f2b"/><path d="M13.9 14.8l2.8 8.9-3.4-1.6Z" fill="#9c1f2b"/><rect x="10.5" y="11.5" width="5" height="4.8" rx="1.7" fill="#e26973"/></svg></button></div><div class="orn-sep"></div><div class="orn-acts"><button type="button" id="ornUndo" title="되돌리기" aria-label="되돌리기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M9 7h6.5a5.5 5.5 0 0 1 0 11H8"/><path d="M12 4 9 7l3 3"/></svg></button><button type="button" id="ornClear" title="초기화" aria-label="초기화"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 7h16"/><path d="M9.5 7V5.2c0-.7.5-1.2 1.2-1.2h2.6c.7 0 1.2.5 1.2 1.2V7"/><path d="M6.5 7l.9 11.6c.06.8.7 1.4 1.5 1.4h6.2c.8 0 1.44-.6 1.5-1.4L17.5 7"/><path d="M10.4 10.6v6M13.6 10.6v6"/></svg></button></div><p class="orn-tip">나뭇가지를 눌러 오너먼트를 달아 보세요</p></div>
 <div id="treebar" class="hidden"><button id="tbBack">← 이전</button><button id="tbSnow">❄️ 눈</button><button id="tbOrn">🎀 꾸미기</button><button id="tbCard" class="primary">💌 카드</button></div>
 <div id="treeCount" aria-live="polite"></div>
 <div id="endbar" class="hidden"><button class="btn" id="bSpinToggle">360° 회전</button><button class="btn" id="bPhoto">📸 기념사진</button><button class="btn sub" id="bSnow">❄️ 눈 던지기</button><button class="btn sub" id="bResOpen">결과 보기</button><button class="btn sub" id="bShot2">장면 캡처</button><button class="btn sub" id="bRetry3">한 번 더</button></div>
@@ -2025,6 +2029,18 @@ const fmt = (t) => { const m = Math.floor(t / 60), s = t - m * 60; return m + ':
 const getBest = () => { try { return JSON.parse(localStorage.getItem('sledBest') || 'null'); } catch (e) { return null; } };
 const getBoard = () => { try { const b = JSON.parse(localStorage.getItem('sledBoard') || '[]'); return Array.isArray(b) ? b : []; } catch (e) { return []; } };
 const esc = (t) => String(t).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+// 카드 본문: 'Merry Christmas!' 처럼 영문 구절은 중간에서 끊기지 않게 한 덩어리로 묶어 준다(한글은 어절 단위 keep-all 그대로)
+function msgHtml(t) {
+  const s = String(t || '');
+  const re = /[A-Za-z][A-Za-z0-9'’.,:;!?\-]*(?:[ \t]+[A-Za-z0-9][A-Za-z0-9'’.,:;!?\-]*)+/g;
+  let out = '', i = 0, m;
+  while ((m = re.exec(s))) {
+    out += esc(s.slice(i, m.index));
+    out += m[0].length <= 26 ? '<span class="nw">' + esc(m[0]) + '</span>' : esc(m[0]);
+    i = m.index + m[0].length;
+  }
+  return out + esc(s.slice(i));
+}
 const isOpen = (id) => !$(id).classList.contains('hidden');
 
 async function boot() {
@@ -2245,8 +2261,8 @@ function stampHoles(W, H, r, pitch) { // 우표 천공 — 일정 간격으로 �
   return out;
 }
 function stampMaskUri() { // 4:5 세로형 우표 — 네 변에 균일한 반원 천공 (evenodd로 alpha 마스크, iOS는 -webkit-mask-image 동시 적용)
-  const W = 56, H = 70, R = 3.9;
-  const holes = stampHoles(W, H, R, 8.8).map(function (q) {
+  const W = 56, H = 70, R = 2.6;
+  const holes = stampHoles(W, H, R, 6.8).map(function (q) {
     return 'M' + (q[0] - R) + ' ' + q[1] + 'a' + R + ' ' + R + ' 0 1 0 ' + (2 * R) + ' 0a' + R + ' ' + R + ' 0 1 0 ' + (-2 * R) + ' 0Z';
   }).join('');
   const svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' + W + ' ' + H + '" width="' + W + '" height="' + H + '">'
@@ -2310,13 +2326,13 @@ async function drawCardCanvas(card) { // card를 넘기면 그 카드(내 카드
     sx.fillStyle = '#f6f0e2'; sx.fillRect(0, 0, 150, 188);
     sx.drawImage(im, 12, 12, 126, 164);                    // 균일한 미색 종이 여백
     sx.strokeStyle = 'rgba(60,45,30,.22)'; sx.lineWidth = 1.5; sx.strokeRect(12, 12, 126, 164);
-    const holes = stampHoles(150, 188, 10, 20.5);
+    const holes = stampHoles(150, 188, 7, 18.2);
     sx.globalCompositeOperation = 'destination-out';       // 공유 이미지도 같은 반원 천공
-    holes.forEach(function (q) { sx.beginPath(); sx.arc(q[0], q[1], 10, 0, Math.PI * 2); sx.fill(); });
+    holes.forEach(function (q) { sx.beginPath(); sx.arc(q[0], q[1], 7, 0, Math.PI * 2); sx.fill(); });
     sx.globalCompositeOperation = 'source-over';
-    sx.strokeStyle = 'rgba(110,84,50,.6)'; sx.lineWidth = 2;
-    holes.forEach(function (q) { sx.beginPath(); sx.arc(q[0], q[1], 10, 0, Math.PI * 2); sx.stroke(); });
-    x.save(); x.translate(CW - 135, 150); x.rotate(0.038); x.shadowColor = 'rgba(36,22,8,.42)'; x.shadowBlur = 10; x.shadowOffsetY = 3; x.drawImage(sc, -75, -94); x.restore();
+    sx.strokeStyle = 'rgba(110,84,50,.3)'; sx.lineWidth = 1.4;
+    holes.forEach(function (q) { sx.beginPath(); sx.arc(q[0], q[1], 7, 0, Math.PI * 2); sx.stroke(); });
+    x.save(); x.translate(CW - 135, 150); x.rotate(0.038); x.shadowColor = 'rgba(36,22,8,.22)'; x.shadowBlur = 7; x.shadowOffsetY = 2; x.drawImage(sc, -75, -94); x.restore();
   } catch (e) { }
   const mark = th.dark ? 'rgba(244,226,184,.8)' : 'rgba(124,35,41,.5)';
   x.save(); x.translate(CW - 300, 152); x.rotate(-0.12); x.strokeStyle = mark;
@@ -2472,7 +2488,7 @@ function paintCards() {
     const th = CARD_THEMES[c.theme] || CARD_THEMES.cream;
     return '<article class="vcard" role="button" tabindex="0" data-card-id="' + (c.id | 0) + '" aria-label="' + esc(c.name || '익명') + ' 님의 엽서 열어 보기" style="background-color:' + th.bg + ';color:' + th.ink + ';border-color:' + th.edge + '">'
       + '<span class="vc-stamp" style="background-image:url(\'' + stampArt(c.stamp) + '\')"></span>'
-      + '<p class="vc-msg">' + esc(c.message) + '</p>'
+      + '<p class="vc-msg">' + msgHtml(c.message) + '</p>'
       + '<div class="vc-foot"><b>From. ' + esc(c.name) + '</b><span>To. ' + esc(c.toName || '모두에게') + '</span></div>'
       + '<div class="vc-when">' + esc(cardWhen(c.createdAt)) + '</div>'
       + (myCardById(c.id) ? '<div class="vc-own"><button type="button" class="vc-share" data-card-id="' + (c.id | 0) + '">💌 내 카드 공유하기</button></div>' : '')
@@ -2579,6 +2595,8 @@ function initCards() {
   });
   const cs = $('#cards');
   if (cs) { cs.style.setProperty('--stamp-mask', stampMaskUri()); cs.style.setProperty('--postmark-mask', postmarkMaskUri()); }
+  const cvs = $('#cardView');
+  if (cvs) { cvs.style.setProperty('--stamp-mask', stampMaskUri()); cvs.style.setProperty('--postmark-mask', postmarkMaskUri()); }
   $('#cardTree').onclick = () => { auInit(); openTreeView(); }; // 동기 실행: 제스처 안에서 바로 트리 곡 재생
   const sb = $('#cardShare'); if (sb) sb.onclick = () => shareVintageCard();
   $('#tbCard').onclick = () => { auInit(); toggleCards(true); };
@@ -2633,16 +2651,14 @@ function cardTexture(c) { // 봉투 위로 삐져나온 엽서 윗면 — 선명
   x.font = '700 9px Helvetica,Arial,sans-serif'; x.fillText('DEC 25 · 2026', 0, 24);
   x.restore();
   // 우표 (오른쪽 위) — 천공 테두리 + 그림
-  const sx = Wd - 118, sy = 20, sw = 76, sh = 92, cutR = 5.6, cutStep = 11.6;
-  x.save(); x.shadowColor = 'rgba(50,34,12,.4)'; x.shadowBlur = 9; x.shadowOffsetY = 3;
+  const sx = Wd - 118, sy = 20, sw = 76, sh = 92, cutR = 3.5, cutStep = 9.2;
+  x.save(); x.shadowColor = 'rgba(50,34,12,.22)'; x.shadowBlur = 6; x.shadowOffsetY = 2;
   x.fillStyle = '#fdf8ec'; x.fillRect(sx, sy, sw, sh); x.restore();
   x.strokeStyle = 'rgba(120,90,50,.5)'; x.lineWidth = 1.8; x.strokeRect(sx + 6, sy + 6, sw - 12, sh - 12);
-  // 반원 천공 — 종이색으로 깊게 파고, 홈마다 얇은 커팅라인
-  const holesT = [];
-  for (let i = 0; i < 6; i++) { const cx = sx + cutStep * 0.6 + i * cutStep; holesT.push([cx, sy], [cx, sy + sh]); }
-  for (let i = 0; i < 7; i++) { const cy = sy + cutStep * 0.6 + i * cutStep; holesT.push([sx, cy], [sx + sw, cy]); }
+  // 반원 천공 — 작고 촘촘하게, 획은 연하게 (자연스러운 우표 테두리)
+  const holesT = stampHoles(sw, sh, cutR, cutStep).map(q => [sx + q[0], sy + q[1]]);
   x.fillStyle = th.bg; holesT.forEach(q => { x.beginPath(); x.arc(q[0], q[1], cutR, 0, 7); x.fill(); });
-  x.strokeStyle = 'rgba(110,84,50,.55)'; x.lineWidth = 1.6; holesT.forEach(q => { x.beginPath(); x.arc(q[0], q[1], cutR, 0, 7); x.stroke(); });
+  x.strokeStyle = 'rgba(110,84,50,.3)'; x.lineWidth = 1.1; holesT.forEach(q => { x.beginPath(); x.arc(q[0], q[1], cutR, 0, 7); x.stroke(); });
   x.textAlign = 'center'; x.textBaseline = 'middle'; x.font = '52px serif'; x.fillStyle = th.ink;
   x.fillText(CARD_STAMPS[c.stamp] || '🎄', sx + sw / 2, sy + sh / 2 + 3);
   x.strokeStyle = 'rgba(64,74,124,.34)'; x.lineWidth = 3; x.beginPath(); x.moveTo(sx - 30, sy + 18); x.lineTo(sx + 44, sy + 68); x.stroke();
@@ -2766,7 +2782,7 @@ function openCardView(c) {
   m.style.setProperty('--cv-mark', th.dark ? 'rgba(242,224,180,.62)' : 'rgba(124,35,41,.55)');
   m.classList.toggle('dark', !!th.dark);
   const st = $('#cvStampImg'); if (st) st.style.backgroundImage = 'url(' + stampArt(c.stamp) + ')';
-  const msg = $('#cvMsg'); if (msg) msg.textContent = c.message || '';
+  const msg = $('#cvMsg'); if (msg) msg.innerHTML = msgHtml(c.message || '');
   const fr = $('#cvFrom'); if (fr) fr.textContent = 'From. ' + (c.name || '익명');
   const to = $('#cvTo'); if (to) to.textContent = 'To. ' + (c.toName || '모두에게');
   const wh = $('#cvWhen'); if (wh) wh.textContent = c.createdAt ? cardWhen(c.createdAt) + ' · 트리에 걸린 엽서' : '';
