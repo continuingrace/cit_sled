@@ -1369,7 +1369,7 @@ function buildWorld(scene) {
       for (let vi = 0; vi < sp2.count; vi++) { const x = sp2.getX(vi), yy = sp2.getY(vi), z = sp2.getZ(vi), t = clamp((yy + h * 0.1) / (h * 0.2), 0, 1), th = Math.atan2(z, x), w = 1 + wav(th) * Math.pow(1 - t, 0.55); sp2.setX(vi, x * w); sp2.setZ(vi, z * w); }
       sl.computeVertexNormals();
       P.push(bake(sl, '#f7fbff', MX(0, y + h * 0.1, 0)));
-      for (let k2 = 0; k2 < 9; k2++) { const a2 = (k2 + 0.5) / 9 * Math.PI * 2 + ph, rr2 = rad * (1 + wav(a2)) * 1.01; P.push(bake(Sph(1, 8, 6), '#ffffff', MX(Math.cos(a2) * rr2, y + h * 0.1, Math.sin(a2) * rr2, 0.5, 0.17, 0.5))); }
+      for (let k2 = 0; k2 < 6; k2++) { const a2 = (k2 + 0.5) / 6 * Math.PI * 2 + ph, rr2 = rad * (1 + wav(a2)) * 1.0; P.push(bake(Sph(1, 8, 6), '#ffffff', MX(Math.cos(a2) * rr2, y + h * 0.085, Math.sin(a2) * rr2, 0.5, 0.12, 0.5))); }
       // 따뜻한 전구: 층마다 고르게
       const nb = 9;
       for (let k2 = 0; k2 < nb; k2++) {
@@ -2244,6 +2244,7 @@ function openTreeView() {
   const tP = wpos(2112, 0, 0, new THREE.Vector3()), hP = wpos(2080, 0, 0, new THREE.Vector3());
   G.treeBaseAng = Math.atan2(hP.x - tP.x, hP.z - tP.z);
   G.autoSpin = true; G.orbitYaw = 0; G.orbitPitch = 0.18; G.orbitDist = (treeTopY() + 2.6) * (innerWidth / innerHeight > 1.15 ? 1.9 : 1.6);
+  window.__dbg = { W, camera };
   closeCardView();
   resetWorld(); G.lastSec = -1; G.offR = 0;
   $('#result').classList.add('hidden'); $('#endbar').classList.add('hidden'); orbitHint(false);
@@ -2502,7 +2503,7 @@ function updateTreeCards() { // 카드 배열과 봉투 오너먼트를 정확�
     const ry = Math.PI / 2 - ang + (cardRnd(c.id, 3) - 0.5) * 0.55;
     const rx = -0.10 + (cardRnd(c.id, 4) - 0.5) * 0.36;  // 위쪽이 가지 속으로 살짝 기운 자연스러운 각도
     const rz = (cardRnd(c.id, 5) - 0.5) * 0.42;
-    const sc = 0.9 + cardRnd(c.id, 6) * 0.24;
+    const sc = 1.14 + cardRnd(c.id, 6) * 0.24;
     const M = new THREE.Matrix4().compose(pos, new THREE.Quaternion().setFromEuler(new THREE.Euler(rx, ry, rz, 'YXZ')), new THREE.Vector3(sc, sc, sc));
     const WM = L(W.treeFrame, M); // 트리 로컬 좌표 → 월드 좌표 (cardGroup은 변환이 없다)
     const add = (geo, col, mx) => parts.push(bake(geo, col, L(WM, mx)));
