@@ -1690,15 +1690,21 @@ const MENU_TRACKS = [
   { ko: '트레팍', name: 'Trepak - Russian Dance (The Nutcracker)', file: './audio/menu-trepak.mp3' }
 ];
 const MGA = new Audio();
-MGA.preload = 'none'; MGA.volume = BGM_VOL * 0.7; MGA.muted = true;
+MGA.preload = 'auto'; MGA.volume = BGM_VOL * 0.7; MGA.muted = true; // 첫 터치에 바로 소리가 나도록 미리 받아 둔다
 MGA.setAttribute('playsinline', ''); MGA.setAttribute('webkit-playsinline', '');
 let menuI = Math.floor(Math.random() * MENU_TRACKS.length);
+try { MGA.src = bgmSrc(MENU_TRACKS[menuI]); MGA.load(); } catch (e) { }
 MGA.addEventListener('ended', () => {
   if (G.state !== 'menu' || AU.muted) return;
   menuI = (menuI + 1) % MENU_TRACKS.length; playMenuTrack();
 });
 function playMenuTrack() {
-  try { MGA.src = bgmSrc(MENU_TRACKS[menuI]); MGA.muted = AU.muted; MGA.volume = BGM_VOL * 0.7; const p = MGA.play(); if (p && p.catch) p.catch(() => { }); } catch (e) { }
+  try {
+    const want = bgmSrc(MENU_TRACKS[menuI]);
+    if (MGA.src !== want) MGA.src = want;   // 이미 받아 둔 곡이면 다시 받지 않는다
+    MGA.muted = AU.muted; MGA.volume = BGM_VOL * 0.7;
+    const p = MGA.play(); if (p && p.catch) p.catch(() => { });
+  } catch (e) { }
 }
 function menuBgm(on) {
   try {
