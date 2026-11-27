@@ -1876,7 +1876,10 @@ function auInit() {
   bgmUnlock();
   if (AU.ctx) { auResume(); return; }
   const C = window.AudioContext || window.webkitAudioContext; if (!C) return;
-  const c = AU.ctx = new C(); AU.master = c.createGain(); AU.master.gain.value = AU.muted ? 0 : 0.85; AU.master.connect(c.destination);
+  const c = AU.ctx = new C(); AU.master = c.createGain(); AU.master.gain.value = AU.muted ? 0 : 0.85;
+  // 효과음이 커져도 찌그러지지 않게 마지막에 소프트 리미터를 둔다
+  AU.lim = c.createDynamicsCompressor(); AU.lim.threshold.value = -14; AU.lim.knee.value = 24; AU.lim.ratio.value = 8; AU.lim.attack.value = 0.002; AU.lim.release.value = 0.18;
+  AU.master.connect(AU.lim); AU.lim.connect(c.destination);
   const nb = c.createBuffer(1, c.sampleRate * 2, c.sampleRate), d = nb.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1; AU.noise = nb;
   const loop = (type, f, q) => { const src = c.createBufferSource(); src.buffer = nb; src.loop = true; const bq = c.createBiquadFilter(); bq.type = type; bq.frequency.value = f; bq.Q.value = q; const g = c.createGain(); g.gain.value = 0; src.connect(bq); bq.connect(g); g.connect(AU.master); src.start(); return { g, bq }; };
   AU.sled = loop('bandpass', 1100, 0.7); AU.wind = loop('lowpass', 420, 0.2);
@@ -1907,12 +1910,12 @@ const SFX = {
   click() { const t = AU.ctx && AU.ctx.currentTime; if (!t) return; tone(900, t, 0.08, 'triangle', 0.15); },
   paper() { const t = AU.ctx && AU.ctx.currentTime; if (!t) return; nz(t, 0.22, 2600, 0.8, 0.10, 'bandpass'); nz(t + 0.06, 0.16, 4200, 1.2, 0.05, 'highpass'); },
   thud() { const t = AU.ctx && AU.ctx.currentTime; if (!t) return; tone(190, t, 0.16, 'sine', 0.2, null, 90); nz(t, 0.2, 900, 0.7, 0.26, 'lowpass'); tone(1200, t + 0.02, 0.09, 'triangle', 0.05); },
-  whoosh() { const t = AU.ctx && AU.ctx.currentTime; if (!t) return; nzSweep(t, 0.2, 520, 2400, 1.2, 0.16, 'bandpass'); nzSweep(t + 0.02, 0.16, 1500, 3600, 1.0, 0.05, 'highpass'); },
+  whoosh() { const t = AU.ctx && AU.ctx.currentTime; if (!t) return; nzSweep(t, 0.2, 520, 2400, 1.2, 0.36, 'bandpass'); nzSweep(t + 0.02, 0.16, 1500, 3600, 1.0, 0.11, 'highpass'); },
   splat() { const t = AU.ctx && AU.ctx.currentTime; if (!t) return; // 눈이 부서져 사방으로 흩어지는 가볍고 선명한 눈거품 마찰음(저음 둔탁함 없음)
-    nzSweep(t, 0.22, 1800, 650, 1.1, 0.34, 'bandpass');
-    nz(t + 0.004, 0.11, 2600, 2.0, 0.13, 'bandpass');
-    nz(t + 0.03, 0.16, 4400, 1.5, 0.07, 'highpass');
-    nz(t + 0.055, 0.2, 1150, 0.9, 0.09, 'bandpass'); }
+    nzSweep(t, 0.22, 1800, 650, 1.1, 0.82, 'bandpass');
+    nz(t + 0.004, 0.11, 2600, 2.0, 0.3, 'bandpass');
+    nz(t + 0.03, 0.16, 4400, 1.5, 0.16, 'highpass');
+    nz(t + 0.055, 0.2, 1150, 0.9, 0.2, 'bandpass'); }
 };
 // 캐럴 멜로디: 레이스마다 다른 캐럴이 흐른다 (모두 퍼블릭 도메인) + 방울 리듬
 const N = { C: 523.25, D: 587.33, E: 659.25, F: 698.46, Fs: 739.99, G: 783.99, A: 880.00, B: 493.88, C4: 261.63, D4: 293.66, E4: 329.63, F4: 349.23, G4: 392.00, A4: 440.00, B4: 493.88, C3: 130.81, D3: 146.83, E3: 164.81, F3: 174.61, Fs3: 185.00, G3: 196.00, A3: 220.00, B3: 246.94, C6: 1046.50, D6: 1174.66, E6: 1318.51, F6: 1396.91, G6: 1567.98 };
