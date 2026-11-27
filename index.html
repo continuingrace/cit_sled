@@ -3130,6 +3130,9 @@ function startSanta(t) {
   const az = (G.treeBaseAng || 0) + (G.orbitYaw || 0);
   SANTA.cx = _sC.x; SANTA.cz = _sC.z; SANTA.baseY = _sC.y; // 지면 높이 기준 (월드 y=0이 아님)
   SANTA.a0 = az + Math.PI - 0.9; SANTA.a1 = az + Math.PI + 0.9;
+  SANTA.dir = -(SANTA.dir || 1); // 매번 반대 방향으로 가로지름(왼→오 / 오→왼 번갈아)
+  const sweep = 0.82 + Math.random() * 0.3, base = az + Math.PI;
+  SANTA.a0 = base - SANTA.dir * sweep; SANTA.a1 = base + SANTA.dir * sweep;
   SANTA.rad = 44 + Math.random() * 8; SANTA.alt = 30 + Math.random() * 5; // 기본 카메라 프레임 안에 들어오는 높이
   SANTA.t = 0; SANTA.T = 13 + Math.random() * 2; SANTA.active = true; SANTA.group.visible = true; SANTA.bellT = 0;
   try { if (!AU.muted) SFX.sleighWind(); } catch (e) { }
@@ -3160,7 +3163,7 @@ function updateSanta(dt, t) {
   const show = !!G.treeView || ((G.state === 'finish' || G.state === 'result') && !G.resOpen);
   initSanta();
   if (!show) { santaShown = false; if (SANTA.group) SANTA.group.visible = false; SANTA.active = false; updateSantaTrail(dt); return; }
-  if (!santaShown) { santaShown = true; santaNextAt = t + 5 + Math.random() * 2; }
+  if (!santaShown) { santaShown = true; santaNextAt = t + 3.2 + Math.random() * 1.1; }
   if (!SANTA.active && t >= santaNextAt) startSanta(t);
   if (SANTA.active) {
     SANTA.t += dt;
@@ -3181,7 +3184,7 @@ function updateSanta(dt, t) {
     santaDust(_sP);
     SANTA.bellT -= dt;
     if (SANTA.bellT <= 0) { SANTA.bellT = 0.15 + Math.random() * 0.18; try { SFX.sleighBell(); } catch (e) { } }
-    if (SANTA.t >= SANTA.T) { SANTA.active = false; SANTA.group.visible = false; santaNextAt = t + 20 + Math.random() * 8; }
+    if (SANTA.t >= SANTA.T) { SANTA.active = false; SANTA.group.visible = false; santaNextAt = t + 10 + Math.random() * 4; }
   }
   updateSantaTrail(dt);
 }
@@ -3893,10 +3896,10 @@ boot().catch(e => { console.error(e); const l = $('#loading'); l.classList.remov
     }
     if (isDrag && can()) {
       const dy = e.clientY - dragY;
-      G.orbitYaw = startYaw - (e.clientX - dragX) * 0.008; // 손가락을 따라 트리가 같이 돌아가게(모바일 직관)
+      G.orbitYaw = startYaw - (e.clientX - dragX) * 0.0115; // 손가락을 따라 트리가 같이 돌아가게(모바일 직관)
       if (window.G && G.treeView) {
-        G.orbitPitch = Math.max(-0.5, Math.min(1.18, startPitch - dy * 0.0011));
-        G.orbitFocus = Math.max(0, Math.min(1, startFocus + dy * 0.0016)); // 위로 끌면 위쪽, 아래로 끌면 선물상자 쪽
+        G.orbitPitch = Math.max(-0.5, Math.min(1.18, startPitch - dy * 0.0020));
+        G.orbitFocus = Math.max(0, Math.min(1, startFocus + dy * 0.0024)); // 위로 끌면 위쪽, 아래로 끌면 선물상자 쪽
       } else {
         G.orbitPitch = Math.max(-0.18, Math.min(1.05, startPitch + dy * 0.006));
       }
