@@ -289,6 +289,11 @@ body.paused *{animation-play-state:paused!important}
 #treeCount{position:fixed;left:50%;transform:translateX(-50%);top:calc(12px + env(safe-area-inset-top,0px));bottom:auto;z-index:18;display:none;padding:9px 16px;border-radius:999px;background:rgba(13,19,42,.84);border:1px solid rgba(255,255,255,.16);color:#f6f2e8;font-family:inherit;font-size:12.5px;font-weight:700;letter-spacing:.01em;box-shadow:0 12px 30px rgba(4,8,26,.44);pointer-events:none;white-space:nowrap}
 #treeCount.on{display:block}
 #treeCount b{color:#ffd84d}
+/* 지금 나오는 음악 — 작은 다크 글래스 배지 (상단 좌측) */
+#nowPlay{position:fixed;left:14px;top:calc(14px + env(safe-area-inset-top,0px));z-index:17;display:none;align-items:center;gap:6px;max-width:min(58vw,300px);padding:6px 12px 6px 10px;border-radius:999px;background:rgba(11,17,34,.55);border:1px solid rgba(255,255,255,.14);box-shadow:0 8px 22px rgba(4,8,26,.34);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);color:#eef1fa;font-family:inherit;font-size:12px;font-weight:600;letter-spacing:.01em;pointer-events:none;opacity:.94}
+#nowPlay.on{display:flex}
+#nowPlay i{font-style:normal;font-size:11px;line-height:1;opacity:.85}
+#nowPlay b{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 /* 첫 화면 다듬기 (브랜드·글래스 카드·세그먼트·출발 버튼·3버튼 줄) */
 #menu{background:linear-gradient(90deg,rgba(9,14,34,.78),rgba(9,14,34,.34) 42%,rgba(9,14,34,0) 68%)}
 .brand{display:flex;flex-direction:column;gap:7px}
@@ -454,7 +459,7 @@ body.paused *{animation-play-state:paused!important}
   <div class="help">
     <div><h3>주행</h3><p><kbd>←</kbd><kbd>→</kbd> 방향 바꾸기</p><p><kbd>↓</kbd> 브레이크</p><p><kbd>↑</kbd> 밀기 (느릴 때만)</p></div>
     <div><h3>트릭</h3><p><kbd>SPACE</kbd> 점프</p><p>공중에서 <kbd>←</kbd><kbd>→</kbd> 스핀</p><p>정면을 보고 착지하면 퍼펙트. 점수와 순간 가속을 받아요.</p></div>
-    <div><h3>코스</h3><p>기문 사이를 통과하면 +30점, 놓치면 +2초</p><p>선물 상자 +50점</p><p>노란 별은 터보. 잠깐 빨라지고 친구 썰매에 밀리지 않아요.</p><p>노란 화살표는 부스트. 눈사람과 나무는 피하세요.</p></div>
+    <div><h3>코스</h3><p>깃발 통과 +30점, 놓치면 +2초</p><p>선물 상자 +50점</p><p>노란 별은 터보. 잠깐 빨라지고 친구 썰매에 밀리지 않아요.</p><p>노란 화살표는 부스트. 눈사람과 나무는 피하세요.</p></div>
     <div><h3>기타</h3><p><kbd>C</kbd> 카메라 전환</p><p><kbd>P</kbd> 일시정지 · <kbd>M</kbd> 소리</p><p><kbd>H</kbd> 이 창 열기/닫기</p></div>
   </div>
 </div></div>
@@ -517,6 +522,7 @@ body.paused *{animation-play-state:paused!important}
 <div id="treebar" class="hidden"><button id="tbBack">← 이전</button><button id="tbSnow">❄️ 눈</button><button id="tbOrn">🎀 꾸미기</button><button id="tbSpot" title="오두막 보기" aria-label="오두막 보기">🏠</button><button id="tbCard" class="primary">💌 카드</button></div>
 <div id="treeCount" aria-live="polite"></div>
 <div id="endbar" class="hidden"><button class="btn" id="bSpinToggle">360° 회전</button><button class="btn" id="bPhoto">📸 기념사진</button><button class="btn sub" id="bSnow">❄️ 눈 던지기</button><button class="btn sub" id="bResOpen">결과 보기</button><button class="btn sub" id="bShot2">장면 캡처</button><button class="btn sub" id="bRetry3">한 번 더</button></div>
+<div id="nowPlay" class="hidden" aria-live="off"><i>🎵</i><b></b></div>
 <div id="orbitHint" aria-hidden="true">👆 드래그해서 360° 둘러보기 · 팻말 터치</div>
 <div id="cardView" class="modal hidden" aria-hidden="true"><div class="panel cvbox" role="dialog" aria-modal="true" aria-label="트리에 걸린 빈티지 엽서">
   <button type="button" class="cv-x" id="cardViewX" aria-label="엽서 닫기">✕</button>
@@ -730,8 +736,8 @@ const HAIR = {
   short: { // 한국 남자 댄디 — 옆으로 넘긴 가르마와 둥근 앞머리·윗머리 퍼프, 귀 앞 구레나룻
     thick: (p, t) => 0.060 + 0.032 * Math.exp(-((p / 1.0) ** 2)) + 0.026 * Math.exp(-(((Math.abs(p) - 0.9) / 0.5) ** 2)) + 0.048 * Math.sin(Math.min(t, 1.3)) * Math.exp(-((p / 1.35) ** 2)),
     ymin: (p) => { const a = Math.abs(p); return 0.02 - 0.21 * Math.exp(-(((a - 1.18) / 0.22) ** 2)) - 0.34 * sst(1.55, 2.3, a); },
-    L: 0.34, bulge: 0.03, tuck: 0.15, lip: 0.05, n: 17, twist: 0.06, part: 0.5, win: [1.05, 1.35],
-    fringe: (p) => 0.215 + 0.175 * sst(-0.8, 1.0, p) + 0.07 * sst(1.05, 1.6, Math.abs(p)) - 0.01 * Math.exp(-(((p + 0.75) / 0.35) ** 2))
+    L: 0.34, bulge: 0.03, tuck: 0.15, lip: 0.05, n: 17, twist: 0.06, part: 0.55, win: [1.05, 1.35],
+    fringe: (p) => 0.245 + 0.06 * sst(-0.9, 0.9, p) + 0.025 * Math.exp(-(((p - 0.55) / 0.3) ** 2)) - 0.02 * Math.exp(-(((p + 0.7) / 0.45) ** 2))
   }
 };
 function hairShell(THREE, dims, o) {
@@ -968,6 +974,28 @@ function makeTextures() {
     const [c, x] = cv(256, 256); x.fillStyle = '#ffffff'; x.fillRect(0, 0, 256, 256);
     for (let i = 0; i < 8; i++) { const y0 = i * 32; x.fillStyle = `rgba(120,80,50,${0.06 + r() * 0.12})`; x.fillRect(0, y0, 256, 32); x.fillStyle = 'rgba(60,35,20,0.45)'; x.fillRect(0, y0, 256, 3); for (let k = 0; k < 14; k++) { x.fillStyle = `rgba(90,55,30,${0.05 + r() * 0.1})`; x.fillRect(r() * 256, y0 + 4 + r() * 26, 20 + r() * 80, 1.5); } const xs = r() * 256; x.fillStyle = 'rgba(60,35,20,0.35)'; x.fillRect(xs, y0, 2, 32); }
     TEX.plank = tex(c, true);
+  }
+  { // 통나무 벽 — 둥글게 부푼 로그결과 이음새 그림자로 산장 느낌
+    const [c, x] = cv(256, 256); x.fillStyle = '#ffffff'; x.fillRect(0, 0, 256, 256);
+    const rows = 9, hh = 256 / rows;
+    for (let i = 0; i < rows; i++) {
+      const y0 = i * hh;
+      const g = x.createLinearGradient(0, y0, 0, y0 + hh);
+      g.addColorStop(0, 'rgba(255,252,244,0.34)'); g.addColorStop(0.18, 'rgba(255,250,240,0.06)');
+      g.addColorStop(0.62, 'rgba(78,46,26,0.10)'); g.addColorStop(0.9, 'rgba(56,32,18,0.30)'); g.addColorStop(1, 'rgba(44,24,12,0.44)');
+      x.fillStyle = g; x.fillRect(0, y0, 256, hh);
+      x.strokeStyle = 'rgba(48,28,15,0.45)'; x.lineWidth = 1.6; x.beginPath(); x.moveTo(0, y0 + 0.8); x.lineTo(256, y0 + 0.8); x.stroke();
+      for (let k = 0; k < 9; k++) { x.strokeStyle = `rgba(92,58,32,${0.04 + r() * 0.07})`; x.lineWidth = 1; const yy = y0 + 4 + r() * (hh - 8); x.beginPath(); x.moveTo(0, yy); x.bezierCurveTo(70, yy + r() * 3 - 1.5, 170, yy + r() * 3 - 1.5, 256, yy); x.stroke(); }
+      if (r() < 0.55) { const kx = 24 + r() * 208, ky = y0 + hh * (0.35 + r() * 0.3); x.strokeStyle = 'rgba(70,44,24,0.30)'; x.lineWidth = 1.4; x.beginPath(); x.ellipse(kx, ky, 4.5, 2.6, 0, 0, 7); x.stroke(); }
+    }
+    TEX.logs = tex(c, true);
+  }
+  { // 굴뚝 연기 — 뭉게뭉게 부푼 부드러운 연기 알갱이
+    const [c, x] = cv(128, 128);
+    for (let i = 0; i < 9; i++) { const cx = 64 + Math.cos(i * 2.4) * (i % 3) * 7, cy = 64 + Math.sin(i * 1.7) * (i % 4) * 6, rr2 = 22 + (i % 5) * 5;
+      const g = x.createRadialGradient(cx, cy, 0, cx, cy, rr2); g.addColorStop(0, 'rgba(255,255,255,0.34)'); g.addColorStop(0.5, 'rgba(255,255,255,0.16)'); g.addColorStop(0.82, 'rgba(255,255,255,0.05)'); g.addColorStop(1, 'rgba(255,255,255,0)');
+      x.fillStyle = g; x.beginPath(); x.arc(cx, cy, rr2, 0, 7); x.fill(); }
+    TEX.puff = new THREE.CanvasTexture(c); try { TEX.puff.minFilter = THREE.LinearFilter; TEX.puff.generateMipmaps = false; } catch (e) { }
   }
   { // 기와 지붕
     const [c, x] = cv(256, 256); x.fillStyle = '#ffffff'; x.fillRect(0, 0, 256, 256);
@@ -1244,6 +1272,9 @@ function simulate(diffKey, seed) {
 
 // ===== 월드: 지형 · 배경 · 조명 · 이펙트 =====
 const BULBC = ['#ff5a5a', '#ffd24a', '#5ad1ff', '#7dff8a', '#ff8ad8', '#ffa64a'];
+// 오두막·산장용 따뜻한 웜화이트/샴페인/앰버 전구 (원색 무지개 대신)
+const WBULB = ['#fff4dc', '#ffe6bc', '#ffd79c', '#fff0d2', '#f6dfb2', '#ffdcae'];
+const WGLOW = '#c9a06a';
 const _v = new THREE.Vector3();
 function frame(s, u, dy) { const t = wpos(s, u, dy || 0, _v); return new THREE.Matrix4().makeRotationY(-t.th).setPosition(_v.x, _v.y, _v.z); }
 const L = (F, m) => F.clone().multiply(m);
@@ -1352,7 +1383,7 @@ function buildWorld(scene) {
   const giftGeo = merge([bake(Box, '#ffffff', MX(0, 0, 0, 0.9))]), ribGeo = merge([bake(Box, '#fff4c2', MX(0, 0, 0, 0.94, 0.94, 0.2)), bake(Box, '#fff4c2', MX(0, 0, 0, 0.2, 0.94, 0.94)), bake(Sph(0.15), '#fff4c2', MX(-0.14, 0.53, 0)), bake(Sph(0.15), '#fff4c2', MX(0.14, 0.53, 0))]);
   const B = {
     tree: new Batch(treeGeo, vc, true), bulb: new Batch(Sph(0.17, 8, 6), new THREE.MeshBasicMaterial({ toneMapped: false })), lampHead: new Batch(Sph(0.3, 10, 8), new THREE.MeshBasicMaterial({ color: '#fff0c0', toneMapped: false })),
-    wall: new Batch(Box, std({ map: TEX.plank }), true), roof: new Batch(prismGeo(), std({ map: TEX.roof })), rsnow: new Batch(prismGeo(), std({ color: '#ffffff', roughness: 1 })), win: new Batch(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ map: TEX.win })),
+    wall: new Batch(Box, std({ map: TEX.plank }), true), logwall: new Batch(Box, std({ map: TEX.logs }), true), roof: new Batch(prismGeo(), std({ map: TEX.roof })), rsnow: new Batch(prismGeo(), std({ color: '#ffffff', roughness: 1 })), win: new Batch(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ map: TEX.win })),
     door: new Batch(Box, std({ color: '#7a4a30' })), chim: new Batch(Box, std({ color: '#a06a58' })), ball: new Batch(Sph(1, 12, 8), std({ roughness: 0.6 })),
     stall: new Batch(stallGeo, vc, true), awnR: new Batch(Box, std({ map: TEX.awnR })), awnG: new Batch(Box, std({ map: TEX.awnG })), cane: new Batch(caneGeo, std({ map: caneT, roughness: 0.4 }), true),
     orn: new Batch(ornGeo, std({ vertexColors: true, roughness: 0.22, metalness: 0.35 }), true), fence: new Batch(fenceGeo, vc), lamp: new Batch(lampGeo, vc),
@@ -1363,7 +1394,7 @@ function buildWorld(scene) {
   };
   W.winMat = B.win.mat; W.bulbMat = B.bulb.mat;
   TEX.roof.repeat.set(3, 2);
-  const bulb = (p, c) => { B.bulb.add(MX(p.x, p.y, p.z), c); W.glowS.push(p.x, p.y, p.z, c); };
+  const bulb = (p, c, s, gc) => { B.bulb.add(MX(p.x, p.y, p.z, s || 1), c); W.glowS.push(p.x, p.y, p.z, gc || c); };
   const bigGlow = (p, c) => W.glowB.push(p.x, p.y, p.z, c);
   const tree = (s, u, sc, lit) => { const F = frame(s, u); B.tree.add(L(F, MX(0, -0.15, 0, sc, sc * (0.9 + r() * 0.3), sc, 0, r() * 6, 0))); if (lit) for (let i = 0; i < 9; i++) { const y = 0.9 + i * 0.33, rad = 1.25 * (1 - (y - 0.9) / 3.6) + 0.05, a = i * 2.3; bulb(PT(F, Math.cos(a) * rad * sc, y * sc, Math.sin(a) * rad * sc), BULBC[i % 6]); } };
   const lamp = (s, u) => { const F = frame(s, u); B.lamp.add(F); const p = PT(F, 0, 4.45, 0); B.lampHead.add(MX(p.x, p.y, p.z)); bigGlow(p, '#ffd890'); };
@@ -1538,7 +1569,7 @@ function buildWorld(scene) {
     const s0 = 2080, F = frame(s0, 0), w = 9.6, h = 4.2, d = 7.4, rh = 4.6, zf = d / 2, a = [];
     const fr = (x, z) => frame(s0 - z, x);                                   // 오두막 기준 (x: 좌우, z: 트랙 위쪽)
     occupied.push([s0, 0, 10]);
-    B.wall.add(L(F, MX(0, h / 2 - 0.7, 0, w, h + 1.4, d)), '#c08a5a');
+    B.logwall.add(L(F, MX(0, h / 2 - 0.7, 0, w, h + 1.4, d)), '#c08a5a');
     a.push(bake(Box, '#6f6259', MX(0, -2.6, 0, w * 1.05, 5.4, d * 1.05)));   // 눈 아래까지 내려가는 돌 기초 (아래에서 봐도 틈 없음)
     a.push(bake(Box, '#f2f7ff', MX(0, -0.55, 0, w * 1.12, 1.5, d * 1.12)));  // 밑동 눈더미
     B.roof.add(L(F, MX(0, h, 0, w * 1.22, rh, d * 1.16)), '#b5483f');
@@ -1548,15 +1579,27 @@ function buildWorld(scene) {
     [-1, 1].forEach(k => { a.push(bake(Box, '#8a5a3c', MX(k * 3.0, 1.6, zf + 2.1, 0.24, 2.9, 0.24)));                                                // 기둥
       a.push(bake(Box, '#2f8a5a', MX(k * 3.0 - k * 1.08, 2.15, zf + 0.07, 0.34, 1.75, 0.1)), bake(Box, '#2f8a5a', MX(k * 3.0 + k * 1.08, 2.15, zf + 0.07, 0.34, 1.75, 0.1))); // 덧문
       a.push(bake(Box, '#8a5a3c', MX(k * 3.0, 1.16, zf + 0.22, 2.1, 0.22, 0.4)), bake(Box, '#ffffff', MX(k * 3.0, 1.3, zf + 0.22, 2.0, 0.12, 0.36)));   // 창턱 + 눈
+      { // 창틀·창살 — 나무 프레임과 십자 창살로 입체감
+        const wx = k * 3.0, wy = 2.15, wW = 1.75, wH = 1.75, fz = zf + 0.15;
+        a.push(bake(Box, '#9c6a45', MX(wx, wy + wH / 2 + 0.06, fz, wW + 0.26, 0.16, 0.16)),
+          bake(Box, '#9c6a45', MX(wx, wy - wH / 2 - 0.06, fz, wW + 0.26, 0.18, 0.18)),
+          bake(Box, '#9c6a45', MX(wx - wW / 2 - 0.07, wy, fz, 0.16, wH + 0.2, 0.16)),
+          bake(Box, '#9c6a45', MX(wx + wW / 2 + 0.07, wy, fz, 0.16, wH + 0.2, 0.16)),
+          bake(Box, '#a8784f', MX(wx, wy, fz - 0.04, 0.075, wH, 0.08)),
+          bake(Box, '#a8784f', MX(wx, wy, fz - 0.04, wW, 0.075, 0.08)));
+      }
       B.win.add(L(F, MX(k * 3.0, 2.15, zf + 0.06, 1.75, 1.75, 1))); bigGlow(PT(F, k * 3.0, 2.15, zf + 0.5), '#ffcf70'); bigGlow(PT(F, k * 3.0, 2.15, zf + 0.5), '#ffb860');
       B.win.add(L(F, MX(k * (w / 2 + 0.05), 2.15, 0.4, 1.6, 1.6, 1, 0, k * Math.PI / 2, 0))); bigGlow(PT(F, k * (w / 2 + 0.4), 2.15, 0.4), '#ffcf70');
       const lp = PT(F, k * 3.0, 2.72, zf + 2.3); B.lampHead.add(MX(lp.x, lp.y, lp.z, 0.5)); bigGlow(lp, '#ffd890');                                   // 기둥 랜턴
-      for (let i = 0; i <= 10; i++) { const t = i / 10; bulb(PT(F, k * w * 0.61 * (1 - t), h + rh * t - 0.1, d * 0.58 + 0.3), BULBC[(i + (k > 0 ? 3 : 0)) % 6]); }    // 처마 전구
+      for (let i = 0; i <= 10; i++) { const t = i / 10; bulb(PT(F, k * w * 0.61 * (1 - t), h + rh * t - 0.1, d * 0.58 + 0.3), WBULB[i % 6], 0.52, WGLOW); }    // 처마 전구 (따뜻한 샴페인)
       B.cane.add(L(fr(k * 2.0, zf + 3.6), MX(0, -0.2, 0, 0.85, 0.85, 0.85, 0, k > 0 ? Math.PI : 0, 0))); });
     a.push(bake(Box, '#a8443c', MX(0, 3.2, zf + 1.2, 7.0, 0.18, 2.7, 0.22, 0, 0)), bake(Box, '#ffffff', MX(0, 3.36, zf + 1.12, 6.8, 0.16, 2.3, 0.22, 0, 0)));  // 포치 지붕 + 눈
-    for (let i = 0; i < 10; i++) bulb(PT(F, -3.15 + i * 0.7, 2.86, zf + 2.5), BULBC[(i + 1) % 6]);
+    for (let i = 0; i < 10; i++) bulb(PT(F, -3.15 + i * 0.7, 2.86, zf + 2.5), WBULB[(i + 2) % 6], 0.46, WGLOW);
+    for (let i = 0; i < 15; i++) { const ix = -3.24 + i * 0.46, ln = 0.26 + ((i * 7) % 4) * 0.11; a.push(bake(new THREE.ConeGeometry(0.05, ln, 6), '#e6f3ff', MX(ix, 3.11 - ln / 2, zf + 2.56, 1, 1, 1, Math.PI, 0, 0))); } // 처마 고드름
     B.door.add(L(F, MX(0, 1.3, zf + 0.06, 1.55, 2.5, 0.14))); a.push(bake(Box, '#5e3b25', MX(0, 1.3, zf + 0.02, 1.85, 2.75, 0.1)), bake(Sph(0.08), '#f3c64a', MX(0.52, 1.25, zf + 0.17)));
-    a.push(bake(new THREE.TorusGeometry(0.42, 0.14, 8, 20), '#2f8a5a', MX(0, 1.85, zf + 0.2)), bake(Sph(0.13), '#e2463f', MX(-0.14, 1.45, zf + 0.3)), bake(Sph(0.13), '#e2463f', MX(0.14, 1.45, zf + 0.3)), bake(Sph(0.07), '#f3c64a', MX(0, 1.45, zf + 0.34))); // 리스
+    a.push(bake(new THREE.TorusGeometry(0.42, 0.14, 10, 24), '#2f8a5a', MX(0, 1.85, zf + 0.2)), bake(Sph(0.13), '#e2463f', MX(-0.14, 1.45, zf + 0.3)), bake(Sph(0.13), '#e2463f', MX(0.14, 1.45, zf + 0.3)), bake(Sph(0.07), '#f3c64a', MX(0, 1.45, zf + 0.34)),
+      bake(Box, '#b23038', MX(-0.19, 1.4, zf + 0.28, 0.36, 0.19, 0.1, 0, 0, 0.44)), bake(Box, '#b23038', MX(0.19, 1.4, zf + 0.28, 0.36, 0.19, 0.1, 0, 0, -0.44)), bake(Sph(0.075), '#c3373f', MX(0, 1.42, zf + 0.3)),
+      bake(new THREE.ConeGeometry(0.075, 0.2, 7), '#2f7a54', MX(-0.3, 1.72, zf + 0.33, 1, 1, 1, 0.5, 0, 0.4)), bake(new THREE.ConeGeometry(0.075, 0.2, 7), '#2f7a54', MX(0.31, 2.3, zf + 0.34, 1, 1, 1, -0.4, 0, -0.5))); // 리스 + 리본 + 잎
     [[-0.3, 2.2], [0.35, 2.05], [0.1, 1.5], [-0.38, 1.7]].forEach(([x, y]) => a.push(bake(Sph(0.06), '#e2463f', MX(x, y, zf + 0.33))));
     a.push(bake(Box, '#9a8f8a', MX(2.7, h + 2.6, -1.2, 1.15, 4.8, 1.15)), bake(Box, '#7d726e', MX(2.7, h + 5.05, -1.2, 1.45, 0.3, 1.45)));       // 굴뚝
     chims.push({ p: PT(F, 2.7, h + 5.4, -1.2), sc: 1.15, n: 7 });
@@ -1573,13 +1616,13 @@ function buildWorld(scene) {
         bake(Box, '#ffffff', MX(0, BY + BH / 2 + 0.06, 0.02, BW, 0.13, 0.26, 0, RA, 0))];         // 판 위 눈
       const sm = new THREE.Mesh(merge(b), vc); sm.matrixAutoUpdate = false; sm.matrix.copy(Fs); sm.castShadow = true; sm.frustumCulled = false; scene.add(sm);
       plate(map, BW, BH, L(Fs, MX(0, BY, 0.02, 1, 1, 1, 0, RA, 0).multiply(MX(0, 0, 0.08))), arr);
-      const gp = PT(Fs, 0, BY + BH / 2 + 0.32, 0.3); B.lampHead.add(MX(gp.x, gp.y, gp.z, 0.45)); bigGlow(gp, '#fff0c0');
+      const gp = PT(Fs, 0, BY + BH / 2 + 0.32, 0.3); B.lampHead.add(MX(gp.x, gp.y, gp.z, 0.45)); bigGlow(gp, '#d9b07a');
     };
     signBoard(-1, signHome(), W.links); signBoard(1, signPhoto(), W.photoLinks);
     const warm = new THREE.PointLight('#ffb866', 0, 38, 1.7); warm.position.copy(PT(F, 0, 3.4, zf + 6.5)); scene.add(warm); W.warm = warm;
     giftPile(s0 - zf - 1.3, -1.9, 3, 0.7); giftPile(s0 - zf - 1.3, 2.0, 3, 0.7);
     // 장식 중인 트리 · 파티 테이블 · 꼬마 눈사람
-    { const Ft = fr(-7.9, 6.2); B.tree.add(L(Ft, MX(0, -0.1, 0, 1.35, 1.35, 1.35))); for (let i = 0; i < 12; i++) { const y = 1.3 + i * 0.3, rad = (1.28 * (1 - (y - 0.9) / 3.7) + 0.08) * 1.35, an = i * 2.4, p = PT(Ft, Math.cos(an) * rad, y * 1.35, Math.sin(an) * rad); if (i % 2) bulb(p, BULBC[i % 6]); else B.ball.add(MX(p.x, p.y, p.z, 0.15), BULBC[(i + 3) % 6]); }
+    { const Ft = fr(-7.9, 6.2); B.tree.add(L(Ft, MX(0, -0.1, 0, 1.35, 1.35, 1.35))); for (let i = 0; i < 12; i++) { const y = 1.3 + i * 0.3, rad = (1.28 * (1 - (y - 0.9) / 3.7) + 0.08) * 1.35, an = i * 2.4, p = PT(Ft, Math.cos(an) * rad, y * 1.35, Math.sin(an) * rad); if (i % 2) bulb(p, WBULB[i % 6], 0.72, WGLOW); else B.ball.add(MX(p.x, p.y, p.z, 0.15), WBULB[(i + 3) % 6]); }
       const tp = PT(Ft, 0, 5.95, 0); const ts = new THREE.Mesh(starGeo5(0.74, 0.18), new THREE.MeshBasicMaterial({ color: '#ffd84d', toneMapped: false, side: THREE.DoubleSide })); ts.position.copy(tp); ts.frustumCulled = false; scene.add(ts); bigGlow(tp, '#ffe98a'); bigGlow(tp, '#ffd84d');
       // 오두막 옆 장식 트리: 빈티지 카드를 매달고, 트리를 눌러도 카드 창이 열리게 한다
       W.hutTreeFrame = Ft;
@@ -1649,8 +1692,19 @@ function buildWorld(scene) {
     for (let s = 1582, i = 0; s < 1984; s += 14, i++) { const sd = i % 2 ? 1 : -1; B.cane.add(L(frame(s, sd * 11.2), MX(0, -0.2, 0, 1.1, 1.1, 1.1, 0, sd > 0 ? Math.PI : 0, 0))); }
   }
   Object.values(B).forEach(b => b.build(scene));
-  { let n = 0; chims.forEach(c => n += c.n); W.chims = chims; W.smokeMat = new THREE.MeshBasicMaterial({ color: '#f1ecf2', transparent: true, opacity: 0.86 });
-    W.smoke = new THREE.InstancedMesh(Sph(1, 10, 8), W.smokeMat, n); W.smoke.frustumCulled = false; const z0 = new THREE.Matrix4().makeScale(0, 0, 0); for (let i = 0; i < n; i++) W.smoke.setMatrixAt(i, z0); scene.add(W.smoke); }
+  { let n = 0; chims.forEach(c => n += c.n); W.chims = chims; // 굴뚝 연기 — 부드러운 연기 알갱이(포인트 스프라이트)
+    const P = new Float32Array(n * 3), SZ = new Float32Array(n), AL = new Float32Array(n);
+    const g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.BufferAttribute(P, 3));
+    g.setAttribute('aSize', new THREE.BufferAttribute(SZ, 1));
+    g.setAttribute('aAlpha', new THREE.BufferAttribute(AL, 1));
+    W.smokeMat = new THREE.ShaderMaterial({
+      uniforms: { map: { value: TEX.puff }, tint: { value: new THREE.Color('#e7ebf7') } },
+      vertexShader: 'attribute float aSize; attribute float aAlpha; varying float vA; void main(){ vA = aAlpha; vec4 mv = modelViewMatrix * vec4(position,1.0); gl_PointSize = aSize * (420.0 / max(1.0, -mv.z)); gl_Position = projectionMatrix * mv; }',
+      fragmentShader: 'uniform sampler2D map; uniform vec3 tint; varying float vA; void main(){ vec4 t = texture2D(map, gl_PointCoord); if (t.a < 0.01) discard; gl_FragColor = vec4(tint, t.a * vA); \n#include <colorspace_fragment>\n }',
+      transparent: true, depthWrite: false, fog: false
+    });
+    W.smoke = new THREE.Points(g, W.smokeMat); W.smoke.frustumCulled = false; scene.add(W.smoke); }
   if (lines.length) { const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(lines, 3)); const l = new THREE.LineSegments(g, new THREE.LineBasicMaterial({ color: '#39405a' })); l.frustumCulled = false; scene.add(l); }
   const glowPts = (arr, size) => { const n = arr.length / 4, P = new Float32Array(n * 3), C = new Float32Array(n * 3), c = new THREE.Color(); for (let i = 0; i < n; i++) { P[i * 3] = arr[i * 4]; P[i * 3 + 1] = arr[i * 4 + 1]; P[i * 3 + 2] = arr[i * 4 + 2]; c.set(arr[i * 4 + 3]); C[i * 3] = c.r; C[i * 3 + 1] = c.g; C[i * 3 + 2] = c.b; } const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(P, 3)); g.setAttribute('color', new THREE.BufferAttribute(C, 3)); const m = new THREE.Points(g, new THREE.PointsMaterial({ map: TEX.glow, size, vertexColors: true, blending: THREE.AdditiveBlending, depthWrite: false, transparent: true, fog: false })); m.frustumCulled = false; scene.add(m); return m; };
   W.gS = glowPts(W.glowS, 1.9); W.gB = glowPts(W.glowB, 7);
@@ -1673,7 +1727,7 @@ function buildWorld(scene) {
     skyMat.uniforms.top.value.copy(a[1]).lerp(b[1], t); skyMat.uniforms.hor.value.copy(a[2]).lerp(b[2], t); scene.fog.color.copy(a[3]).lerp(b[3], t); W.sun.color.copy(a[4]).lerp(b[4], t); W.sun.intensity = lerp(a[5], b[5], t); W.hemi.intensity = lerp(a[6], b[6], t); W.hemi.color.copy(a[7]).lerp(b[7], t); W.hemi.groundColor.copy(W.hemi.color).multiplyScalar(0.8);
     const n = W.night = sst(0.42, 0.84, p); scene.fog.far = lerp(560, 430, n);
     W.winMat.color.copy(wDay).lerp(wNight, sst(0.1, 0.7, n)); W.bulbMat.color.setScalar(lerp(0.82, 1, n)); W.gS.material.opacity = lerp(0.35, 1, n); W.gS.material.size = lerp(1.5, 2.6, n); W.gB.material.opacity = lerp(0.12, 0.9, n); W.gB.material.size = lerp(5, 9, n);
-    W.stars.material.opacity = sst(0.5, 1, n); W.smokeMat.color.set('#f1ecf2').lerp(tmp.set('#a9a6c4'), n); if (W.warm) W.warm.intensity = 70 * sst(0.3, 0.9, n); if (W.treeLight) W.treeLight.intensity = 95 * sst(0.3, 0.9, n); if (W.starLight) W.starLight.intensity = 85 * sst(0.3, 0.9, n); W.aurora.material.uniforms.op.value = sst(0.5, 0.95, n); W.signMats.forEach(m => m.color.setScalar(lerp(1, 0.86, n))); };
+    W.stars.material.opacity = sst(0.5, 1, n); W.smokeMat.uniforms.tint.value.set('#e7ebf7').lerp(tmp.set('#9a97b6'), n); if (W.warm) W.warm.intensity = 70 * sst(0.3, 0.9, n); if (W.treeLight) W.treeLight.intensity = 95 * sst(0.3, 0.9, n); if (W.starLight) W.starLight.intensity = 85 * sst(0.3, 0.9, n); W.aurora.material.uniforms.op.value = sst(0.5, 0.95, n); W.signMats.forEach(m => m.color.setScalar(lerp(1, 0.86, n))); };
   // ---------- 파티클 ----------
   const pts = (n, size, map, add, colors) => { const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(new Float32Array(n * 3).fill(-9999), 3)); if (colors) g.setAttribute('color', new THREE.BufferAttribute(new Float32Array(n * 3), 3)); const m = new THREE.Points(g, new THREE.PointsMaterial({ map, size, transparent: true, depthWrite: false, vertexColors: !!colors, blending: add ? THREE.AdditiveBlending : THREE.NormalBlending, fog: !add, opacity: 0.9 })); m.frustumCulled = false; scene.add(m); return m; };
   const NSN = 2300, snowO = new Float32Array(NSN * 4); for (let i = 0; i < NSN * 4; i++) snowO[i] = r(); W.snow = pts(NSN, 0.34, TEX.glow);
@@ -1685,8 +1739,18 @@ function buildWorld(scene) {
   const sm4 = new THREE.Matrix4(), sq = new THREE.Quaternion(), sv = new THREE.Vector3(), ss = new THREE.Vector3();
   W.update = (dt, time, cam, ps) => {
     if (ps > 1480) { // 굴뚝 연기 · 마을 사람들
-      let k = 0; for (let i = 0; i < W.chims.length; i++) { const c = W.chims[i]; for (let j = 0; j < c.n; j++, k++) { const f = (time * 0.2 + i * 0.37 + j / c.n) % 1, sc = c.sc * (0.32 + 0.9 * f) * sst(0, 0.1, f) * (1 - sst(0.72, 1, f)); sv.set(c.p.x + (Math.sin(time * 0.7 + i + j) * 0.25 + 1.3 * f) * f * c.sc * 1.6, c.p.y + f * 5.2 * c.sc, c.p.z + Math.cos(time * 0.5 + i * 2 + j) * 0.3 * f * c.sc); sm4.compose(sv, sq, ss.setScalar(sc)); W.smoke.setMatrixAt(k, sm4); } }
-      W.smoke.instanceMatrix.needsUpdate = true;
+      const PA = W.smoke.geometry.attributes.position.array, SZA = W.smoke.geometry.attributes.aSize.array, ALA = W.smoke.geometry.attributes.aAlpha.array;
+      let k = 0; for (let i = 0; i < W.chims.length; i++) { const c = W.chims[i]; for (let j = 0; j < c.n; j++, k++) {
+        const f = (time * 0.17 + i * 0.37 + j / c.n) % 1;
+        PA[k * 3] = c.p.x + (Math.sin(time * 0.6 + i + j) * 0.28 + 0.85 * f) * f * c.sc * 1.5;
+        PA[k * 3 + 1] = c.p.y + f * 6.2 * c.sc;
+        PA[k * 3 + 2] = c.p.z + Math.cos(time * 0.5 + i * 2 + j) * 0.3 * f * c.sc;
+        SZA[k] = c.sc * 3.6 * (1.0 + 2.2 * f) * sst(0, 0.1, f);
+        ALA[k] = 0.62 * sst(0, 0.14, f) * (1 - sst(0.5, 1, f));
+      } }
+      W.smoke.geometry.attributes.position.needsUpdate = true;
+      W.smoke.geometry.attributes.aSize.needsUpdate = true;
+      W.smoke.geometry.attributes.aAlpha.needsUpdate = true;
       for (const g of W.villagers) { const u = g.userData, t = time + u.ph, [aL, aR] = u.arms; u.head.rotation.z = Math.sin(t * 1.5) * 0.07; u.body.position.y = Math.abs(Math.sin(t * 2)) * 0.03;
         if (u.anim === 'reach') { aR.rotation.x = -2.5 + Math.sin(t * 2.4) * 0.28; aL.rotation.x = -0.5; u.head.rotation.x = -0.28; }
         else if (u.anim === 'wave') { aR.rotation.z = 2.5 + Math.sin(t * 9) * 0.38; u.body.rotation.z = Math.sin(t * 4.5) * 0.05; }
@@ -1820,7 +1884,7 @@ function menuBgm(on) {
   } catch (e) { }
 }
 // 3D 트리 보기 전용 BGM — O Christmas Tree (미 공군 Heartland of America Band 'Raptor' 재즈 연주, PD-USGov)
-const TREE_BGM = { file: './audio/tree-o-christmas-tree.mp3' };
+const TREE_BGM = { file: './audio/tree-o-christmas-tree.mp3', title: 'O Christmas Tree' };
 const TGA = new Audio();
 TGA.loop = true; TGA.preload = 'auto'; TGA.volume = BGM_VOL * 0.62; TGA.muted = true;
 TGA.setAttribute('playsinline', ''); TGA.setAttribute('webkit-playsinline', '');
@@ -1831,6 +1895,7 @@ function prepareTreeBgm() {
   try { if (!TGA.getAttribute('src')) { TGA.src = new URL(TREE_BGM.file, location.href).href; } if (TGA.preload !== 'auto') TGA.preload = 'auto'; if (!TGA.readyState) TGA.load(); } catch (e) { }
 }
 function treeBgm(on) {
+  try { nowPlayRefresh(); } catch (e) { }
   try {
     if (!on) { TGA.pause(); return; }
     if (AU.muted) { TGA.muted = true; TGA.pause(); return; }
@@ -1839,6 +1904,7 @@ function treeBgm(on) {
     TGA.muted = false; TGA.volume = BGM_VOL * 0.62;
     if (TGA.paused) { const p = TGA.play(); if (p && p.catch) p.catch(() => { if (!tgaUnlocked) tgaUnlockNow(); }); }
   } catch (e) { }
+  try { nowPlayRefresh(); } catch (e) { }
 }
 function tgaUnlockNow() { // 사용자 제스처 안에서만 호출 — 무음으로 한 번 재생해 iOS의 오디오 잠금을 풀어 둔다
   if (tgaUnlocked || tgaUnlockPending) return;
@@ -1919,7 +1985,7 @@ function auInit() {
   AU.music = c.createGain(); AU.music.gain.value = 0.55; AU.music.connect(AU.master);
   auResume();
 }
-function auMute(m) { AU.muted = m; BGA.muted = m; MGA.muted = m; try { TGA.muted = m; if (m) TGA.pause(); else if (G.treeView) treeBgm(true); } catch (e) { } if (m) MGA.pause(); else if (G.state === 'menu') menuBgm(true); try { localStorage.setItem('sledMute', m ? '1' : '0'); } catch (e) { } if (AU.master) AU.master.gain.setTargetAtTime(m ? 0 : 0.85, AU.ctx.currentTime, 0.03); }
+function auMute(m) { AU.muted = m; BGA.muted = m; MGA.muted = m; try { TGA.muted = m; if (m) TGA.pause(); else if (G.treeView) treeBgm(true); } catch (e) { } if (m) MGA.pause(); else if (G.state === 'menu') menuBgm(true); try { localStorage.setItem('sledMute', m ? '1' : '0'); } catch (e) { } if (AU.master) AU.master.gain.setTargetAtTime(m ? 0 : 0.85, AU.ctx.currentTime, 0.03); try { nowPlayRefresh(); } catch (e) { } }
 function tone(f, t0, dur, type, vol, dest, f2) { const c = AU.ctx; if (!c) return; const o = c.createOscillator(), g = c.createGain(); o.type = type || 'sine'; o.frequency.setValueAtTime(f, t0); if (f2) o.frequency.exponentialRampToValueAtTime(f2, t0 + dur); g.gain.setValueAtTime(0.0001, t0); g.gain.exponentialRampToValueAtTime(vol, t0 + 0.012); g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur); o.connect(g); g.connect(dest || AU.master); o.start(t0); o.stop(t0 + dur + 0.05); }
 function nzSweep(t0, dur, f0, f1, q, vol, type, dest) { // 필터 주파수를 훑는 노이즈 (휙 지나가는 바람소리)
   const c = AU.ctx; if (!c) return; const s = c.createBufferSource(); s.buffer = AU.noise; s.loop = true;
@@ -2055,6 +2121,7 @@ function bgmCelebrate() { // 결승 통과: 레이스 캐럴에서 세리머니 
   AU.celeb = true; AU.celebI = 0;
   bgm(true);
   bgmDuck(2200);
+  try { nowPlayRefresh(); } catch (e) { }
 }
 function auEngine(v, ground, mute) { if (!AU.ctx) return; const t = AU.ctx.currentTime, k = mute ? 0 : 1; AU.sled.g.gain.setTargetAtTime(k * (ground ? Math.min(0.18, v / 183) : 0), t, 0.05); AU.sled.bq.frequency.setTargetAtTime(700 + v * 30, t, 0.1); AU.wind.g.gain.setTargetAtTime(k * Math.min(0.25, v * v / 6400), t, 0.1); AU.wind.bq.frequency.setTargetAtTime(300 + v * 14, t, 0.1); }
 
@@ -2162,7 +2229,7 @@ function setCam(dt, snap) {
   else if (st === 'intro') { menuCam(G.time); chaseCam(dt, true); const e = sst(0, 1, G.introT / 2.6), b = Math.sin(e * Math.PI); cam.pos.lerpVectors(mC.pos, cT.pos, e); cam.pos.y += b * 1.8; cam.look.lerpVectors(mC.look, cT.look, e); cam.fov = lerp(mC.fov, cT.fov, e); oP.copy(cam.pos); oL.copy(cam.look); fov = cam.fov; off = mC.off * (1 - e); }
   else { chaseCam(dt, snap); const k = snap ? 1 : 1 - Math.exp(-9 * dt); cam.pos.lerp(cT.pos, k); cam.look.lerp(cT.look, snap ? 1 : 1 - Math.exp(-12 * dt)); cam.fov += (cT.fov - cam.fov) * (snap ? 1 : Math.min(1, dt * 4)); oP.copy(cam.pos); oL.copy(cam.look); fov = cam.fov;
     if (G.treeView) { // 결승 대형 트리 ↔ 오두막을 둘러보는 카메라
-      const yaw = (G.treeBaseAng || 0) + (G.orbitYaw || 0), pit = Math.max(-0.35, Math.min(0.9, G.orbitPitch || 0)), treeH = treeTopY() + 2.6, wide = innerWidth / innerHeight > 1.15, dist = clamp(G.orbitDist || treeH * (wide ? 1.58 : 1.36), 4.5, 70);
+      const yaw = (G.treeBaseAng || 0) + (G.orbitYaw || 0), pit = Math.max(-0.5, Math.min(1.18, G.orbitPitch || 0)), treeH = treeTopY() + 2.6, wide = innerWidth / innerHeight > 1.15, dist = clamp(G.orbitDist || treeH * (wide ? 1.58 : 1.36), 4.5, 70);
       wpos(2112, 0, 0, eP);
       const fy = G.orbitFocus == null ? 0.45 : G.orbitFocus;
       let ty = eP.y + 1.2 + fy * (treeH - 1.9); // 시선 높이: 트리 발치 선물상자(아래) ~ 꼭대기 별(위)
@@ -2172,6 +2239,7 @@ function setCam(dt, snap) {
         const tyH = eP2.y + (fy - 0.45) * 9;
         eP.lerp(eP2, mix);
         ty = ty * (1 - mix) + tyH * mix;
+        if (mix > 0) ty = Math.max(eP2.y + 0.6, ty); // 오두막 앞에선 눈밭·마스코트까지 내려다볼 수 있게
       }
       const pitEff = pit - Math.max(0, 0.45 - fy) * (wide ? 0.5 : 0.58); // 아래를 볼 땐 카메라도 낮춰 가지 밑을 가리지 않게
       oP.set(eP.x + Math.sin(yaw) * Math.cos(pitEff) * dist, ty + Math.sin(pitEff) * dist, eP.z + Math.cos(yaw) * Math.cos(pitEff) * dist);
@@ -2182,7 +2250,7 @@ function setCam(dt, snap) {
       const e = sst(0.4, 4.2, G.finT), sw = Math.sin(G.time * 0.22), wide = innerWidth / innerHeight > 1.15;
       wpos(2049.5 - sw * 0.8, 5.4 + sw * 1.1, 4.5, eP); wpos(2079, -0.6, 3.4, eL); oP.lerp(eP, e); oL.lerp(eL, e); fov = lerp(fov, wide ? 43 : 58, e);
       if (G.orbitYaw || G.orbitPitch) {
-        const oy = G.orbitYaw || 0, op = Math.max(-0.05, Math.min(0.72, G.orbitPitch || 0));
+        const oy = G.orbitYaw || 0, op = Math.max(-0.18, Math.min(1.05, G.orbitPitch || 0));
         const dx = eP.x - eL.x, dz = eP.z - eL.z, dist = Math.sqrt(dx * dx + dz * dz) || 30;
         const baseA = Math.atan2(dx, dz);
         oP.x = eL.x + Math.sin(baseA + oy) * Math.cos(op) * dist;
@@ -2201,6 +2269,22 @@ function setCam(dt, snap) {
 // ---------- UI ----------
 function pop(txt, cls) { const p = document.createElement('div'); p.className = 'pop ' + (cls || ''); p.textContent = txt; p.style.top = (-(Math.random() * 30)) + 'px'; $('#pops').appendChild(p); setTimeout(() => p.remove(), 1300); }
 function toast(name, sub) { const t = $('#toast'); t.innerHTML = `<small>${sub}</small>${name}`; t.classList.add('on'); clearTimeout(toast.h); toast.h = setTimeout(() => t.classList.remove('on'), 2400); }
+// 지금 흐르는 음악 — 상단 작은 주크박스 배지 (영어 제목만, 무음이면 숨김)
+function nowPlaySet(title) {
+  const el = $('#nowPlay'); if (!el) return;
+  const b = el.querySelector('b');
+  if (!title) { el.classList.remove('on'); return; }
+  if (b && b.textContent !== title) b.textContent = title;
+  el.classList.add('on');
+}
+function nowPlayRefresh() {
+  try {
+    if (AU.muted) return nowPlaySet('');
+    if (G.treeView) return nowPlaySet(TREE_BGM.title);
+    if (AU.celeb && (G.state === 'finish' || G.state === 'result')) return nowPlaySet(CELEB[(AU.celebI || 0) % CELEB.length].name);
+    nowPlaySet('');
+  } catch (e) { }
+}
 function setName(v) {
   G.pname = String(v || '').trim().slice(0, 10);
   try { if (G.pname) localStorage.setItem('sledName', G.pname); else localStorage.removeItem('sledName'); } catch (e) { }
@@ -3619,7 +3703,7 @@ function showResult() {
   };
   G.updateResultRoster = updateResultRoster;
   updateResultRoster();
-  $('#rStats').innerHTML = [['시간', fmt(p.time)], ['선물', p.gifts + '개'], ['기문', p.gates + '/' + COURSE.gates.length], ['트릭', p.tricks + '회'], ['최고속도', Math.round(p.vmax * 3.6) + 'km/h'], ['순위 보너스', '+' + sc.bonus], ['난이도 보너스', '+' + sc.diffBonus]].map(([a, b]) => `<div>${a}<b>${b}</b></div>`).join('');
+  $('#rStats').innerHTML = [['시간', fmt(p.time)], ['선물', p.gifts + '개'], ['깃발 통과', p.gates + '/' + COURSE.gates.length], ['트릭', p.tricks + '회'], ['최고속도', Math.round(p.vmax * 3.6) + 'km/h'], ['순위 보너스', '+' + sc.bonus], ['난이도 보너스', '+' + sc.diffBonus]].map(([a, b]) => `<div>${a}<b>${b}</b></div>`).join('');
   $('#rTotal').textContent = sc.total; const b = getBest(); let msg;
   if (!b || sc.total > b.score) { try { localStorage.setItem('sledBest', JSON.stringify({ score: sc.total, time: p.time, diff: G.diff })); } catch (e) { } msg = '내 최고 기록을 새로 썼어요. 이름을 남겨 보세요.'; } else msg = `내 최고 기록 <span class="num">${b.score}</span>점 · 이름을 남기면 순위표에 올라가요.`;
   $('#rBest').innerHTML = msg; G.last = { score: sc.total, time: p.time }; G.saved = 0;
@@ -3658,8 +3742,8 @@ function events() {
   for (const e of R.events) {
     if (e.t === 'gift') { SFX.gift(); pop('선물 +50', 'gold'); W.emit(W.giftPos[e.i], 0, 3, 0, 8, 5); }
     else if (e.t === 'star') { SFX.boost(); SFX.gift(); pop('터보 스타!', 'gold'); W.emit(W.starPos[e.i], 0, 4, 0, 16, 8); }
-    else if (e.t === 'gate') { SFX.gate(); pop('기문 통과 +30', 'blue'); }
-    else if (e.t === 'miss') { SFX.miss(); pop('기문 놓침 +2초', 'bad'); }
+    else if (e.t === 'gate') { SFX.gate(); pop('깃발 통과 +30', 'blue'); }
+    else if (e.t === 'miss') { SFX.miss(); pop('깃발 놓침 +2초', 'bad'); }
     else if (e.t === 'jump') SFX.jump();
     else if (e.t === 'boost') { SFX.boost(); pop('부스트!', 'gold'); }
     else if (e.t === 'land') { SFX.land(e.kind); wpos(p.s, p.u, 0, fxV); W.emit(fxV, 0, 4, 0, 26, 9); if (e.kind === 'perfect') pop(e.spins ? `퍼펙트! ${e.spins}회전 +${100 + e.spins * 200}` : '퍼펙트 착지 +100', 'gold'); else if (e.kind === 'wobble') pop('흔들!', 'bad'); else if (e.kind === 'miss') pop('미스…', 'bad'); }
@@ -3690,8 +3774,8 @@ function frame_(dt) {
         const d = keys['ArrowDown'] || keys['KeyS'] || touch.b;
         if (l) { G.autoSpin = false; G.orbitYaw = (G.orbitYaw || 0) - dt * 2.2; }
         if (r) { G.autoSpin = false; G.orbitYaw = (G.orbitYaw || 0) + dt * 2.2; }
-        if (u) { G.autoSpin = false; G.orbitPitch = Math.min(0.72, (G.orbitPitch || 0) + dt * 1.5); }
-        if (d) { G.autoSpin = false; G.orbitPitch = Math.max(-0.05, (G.orbitPitch || 0) - dt * 1.5); }
+        if (u) { G.autoSpin = false; G.orbitPitch = Math.min(1.05, (G.orbitPitch || 0) + dt * 1.5); }
+        if (d) { G.autoSpin = false; G.orbitPitch = Math.max(-0.18, (G.orbitPitch || 0) - dt * 1.5); }
       }
     }
     // 눈 튀김 · 자국
@@ -3809,10 +3893,10 @@ boot().catch(e => { console.error(e); const l = $('#loading'); l.classList.remov
       const dy = e.clientY - dragY;
       G.orbitYaw = startYaw - (e.clientX - dragX) * 0.008; // 손가락을 따라 트리가 같이 돌아가게(모바일 직관)
       if (window.G && G.treeView) {
-        G.orbitPitch = Math.max(-0.35, Math.min(0.9, startPitch - dy * 0.0008));
+        G.orbitPitch = Math.max(-0.5, Math.min(1.18, startPitch - dy * 0.0011));
         G.orbitFocus = Math.max(0, Math.min(1, startFocus + dy * 0.0016)); // 위로 끌면 위쪽, 아래로 끌면 선물상자 쪽
       } else {
-        G.orbitPitch = Math.max(-0.05, Math.min(0.8, startPitch + dy * 0.006));
+        G.orbitPitch = Math.max(-0.18, Math.min(1.05, startPitch + dy * 0.006));
       }
     }
   });
