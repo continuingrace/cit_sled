@@ -1488,7 +1488,7 @@ function buildWorld(scene) {
       }
     });
     // 발치 선물 상자 · 눈 묻은 낮은 울타리 (다른 나무와 구분되는 광장)
-    giftPile(2111.5, 3.4, 4, 2.2); giftPile(2111.0, -3.8, 4, 2.2); giftPile(2108.4, 1.2, 3, 1.8); giftPile(2115.2, -1.4, 3, 1.9); giftPile(2114.6, 4.4, 2, 1.4);
+    giftPile(2111.5, 5.6, 4, 2.2); giftPile(2111.0, -6.0, 4, 2.2); giftPile(2108.4, 3.2, 3, 1.8); giftPile(2115.2, -3.6, 3, 1.9); giftPile(2114.6, 6.8, 2, 1.4);
     const gT = terrH(2112, 0), gy = (x) => terrH(2112, x) - gT; // 발치 지형 높이 보정
     for (let k2 = 0; k2 < 18; k2++) {
       const a2 = k2 / 18 * Math.PI * 2, rr2 = 10.6, x2 = Math.cos(a2) * rr2, z2 = Math.sin(a2) * rr2, y2 = gy(x2);
@@ -2162,7 +2162,7 @@ function setCam(dt, snap) {
       const yaw = (G.treeBaseAng || 0) + (G.orbitYaw || 0), pit = Math.max(-0.35, Math.min(0.9, G.orbitPitch || 0)), treeH = treeTopY() + 2.6, wide = innerWidth / innerHeight > 1.15, dist = clamp(G.orbitDist || treeH * (wide ? 1.58 : 1.36), 4.5, 70);
       wpos(2112, 0, 0, eP);
       const fy = G.orbitFocus == null ? 0.45 : G.orbitFocus;
-      let ty = eP.y + 1.0 + fy * (treeH - 1.6); // 시선 높이: 선물상자(아래) ~ 꼭대기 별(위)
+      let ty = eP.y + 1.2 + fy * (treeH - 1.9); // 시선 높이: 트리 발치 선물상자(아래) ~ 꼭대기 별(위)
       const mix = Math.max(0, Math.min(1, G.spotMix || 0));
       if (mix > 0) { // 🏠 오두막·장학이벤트 팻말 쪽으로 부드럽게 비행
         wpos(2076.5, 0, 2.4, eP2);   // 오두막 앞(포치) 중앙
@@ -2173,7 +2173,7 @@ function setCam(dt, snap) {
       const pitEff = pit - Math.max(0, 0.45 - fy) * (wide ? 0.5 : 0.58); // 아래를 볼 땐 카메라도 낮춰 가지 밑을 가리지 않게
       oP.set(eP.x + Math.sin(yaw) * Math.cos(pitEff) * dist, ty + Math.sin(pitEff) * dist, eP.z + Math.cos(yaw) * Math.cos(pitEff) * dist);
       oL.set(eP.x, ty, eP.z);
-      if (oP.y < eP.y + 0.4) oP.y = eP.y + 0.4; // 땅 아래로 파고들지 않게
+      if (oP.y < eP.y + 1.8) oP.y = eP.y + 1.8; // 발치 선물·조명을 눈높이에서 볼 수 있게, 지면 아래로는 내려가지 않음
       fov = wide ? 48 : 62;
     } else if (st === 'finish' || st === 'result') { // 오두막 앞 마지막 장면으로 천천히 이동
       const e = sst(0.4, 4.2, G.finT), sw = Math.sin(G.time * 0.22), wide = innerWidth / innerHeight > 1.15;
