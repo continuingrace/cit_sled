@@ -2772,7 +2772,7 @@ const ORN_GEO = {
   ring: new THREE.TorusGeometry(0.045, 0.012, 6, 12),
   star: starGeo3D(0.26, 0.075, 0.42),
   cane: new THREE.TubeGeometry(new THREE.CatmullRomCurve3([[0, -0.06, 0], [0, 0.24, 0], [0.02, 0.38, 0], [0.1, 0.44, 0], [0.18, 0.38, 0], [0.2, 0.3, 0]].map(q => new THREE.Vector3(q[0], q[1], q[2]))), 22, 0.06, 7),
-  bow: merge([bake(new THREE.SphereGeometry(1, 12, 8), '#ffffff', MX(-0.13, 0.02, 0, 0.14, 0.1, 0.06)), bake(new THREE.SphereGeometry(1, 12, 8), '#ffffff', MX(0.13, 0.02, 0, 0.14, 0.1, 0.06)), bake(new THREE.SphereGeometry(1, 10, 8), '#ffffff', MX(0, 0, 0.03, 0.055, 0.055, 0.055)), bake(Box, '#ffffff', MX(-0.09, -0.14, 0, 0.05, 0.16, 0.03, 0, 0, 0.3)), bake(Box, '#ffffff', MX(0.09, -0.14, 0, 0.05, 0.16, 0.03, 0, 0, -0.3))]),
+  bow: merge([bake(new THREE.SphereGeometry(1, 12, 8), '#ffffff', MX(-0.13, 0.02, 0, 0.14, 0.1, 0.06)), bake(new THREE.SphereGeometry(1, 12, 8), '#ffffff', MX(0.13, 0.02, 0, 0.14, 0.1, 0.06)), bake(new THREE.SphereGeometry(1, 10, 8), '#ffffff', MX(0, 0, 0.03, 0.055, 0.055, 0.055)), bake(new THREE.BoxGeometry(1, 1, 1), '#ffffff', MX(-0.09, -0.14, 0, 0.05, 0.16, 0.03, 0, 0, 0.3)), bake(new THREE.BoxGeometry(1, 1, 1), '#ffffff', MX(0.09, -0.14, 0, 0.05, 0.16, 0.03, 0, 0, -0.3))]),
   thread: new THREE.CylinderGeometry(0.008, 0.008, 1, 5)
 };
 const ORN_MAT = {
