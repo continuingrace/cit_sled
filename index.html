@@ -297,7 +297,9 @@ body.paused *{animation-play-state:paused!important}
 #nowPlay{position:fixed;left:14px;top:calc(14px + env(safe-area-inset-top,0px));z-index:17;display:none;align-items:center;gap:6px;max-width:min(58vw,300px);padding:6px 12px 6px 10px;border-radius:999px;background:rgba(11,17,34,.55);border:1px solid rgba(255,255,255,.14);box-shadow:0 8px 22px rgba(4,8,26,.34);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);color:#eef1fa;font-family:inherit;font-size:12px;font-weight:600;letter-spacing:.01em;pointer-events:none;opacity:.94}
 #nowPlay.on{display:flex}
 #nowPlay i{font-style:normal;font-size:11px;line-height:1;opacity:.85}
+#nowPlay svg{width:12.5px;height:12.5px;flex:none;fill:#f3d58d;filter:drop-shadow(0 0 3px rgba(243,213,141,.45))}
 #nowPlay b{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#nowPlay.under{left:50%;right:auto;transform:translateX(-50%);top:calc(54px + env(safe-area-inset-top,0px));max-width:calc(100vw - 40px)}
 @media (max-width:560px){
   #treeCount{max-width:calc(100vw - 24px);overflow:hidden;text-overflow:ellipsis}
   #nowPlay{left:50%;right:auto;transform:translateX(-50%);top:calc(56px + env(safe-area-inset-top,0px));max-width:calc(100vw - 40px);font-size:11px;padding:5px 11px 5px 9px}
@@ -532,7 +534,7 @@ body.paused *{animation-play-state:paused!important}
 <div id="treebar" class="hidden"><button id="tbBack">← 이전</button><button id="tbSnow">❄️ 눈</button><button id="tbOrn">🎨 꾸미기</button><button id="tbPhoto" title="기념사진" aria-label="기념사진">📸</button><button id="tbSpot" title="오두막 보기" aria-label="오두막 보기">🏠</button><button id="tbCard" class="primary">💌 카드</button></div>
 <div id="treeCount" aria-live="polite"></div>
 <div id="endbar" class="hidden"><button class="btn" id="bSpinToggle">360° 회전</button><button class="btn" id="bPhoto">📸 기념사진</button><button class="btn sub" id="bSnow">❄️ 눈 던지기</button><button class="btn sub" id="bResOpen">결과 보기</button><button class="btn sub" id="bShot2">장면 캡처</button><button class="btn sub" id="bRetry3">한 번 더</button></div>
-<div id="nowPlay" class="hidden" aria-live="off"><i>🎵</i><b></b></div>
+<div id="nowPlay" class="hidden" aria-live="off"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20.2 3.1a1 1 0 0 0-1.17-.78l-9.1 1.9a1 1 0 0 0-.78.98v8.34a3.3 3.3 0 1 0 2 3.02V8.16l7.1-1.48v5.02a3.3 3.3 0 1 0 2 3.02V3.1Z"/></svg><b></b></div>
 <div id="orbitHint" aria-hidden="true">👆 드래그해서 360° 둘러보기 · 팻말 터치</div>
 <div id="cardView" class="modal hidden" aria-hidden="true"><div class="panel cvbox" role="dialog" aria-modal="true" aria-label="트리에 걸린 빈티지 엽서">
   <button type="button" class="cv-x" id="cardViewX" aria-label="엽서 닫기">✕</button>
@@ -2311,6 +2313,7 @@ function toast(name, sub) { const t = $('#toast'); t.innerHTML = `<small>${sub}<
 function nowPlaySet(title) {
   const el = $('#nowPlay'); if (!el) return;
   const b = el.querySelector('b');
+  el.classList.toggle('under', !!(window.G && G.treeView));
   if (!title) { el.classList.remove('on'); el.classList.add('hidden'); return; }
   if (b && b.textContent !== title) b.textContent = title;
   el.classList.remove('hidden'); el.classList.add('on');
@@ -3679,7 +3682,7 @@ function buildUI() {
     if (G.ornMode && G.snowball) setSnow(false);
     const b = $('#tbOrn'); if (b) b.classList.toggle('on', G.ornMode);
     const bar = $('#ornbar'); if (bar) bar.classList.toggle('on', G.ornMode);
-    const tc = $('#treeCount'); if (tc) tc.style.opacity = G.ornMode ? '0' : '';
+    const tc = $('#treeCount'); if (tc) tc.style.opacity = '';
     $('#gl').style.cursor = G.ornMode ? 'copy' : (G.snowball ? 'crosshair' : '');
     const oh = $('#orbitHint');
     if (oh && G.treeView) {
