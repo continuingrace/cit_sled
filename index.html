@@ -3768,14 +3768,14 @@ function ornBowGeom() { // 벨벳 리본 — 둥글게 말린 두 날개 + 주�
       ornV(0.012 * s, 0.010, 0.010), ornV(0.052 * s, 0.052, 0.028), ornV(0.126 * s, 0.082, 0.046),
       ornV(0.198 * s, 0.050, 0.054), ornV(0.206 * s, -0.016, 0.048), ornV(0.150 * s, -0.058, 0.032),
       ornV(0.070 * s, -0.038, 0.016), ornV(0.014 * s, -0.008, 0.008)
-    ], false, 'catmullrom', 0.5), 26, 0.062, 0.015, 8, wingW));
+    ], false, 'catmullrom', 0.5), 26, 0.072, 0.016, 8, wingW));
   });
   [-1, 1].forEach((s, i) => {
     const sp = i ? 0.028 : 0.010;
     parts.push(ribbonGeom(new THREE.CatmullRomCurve3([
       ornV(0.010 * s, -0.012, 0.006), ornV(0.028 * s, -0.098, 0.014), ornV(0.062 * s + sp * s, -0.176, 0.022),
       ornV(0.090 * s + sp * s, -0.246, 0.020), ornV(0.100 * s + sp * s, -0.318, 0.010)
-    ], false, 'catmullrom', 0.5), 24, 0.056, 0.013, 8, t => 1.02 - 0.55 * t));
+    ], false, 'catmullrom', 0.5), 24, 0.062, 0.014, 8, t => 1.02 - 0.55 * t));
   });
   const knot = [];
   for (let i = 0; i < 20; i++) {
@@ -3828,7 +3828,7 @@ const ORN_GEO = {
   thread: new THREE.CylinderGeometry(0.010, 0.010, 1, 6)
 };
 // 트리 전체 샷에서도 또렷하게 보이도록 오너먼트 전체를 1.5배로 (돌출 오프셋도 같이 키움)
-const ORN_SCALE = 1.5, ORN_CANE_S = 1.45 * ORN_SCALE, ORN_BOW_S = 1.02 * ORN_SCALE;
+const ORN_SCALE = 1.5, ORN_CANE_S = 1.45 * ORN_SCALE, ORN_BOW_S = 1.18 * ORN_SCALE;
 ORN_GEO.ball.scale(ORN_SCALE, ORN_SCALE * 1.03, ORN_SCALE);
 ORN_GEO.crown.scale(ORN_SCALE, ORN_SCALE, ORN_SCALE);
 ORN_GEO.hanger.scale(ORN_SCALE, ORN_SCALE, ORN_SCALE);
