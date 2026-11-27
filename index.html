@@ -2994,8 +2994,7 @@ function buildSanta() {
   return g;
 }
 function initSanta() {
-  if (SANTA.group || !scene) return;
-  SANTA.group = buildSanta(); SANTA.group.visible = false; SANTA.group.frustumCulled = false; scene.add(SANTA.group);
+  if (SANTA.group || !scene) return;  SANTA.group = buildSanta(); SANTA.group.visible = false; SANTA.group.frustumCulled = false; scene.add(SANTA.group);
   // 금빛 별가루 꼬리
   const N = 96, pos = new Float32Array(N * 3), col = new Float32Array(N * 3);
   for (let i = 0; i < N; i++) { pos[i * 3 + 1] = -999; }
@@ -3006,6 +3005,7 @@ function initSanta() {
   mat.toneMapped = false;
   const pts = new THREE.Points(geo, mat); pts.frustumCulled = false; scene.add(pts);
   SANTA_TRAIL = { pts, geo, pos, col, life: new Float32Array(N), vel: new Float32Array(N * 3), i: 0, N };
+  try { window.SANTA = SANTA; window.__santaPass = startSanta; } catch (e) { } // 진단용
 }
 function startSanta(t) {
   initSanta(); if (!SANTA.group) return;
@@ -3094,9 +3094,12 @@ const ORN_GEO = {
   star: starGeo3D(0.38, 0.1, 0.42),
   cane: new THREE.TubeGeometry(new THREE.CatmullRomCurve3([[0, -0.06, 0], [0, 0.24, 0], [0.02, 0.38, 0], [0.1, 0.44, 0], [0.18, 0.38, 0], [0.2, 0.3, 0]].map(q => new THREE.Vector3(q[0], q[1], q[2]))), 22, 0.06, 7),
   bow: merge([bake(new THREE.SphereGeometry(1, 12, 8), '#ffffff', MX(-0.13, 0.02, 0, 0.14, 0.1, 0.06)), bake(new THREE.SphereGeometry(1, 12, 8), '#ffffff', MX(0.13, 0.02, 0, 0.14, 0.1, 0.06)), bake(new THREE.SphereGeometry(1, 10, 8), '#ffffff', MX(0, 0, 0.03, 0.055, 0.055, 0.055)), bake(new THREE.BoxGeometry(1, 1, 1), '#ffffff', MX(-0.09, -0.14, 0, 0.05, 0.16, 0.03, 0, 0, 0.3)), bake(new THREE.BoxGeometry(1, 1, 1), '#ffffff', MX(0.09, -0.14, 0, 0.05, 0.16, 0.03, 0, 0, -0.3))]),
-  thread: new THREE.CylinderGeometry(0.01, 0.01, 1, 5)
+  thread: new THREE.CylinderGeometry(0.014, 0.014, 1, 5)
 };
-ORN_GEO.cane.scale(1.45, 1.45, 1.45); ORN_GEO.bow.scale(1.4, 1.4, 1.4);
+// 트리 전체 샷에서도 또렷하게 보이도록 오너먼트 전체를 1.5배로 (돌출 오프셋도 같이 키움)
+const ORN_SCALE = 1.5;
+['ball', 'cap', 'ring', 'star'].forEach(k => ORN_GEO[k].scale(ORN_SCALE, ORN_SCALE, ORN_SCALE));
+ORN_GEO.cane.scale(1.45 * ORN_SCALE, 1.45 * ORN_SCALE, 1.45 * ORN_SCALE); ORN_GEO.bow.scale(1.4 * ORN_SCALE, 1.4 * ORN_SCALE, 1.4 * ORN_SCALE);
 const ORN_MAT = {
   red: new THREE.MeshStandardMaterial({ color: '#d5353c', roughness: 0.16, metalness: 0.45, emissive: '#3a0a0c', emissiveIntensity: 0.4 }),
   gold: new THREE.MeshStandardMaterial({ color: '#f2c65f', roughness: 0.18, metalness: 0.9, emissive: '#4a3408', emissiveIntensity: 0.5 }),
@@ -3106,7 +3109,7 @@ const ORN_MAT = {
   bow: new THREE.MeshStandardMaterial({ color: '#c62b3a', roughness: 0.35, metalness: 0.15, emissive: '#3a0a0e', emissiveIntensity: 0.35 }),
   thread: new THREE.MeshStandardMaterial({ color: '#d9b25c', roughness: 0.4, metalness: 0.65 })
 };
-const ORN_DROP = 0.36, ORN_BALL_R = 0.29, ORN_GAP = 0.1;
+const ORN_DROP = 0.5, ORN_BALL_R = 0.44, ORN_GAP = 0.1;
 const _ornAxis = new THREE.Vector3();
 function ornPlace(o) {
   const n = new THREE.Vector3(o.nx || 0, 0, o.nz || 1); if (n.lengthSq() < 1e-6) n.set(0, 0, 1); n.normalize();
@@ -3140,8 +3143,8 @@ function rebuildOrnaments() {
     arr.forEach(o => {
       const center = ornPlace(o).center;
       bm.push(new THREE.Matrix4().compose(center, I, S));
-      cm.push(new THREE.Matrix4().compose(center.clone().add(new THREE.Vector3(0, 0.29, 0)), I, S));
-      rm.push(new THREE.Matrix4().compose(center.clone().add(new THREE.Vector3(0, 0.37, 0)), I, S));
+      cm.push(new THREE.Matrix4().compose(center.clone().add(new THREE.Vector3(0, 0.44, 0)), I, S));
+      rm.push(new THREE.Matrix4().compose(center.clone().add(new THREE.Vector3(0, 0.56, 0)), I, S));
     });
     mk(ORN_GEO.ball, ORN_MAT[k], bm); mk(ORN_GEO.cap, ORN_MAT.trim, cm); mk(ORN_GEO.ring, ORN_MAT.trim, rm);
   });
@@ -3152,7 +3155,7 @@ function rebuildOrnaments() {
   });
   if (by.cane) mk(ORN_GEO.cane, ORN_MAT.cane, by.cane.map(o => new THREE.Matrix4().compose(ornPlace(o).center, I, S)));
   const tm = ORNS.map(o => {
-    const q = ornPlace(o), ring = q.center.clone().add(new THREE.Vector3(0, 0.39, 0));
+    const q = ornPlace(o), ring = q.center.clone().add(new THREE.Vector3(0, 0.56, 0));
     const dir = ring.clone().sub(q.p), len = Math.max(0.02, dir.length());
     const mid = q.p.clone().lerp(ring, 0.5);
     const quat = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), dir.normalize());
