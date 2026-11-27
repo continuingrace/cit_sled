@@ -272,9 +272,9 @@ body.paused *{animation-play-state:paused!important}
 #cards .vcard:hover{transform:translateY(-1px);box-shadow:inset 0 0 30px rgba(120,95,60,.06),0 12px 24px rgba(45,30,15,.12)}
 #cards .vcard:active{transform:scale(.985)}
 #cards .vcard:focus-visible{outline:2px solid rgba(124,35,41,.5);outline-offset:2px}
-#cards .vcard .vc-own{position:relative;display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:1px;padding-top:8px;border-top:1px dashed;border-color:currentColor;opacity:.95}
+#cards .vcard .vc-own{position:relative;display:block;margin-top:1px;padding-top:8px;border-top:1px dashed;border-color:currentColor;opacity:.95}
 #cards .vcard .vc-mine{font-size:9px;font-weight:700;letter-spacing:.08em;opacity:.55}
-#cards .vcard .vc-share{display:inline-flex;align-items:center;gap:5px;padding:6px 11px;border-radius:999px;border:1px solid;border-color:currentColor;background:rgba(255,255,255,.4);color:inherit;font-family:inherit;font-size:10.5px;font-weight:700;letter-spacing:.01em;cursor:pointer;opacity:.9}
+#cards .vcard .vc-share{display:flex;align-items:center;justify-content:center;width:100%;box-sizing:border-box;padding:8px 6px;border-radius:999px;border:1px solid;border-color:currentColor;background:rgba(255,255,255,.42);color:inherit;font-family:inherit;font-size:11px;font-weight:800;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;cursor:pointer;opacity:.92}
 #cards .vcard .vc-share:hover{opacity:1}
 #cards .vcard .vc-share:active{transform:scale(.97)}
 #cards .vin-empty{grid-column:1/-1;margin:0;text-align:center;font-size:12px;font-weight:500;line-height:1.7;color:var(--iv-sub);padding:22px 6px}
@@ -348,9 +348,9 @@ body.paused *{animation-play-state:paused!important}
 #cardView .cv-from{font-weight:700;max-width:64%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 #cardView .cv-to{max-width:48%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:right}
 #cardView .cv-when{font-size:10.5px;font-weight:600;letter-spacing:.04em;color:var(--cv-soft);opacity:.8;text-align:right}
-#cardView .cv-own{display:flex;align-items:center;justify-content:space-between;gap:8px;border-top:1px dashed var(--cv-line);padding-top:10px;font-size:10.5px;font-weight:700;letter-spacing:.06em;color:var(--cv-soft)}
+#cardView .cv-own{display:flex;flex-direction:column;align-items:stretch;gap:7px;border-top:1px dashed var(--cv-line);padding-top:10px;font-size:10.5px;font-weight:700;letter-spacing:.06em;color:var(--cv-soft)}
 #cardView .cv-own.hidden{display:none}
-#cardView .cv-share{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:999px;border:1px solid rgba(124,35,41,.4);background:rgba(255,255,255,.55);color:#6f2b30;font-family:inherit;font-size:12px;font-weight:800;cursor:pointer}
+#cardView .cv-share{display:flex;align-items:center;justify-content:center;width:100%;box-sizing:border-box;padding:10px 12px;border-radius:999px;border:1px solid rgba(124,35,41,.4);background:rgba(255,255,255,.55);color:#6f2b30;font-family:inherit;font-size:12.5px;font-weight:800;white-space:nowrap;cursor:pointer}
 #cardView .cv-share:hover{background:#fff}
 #treebar button.on{background:linear-gradient(180deg,#eaf6ff,#bcdcf5);color:#12233d;border-color:rgba(255,255,255,.62);box-shadow:0 12px 28px rgba(120,190,240,.36)}
 #endbar button.btn.on{background:linear-gradient(180deg,#eaf6ff,#bcdcf5);color:#12233d;border-color:rgba(255,255,255,.62)}
@@ -2384,7 +2384,7 @@ function paintCards() {
       + '<p class="vc-msg">' + esc(c.message) + '</p>'
       + '<div class="vc-foot"><b>From. ' + esc(c.name) + '</b><span>To. ' + esc(c.toName || '모두에게') + '</span></div>'
       + '<div class="vc-when">' + esc(cardWhen(c.createdAt)) + '</div>'
-      + (myCardById(c.id) ? '<div class="vc-own"><span class="vc-mine">내 카드</span><button type="button" class="vc-share" data-card-id="' + (c.id | 0) + '">💌 공유하기</button></div>' : '')
+      + (myCardById(c.id) ? '<div class="vc-own"><button type="button" class="vc-share" data-card-id="' + (c.id | 0) + '">💌 내 카드 공유하기</button></div>' : '')
       + '</article>';
   }).join('');
 }
