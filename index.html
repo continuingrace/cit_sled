@@ -1223,7 +1223,7 @@ function buildWorld(scene) {
   {
     const parts = [], lo = new THREE.Color('#7f94bd'), hi = new THREE.Color('#ffffff');
     for (let s = -150; s < 2420; s += 70) for (const sd of [-1, 1]) {
-      const d = 175 + r() * 190, rad = 70 + r() * 80, h = 90 + r() * 130, g = new THREE.ConeGeometry(rad, h, 9, 5).toNonIndexed(), p = g.attributes.position, col = new Float32Array(p.count * 3);
+      const dBase = 175 + r() * 190, plaza = s > 1975 && s < 2265, d = dBase * (plaza ? 2.8 : 1), rad = 70 + r() * 80, h = 90 + r() * 130, g = new THREE.ConeGeometry(rad, h, 9, 5).toNonIndexed(), p = g.attributes.position, col = new Float32Array(p.count * 3);
       for (let i = 0; i < p.count; i++) { const y = p.getY(i) / h + 0.5, j = 1 + (h2(p.getX(i) * 0.31, p.getZ(i) * 0.17 + y) - 0.5) * 0.5 * (1 - y); p.setX(i, p.getX(i) * j); p.setZ(i, p.getZ(i) * j); const t = sst(0.28, 0.62, y + (h2(p.getX(i), p.getZ(i)) - 0.5) * 0.25), cc = lo.clone().lerp(hi, t); col[i * 3] = cc.r; col[i * 3 + 1] = cc.g; col[i * 3 + 2] = cc.b; }
       const t = trk(clamp(s, S0, S1 - 4)); g.applyMatrix4(MX(t.x + Math.cos(t.th) * sd * d + (s < S0 ? 0 : 0), t.y + h / 2 - 22, t.z + Math.sin(t.th) * sd * d - (s > S1 ? (s - S1) : 0) + (s < S0 ? (S0 - s) : 0), 1, 1, 1, 0, r() * 6, 0));
       g.computeVertexNormals(); g.setAttribute('color', new THREE.BufferAttribute(col, 3)); parts.push(g);
@@ -1394,15 +1394,38 @@ function buildWorld(scene) {
         P.push(bake(Sph(0.07, 8, 6), '#f0d091', MX(Math.cos(ang) * rr, yy, Math.sin(ang) * rr)));
       }
     });
-    // 발치 선물 상자
-    giftPile(2111.5, 3.4, 3, 1.8); giftPile(2111.0, -3.6, 3, 1.8); giftPile(2108.8, 1.2, 2, 1.4);
+    // 발치 선물 상자 · 눈 묻은 낮은 울타리 (다른 나무와 구분되는 광장)
+    giftPile(2111.5, 3.4, 4, 2.2); giftPile(2111.0, -3.8, 4, 2.2); giftPile(2108.4, 1.2, 3, 1.8); giftPile(2115.2, -1.4, 3, 1.9); giftPile(2114.6, 4.4, 2, 1.4);
+    const gT = terrH(2112, 0), gy = (x) => terrH(2112, x) - gT; // 발치 지형 높이 보정
+    for (let k2 = 0; k2 < 18; k2++) {
+      const a2 = k2 / 18 * Math.PI * 2, rr2 = 10.6, x2 = Math.cos(a2) * rr2, z2 = Math.sin(a2) * rr2, y2 = gy(x2);
+      P.push(bake(Box, '#9a6b47', MX(x2, y2 + 0.5, z2, 0.14, 1.0, 0.14, 0, -a2, 0)));
+      P.push(bake(Box, '#ffffff', MX(x2, y2 + 1.03, z2, 0.2, 0.08, 0.2, 0, -a2, 0)));
+      const a3 = (k2 + 0.5) / 18 * Math.PI * 2, x3 = Math.cos(a3) * rr2, z3 = Math.sin(a3) * rr2, seg = 2 * Math.PI * rr2 / 18, y3 = gy(x3);
+      P.push(bake(Box, '#a87650', MX(x3, y3 + 0.72, z3, 0.07, 0.09, seg, 0, -a3, 0)));
+      P.push(bake(Box, '#a87650', MX(x3, y3 + 0.38, z3, 0.07, 0.09, seg, 0, -a3, 0)));
+      P.push(bake(Box, '#ffffff', MX(x3, y3 + 0.8, z3, 0.08, 0.04, seg * 0.9, 0, -a3, 0)));
+    }
+    // 트리 발치 눈밭에 번지는 따뜻한 조명
+    { const pcv = document.createElement('canvas'); pcv.width = pcv.height = 128;
+      const pctx = pcv.getContext('2d'), pg = pctx.createRadialGradient(64, 64, 0, 64, 64, 64);
+      pg.addColorStop(0, 'rgba(255,208,142,0.9)'); pg.addColorStop(0.42, 'rgba(255,178,104,0.36)'); pg.addColorStop(1, 'rgba(255,160,90,0)');
+      pctx.fillStyle = pg; pctx.fillRect(0, 0, 128, 128);
+      const poolTex = new THREE.CanvasTexture(pcv);
+      const pool = new THREE.Mesh(new THREE.PlaneGeometry(32, 32), new THREE.MeshBasicMaterial({ map: poolTex, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, opacity: 0.8, fog: false }));
+      pool.rotation.x = -Math.PI / 2; pool.position.copy(PT(F, 0, 0.14, 0)); pool.frustumCulled = false; scene.add(pool);
+      const tl = new THREE.PointLight('#ffbf78', 0, 46, 1.7); tl.position.copy(PT(F, 0, 3.4, 0)); scene.add(tl); W.treeLight = tl; }
     const m = new THREE.Mesh(merge(P), vc); m.matrixAutoUpdate = false; m.matrix.copy(F); m.frustumCulled = false; scene.add(m);
     const gMesh = new THREE.Mesh(merge(goldGeo), new THREE.MeshStandardMaterial({ color: '#f6d896', metalness: 0.25, roughness: 0.45, emissive: '#8a6620', emissiveIntensity: 0.9 }));
     gMesh.matrixAutoUpdate = false; gMesh.matrix.copy(F); gMesh.frustumCulled = false; scene.add(gMesh);
     // 꼭대기 금빛 별
     const sp = PT(F, 0, topY + 2.0, 0);
-    const st = new THREE.Mesh(starGeo5(2.0, 0.5), new THREE.MeshBasicMaterial({ color: '#ffd75a', toneMapped: false, side: THREE.DoubleSide }));
+    const st = new THREE.Mesh(starGeo5(2.3, 0.55), new THREE.MeshBasicMaterial({ color: '#ffdc6a', toneMapped: false, side: THREE.DoubleSide }));
     st.position.copy(sp); st.frustumCulled = false; scene.add(st); W.star = st;
+    const halo = new THREE.Sprite(new THREE.SpriteMaterial({ map: TEX.glow, color: '#ffdf9a', transparent: true, opacity: 0.9, blending: THREE.AdditiveBlending, depthWrite: false, fog: false }));
+    halo.position.copy(sp); halo.scale.set(15, 15, 1); halo.frustumCulled = false; scene.add(halo); W.starHalo = halo;
+    const halo2 = new THREE.Sprite(new THREE.SpriteMaterial({ map: TEX.glow, color: '#fff3c8', transparent: true, opacity: 0.85, blending: THREE.AdditiveBlending, depthWrite: false, fog: false }));
+    halo2.position.copy(sp); halo2.scale.set(6, 6, 1); halo2.frustumCulled = false; scene.add(halo2);
     bigGlow(sp, '#ffe98a'); bigGlow(sp, '#ffd24a');
     W.treeTop = sp.clone();
     W.treeMesh = m; W.treeFrame = F;
@@ -1548,7 +1571,7 @@ function buildWorld(scene) {
     skyMat.uniforms.top.value.copy(a[1]).lerp(b[1], t); skyMat.uniforms.hor.value.copy(a[2]).lerp(b[2], t); scene.fog.color.copy(a[3]).lerp(b[3], t); W.sun.color.copy(a[4]).lerp(b[4], t); W.sun.intensity = lerp(a[5], b[5], t); W.hemi.intensity = lerp(a[6], b[6], t); W.hemi.color.copy(a[7]).lerp(b[7], t); W.hemi.groundColor.copy(W.hemi.color).multiplyScalar(0.8);
     const n = W.night = sst(0.42, 0.84, p); scene.fog.far = lerp(560, 430, n);
     W.winMat.color.copy(wDay).lerp(wNight, sst(0.1, 0.7, n)); W.bulbMat.color.setScalar(lerp(0.82, 1, n)); W.gS.material.opacity = lerp(0.35, 1, n); W.gS.material.size = lerp(1.5, 2.6, n); W.gB.material.opacity = lerp(0.12, 0.9, n); W.gB.material.size = lerp(5, 9, n);
-    W.stars.material.opacity = sst(0.5, 1, n); W.smokeMat.color.set('#f1ecf2').lerp(tmp.set('#a9a6c4'), n); if (W.warm) W.warm.intensity = 70 * sst(0.3, 0.9, n); W.aurora.material.uniforms.op.value = sst(0.5, 0.95, n); W.signMats.forEach(m => m.color.setScalar(lerp(1, 0.86, n))); };
+    W.stars.material.opacity = sst(0.5, 1, n); W.smokeMat.color.set('#f1ecf2').lerp(tmp.set('#a9a6c4'), n); if (W.warm) W.warm.intensity = 70 * sst(0.3, 0.9, n); if (W.treeLight) W.treeLight.intensity = 95 * sst(0.3, 0.9, n); W.aurora.material.uniforms.op.value = sst(0.5, 0.95, n); W.signMats.forEach(m => m.color.setScalar(lerp(1, 0.86, n))); };
   // ---------- 파티클 ----------
   const pts = (n, size, map, add, colors) => { const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(new Float32Array(n * 3).fill(-9999), 3)); if (colors) g.setAttribute('color', new THREE.BufferAttribute(new Float32Array(n * 3), 3)); const m = new THREE.Points(g, new THREE.PointsMaterial({ map, size, transparent: true, depthWrite: false, vertexColors: !!colors, blending: add ? THREE.AdditiveBlending : THREE.NormalBlending, fog: !add, opacity: 0.9 })); m.frustumCulled = false; scene.add(m); return m; };
   const NSN = 2300, snowO = new Float32Array(NSN * 4); for (let i = 0; i < NSN * 4; i++) snowO[i] = r(); W.snow = pts(NSN, 0.34, TEX.glow);
@@ -1569,6 +1592,7 @@ function buildWorld(scene) {
     }
     W.sky.position.copy(cam.position); W.stars.position.copy(cam.position); W.aurora.position.set(cam.position.x, cam.position.y - 60, cam.position.z); W.aurora.material.uniforms.t.value = time;
     W.padMat.map.offset.y = (time * 1.6) % 1; if (W.star) W.star.rotation.y = Math.sin(time * 0.7) * 0.22;
+    if (W.starHalo) { const hs = 14.4 + Math.sin(time * 1.6) * 0.9; W.starHalo.scale.set(hs, hs, 1); W.starHalo.material.opacity = 0.78 + Math.sin(time * 1.9) * 0.12; }
     const P = W.snow.geometry.attributes.position.array, cx = cam.position.x, cy = cam.position.y, cz = cam.position.z;
     for (let i = 0; i < NSN; i++) { const sw = Math.sin(time * 0.8 + snowO[i * 4] * 6.283) * 0.9, fx = (snowO[i * 4] + time * 0.012 * (1 + snowO[i * 4 + 3])) % 1, fy = (snowO[i * 4 + 1] - time * (0.06 + snowO[i * 4 + 3] * 0.05)) % 1, fz = snowO[i * 4 + 2]; P[i * 3] = cx + ((fx - cx / 70) % 1 + 1) % 1 * 70 - 35 + sw; P[i * 3 + 1] = cy + ((fy - cy / 40) % 1 + 1) % 1 * 40 - 20; P[i * 3 + 2] = cz + ((fz - cz / 70) % 1 + 1) % 1 * 70 - 35 + sw * 0.6; }
     W.snow.geometry.attributes.position.needsUpdate = true;
@@ -2405,7 +2429,7 @@ function initCards() {
 }
 // ---------- 트리에 꽂는 작은 봉투 엽서 오너먼트 ----------
 // 결승 트리의 7개 가지 층 — buildWorld의 결승 트리와 같은 수치(가지 끝 반경·높이)
-const TREE_TIERS = [[7.8, 6.2], [7.1, 5.9], [6.4, 5.6], [5.6, 5.2], [4.7, 4.7], [3.7, 4.1], [2.6, 3.3]];
+const TREE_TIERS = [[9.0, 6.8], [8.2, 6.5], [7.35, 6.15], [6.45, 5.7], [5.4, 5.15], [4.25, 4.5], [3.0, 3.6]];
 const TREE_LAYER_BASES = (() => { let b = 3; return TREE_TIERS.map(([rad, h]) => { const base = b; b += h * 0.58; return { base, h, rad }; }); })();
 function treeRadiusAt(y) { // 겹친 가지 중 가장 바깥 실루엣 반경 — 봉투가 가지 끝에 걸려 보이도록
   let r = 0;
