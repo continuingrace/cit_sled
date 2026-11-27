@@ -2002,7 +2002,7 @@ function makeVillager(o) {
 }
 
 // ===== 버전 표기 (배포할 때마다 이 값만 올린다) =====
-const APP_VER = 'v1.23';
+const APP_VER = 'v1.24';
 try { const av = document.getElementById('appVer'); if (av) av.textContent = APP_VER; } catch (e) { }
 
 // ===== 사운드 (효과음: Web Audio 직접 합성 / BGM: 실제 캐럴 MP3) =====
@@ -4187,7 +4187,10 @@ function polaroidCanvas(raw, customText) { // 3D 원본 장면 + 실제 폴라�
   x.font = msgF; const mMsg = x.measureText('가나'); const mAsc = mMsg.actualBoundingBoxAscent || 34, mDesc = mMsg.actualBoundingBoxDescent || 6;
   const GAP_TS = 20, GAP_SM = 28, MLH = 46;
   const blockH = inkH + GAP_TS + (sAsc + sDesc) + (lines.length ? GAP_SM + (lines.length - 1) * MLH + (mAsc + mDesc) : 0);
-  const areaTop = IY + IW, areaBot = PH - 34 - 56;
+  // 바닥 푸터(citkorea.co.kr / 날짜)의 실제 활자 윗선을 재서, 사진 아래 여백과 푸터 사이의 '보이는' 빈 공간 가운데에 앉힌다
+  x.font = `500 21px ${FONT_P}`; const mFoot = x.measureText('citkorea.co.kr');
+  const footCap = PH - 34 - (mFoot.actualBoundingBoxAscent || 15);
+  const areaTop = IY + IW, areaBot = footCap - 12;
   const yTop = areaTop + Math.max(30, (areaBot - areaTop - blockH) / 2);
   const titleBase = yTop + tAsc, inkMid = yTop + inkH / 2, subBase = yTop + inkH + GAP_TS + sAsc;
   {
