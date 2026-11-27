@@ -3765,25 +3765,25 @@ function ornBowGeom() { // 벨벳 리본 — 둥글게 말린 두 날개 + 주�
   const wingW = t => 0.62 + 0.38 * Math.sin(Math.PI * Math.min(1, t * 1.02));
   [-1, 1].forEach(s => {
     parts.push(ribbonGeom(new THREE.CatmullRomCurve3([
-      ornV(0.012 * s, 0.010, 0.010), ornV(0.052 * s, 0.052, 0.028), ornV(0.126 * s, 0.082, 0.046),
-      ornV(0.198 * s, 0.050, 0.054), ornV(0.206 * s, -0.016, 0.048), ornV(0.150 * s, -0.058, 0.032),
-      ornV(0.070 * s, -0.038, 0.016), ornV(0.014 * s, -0.008, 0.008)
-    ], false, 'catmullrom', 0.5), 26, 0.072, 0.016, 8, wingW));
+      ornV(0.015 * s, 0.012, 0.010), ornV(0.065 * s, 0.066, 0.028), ornV(0.158 * s, 0.104, 0.046),
+      ornV(0.250 * s, 0.064, 0.054), ornV(0.258 * s, -0.022, 0.048), ornV(0.188 * s, -0.074, 0.032),
+      ornV(0.088 * s, -0.048, 0.016), ornV(0.017 * s, -0.010, 0.008)
+    ], false, 'catmullrom', 0.5), 30, 0.056, 0.014, 8, wingW));
   });
   [-1, 1].forEach((s, i) => {
     const sp = i ? 0.028 : 0.010;
     parts.push(ribbonGeom(new THREE.CatmullRomCurve3([
       ornV(0.010 * s, -0.012, 0.006), ornV(0.028 * s, -0.098, 0.014), ornV(0.062 * s + sp * s, -0.176, 0.022),
       ornV(0.090 * s + sp * s, -0.246, 0.020), ornV(0.100 * s + sp * s, -0.318, 0.010)
-    ], false, 'catmullrom', 0.5), 24, 0.062, 0.014, 8, t => 1.02 - 0.55 * t));
+    ], false, 'catmullrom', 0.5), 24, 0.058, 0.013, 8, t => 1.02 - 0.55 * t));
   });
   const knot = [];
   for (let i = 0; i < 20; i++) {
     const a = i / 20 * Math.PI * 2;
-    knot.push(ornV(Math.cos(a) * 0.050, Math.sin(a) * 0.040, 0.006 + Math.sin(a * 2) * 0.007));
+    knot.push(ornV(Math.cos(a) * 0.045, Math.sin(a) * 0.034, 0.006 + Math.sin(a * 2) * 0.006));
   }
-  parts.push(ribbonGeom(new THREE.CatmullRomCurve3(knot, true, 'catmullrom', 0.5), 22, 0.036, 0.018, 8, () => 1));
-  parts.push(bake(new THREE.SphereGeometry(0.038, 14, 10).applyMatrix4(MX(0, 0, 0.012, 1.12, 0.94, 0.8)), '#ffffff'));
+  parts.push(ribbonGeom(new THREE.CatmullRomCurve3(knot, true, 'catmullrom', 0.5), 22, 0.027, 0.015, 8, () => 1));
+  parts.push(bake(new THREE.SphereGeometry(0.029, 14, 10).applyMatrix4(MX(0, 0, 0.012, 1.12, 0.94, 0.82)), '#ffffff'));
   return merge(parts.map(g => bake(g, '#ffffff')));
 }
 function ornCrownGeom() { // 빈티지 오너먼트 금속 캡 — 꽃잎 물결 테두리 + 단차 링 + 매다는 고리
