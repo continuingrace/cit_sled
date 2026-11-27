@@ -10,24 +10,29 @@
 </style>
 </head>
 <body>
-<iframe id="f" src="./index.html?v=119a" style="position:fixed;left:-3200px;top:0;width:390px;height:800px;border:0" aria-hidden="true"></iframe>
 <div id="out"></div>
 <script>
-  var fr = document.getElementById('f'), started = false;
+  var fr = document.createElement('iframe');
+  fr.style.cssText = 'position:fixed;left:-3200px;top:0;width:390px;height:800px;border:0';
+  fr.setAttribute('aria-hidden', 'true');
+  fr.src = './index.html?v=' + Date.now();
+  document.body.appendChild(fr);
+  var started = false;
   function render() {
     if (started) return;
     started = true;
     setTimeout(function () {
       var w = fr.contentWindow;
-      Promise.resolve(w.drawCardCanvas({ theme: 'cream', stamp: 'tree', name: '혜련', toName: '모두에게', message: '메리 크리스마스, 따뜻한 연말 보내세요!' }))
-        .then(function (cv) { document.getElementById('out').appendChild(cv); document.title = 'done'; })
-        .catch(function (e) { document.title = 'error ' + (e && e.message); });
-    }, 2500);
+      try {
+        w.drawCardCanvas({ theme: 'cream', stamp: 'tree', name: '혜련', toName: '모두에게', message: '메리 크리스마스, 따뜻한 연말 보내세요!' })
+          .then(function (cv) { document.getElementById('out').appendChild(cv); document.title = 'done'; })
+          .catch(function (e) { document.title = 'error ' + (e && e.message); });
+      } catch (e) { document.title = 'throw ' + e.message; }
+    }, 3000);
   }
   fr.addEventListener('load', render);
-  // 이미 load가 끝나 버린 경우도 처리
   var iv = setInterval(function () {
-    try { if (fr.contentDocument && fr.contentDocument.readyState === 'complete' && fr.contentWindow.drawCardCanvas) { clearInterval(iv); render(); } } catch (e) { }
+    try { if (fr.contentWindow && fr.contentWindow.drawCardCanvas) { clearInterval(iv); render(); } } catch (e) { }
   }, 400);
 </script>
 </body>
