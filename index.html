@@ -2290,6 +2290,7 @@ function openTreeView() {
 }
 function closeTreeView() {
   G.treeView = false; G.autoSpin = false;
+  const oh = $('#orbitHint'); if (oh) { oh.classList.remove('on'); oh.innerHTML = '👆 드래그해서 360° 둘러보기 · 팻말 터치'; }
   $('#treebar').classList.add('hidden');
   const tb = $('#treeCount'); if (tb) { tb.classList.remove('on'); tb.innerHTML = ''; }
   whiteFade(() => { toMenu(true); $('#menu').classList.remove('out'); });
