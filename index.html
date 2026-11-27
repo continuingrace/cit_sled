@@ -2792,12 +2792,12 @@ async function drawCardCanvas(card) { // card를 넘기면 그 카드(내 카드
     sx.globalCompositeOperation = 'source-over';
     sx.strokeStyle = 'rgba(110,84,50,.3)'; sx.lineWidth = 1.4;
     holes.forEach(function (q) { sx.beginPath(); sx.arc(q[0], q[1], 7, 0, Math.PI * 2); sx.stroke(); });
-    x.save(); x.translate(CW - 135, 184); x.rotate(0.038); x.shadowColor = 'rgba(36,22,8,.22)'; x.shadowBlur = 7; x.shadowOffsetY = 2; x.drawImage(sc, -75, -94); x.restore();
+    x.save(); x.translate(CW - 160, 200); x.rotate(0.038); x.shadowColor = 'rgba(36,22,8,.22)'; x.shadowBlur = 7; x.shadowOffsetY = 2; x.drawImage(sc, -75, -94); x.restore();
   } catch (e) { }
   // 소인(도장): 종이에 실제로 찍은 듯한 빈티지 잉크 — 거친 원호, 번짐, 알갱이
   const INK = th.dark ? '244,226,184' : '124,35,41', PPR = th.bg;
   const rnd = (a, b) => a + Math.random() * (b - a);
-  x.save(); x.translate(CW - 300, 186); x.rotate(-0.12);
+  x.save(); x.translate(CW - 325, 202); x.rotate(-0.12);
   x.strokeStyle = 'rgba(' + INK + ',1)'; x.fillStyle = 'rgba(' + INK + ',1)'; x.lineCap = 'round'; x.lineJoin = 'round';
   const ring = (rad, lw, alpha) => {
     x.globalAlpha = alpha; x.lineWidth = lw;                  // 본 잉크
@@ -3631,8 +3631,8 @@ function ornBallTexture(kind) { // 512×256 — 버건디 래커 / 샴페인 골
     g.addColorStop(0, '#1d0306'); g.addColorStop(0.16, '#5b0d18'); g.addColorStop(0.40, '#8f1b29');
     g.addColorStop(0.60, '#741523'); g.addColorStop(0.82, '#3d0811'); g.addColorStop(1, '#180204');
   } else {
-    g.addColorStop(0, '#2f240d'); g.addColorStop(0.16, '#8a6a26'); g.addColorStop(0.40, '#e7c97c');
-    g.addColorStop(0.60, '#c4a052'); g.addColorStop(0.82, '#7a5f24'); g.addColorStop(1, '#2a1f0a');
+    g.addColorStop(0, '#4a3a18'); g.addColorStop(0.16, '#b08d3e'); g.addColorStop(0.40, '#f7e2a8');
+    g.addColorStop(0.60, '#e3c078'); g.addColorStop(0.82, '#a5842f'); g.addColorStop(1, '#3d2d10');
   }
   x.fillStyle = g; x.fillRect(0, 0, W, H);
   if (kind === 'gold') { // 브러시드 결
@@ -3768,22 +3768,22 @@ function ornBowGeom() { // 벨벳 리본 — 둥글게 말린 두 날개 + 주�
       ornV(0.012 * s, 0.010, 0.010), ornV(0.052 * s, 0.052, 0.028), ornV(0.126 * s, 0.082, 0.046),
       ornV(0.198 * s, 0.050, 0.054), ornV(0.206 * s, -0.016, 0.048), ornV(0.150 * s, -0.058, 0.032),
       ornV(0.070 * s, -0.038, 0.016), ornV(0.014 * s, -0.008, 0.008)
-    ], false, 'catmullrom', 0.5), 26, 0.052, 0.013, 8, wingW));
+    ], false, 'catmullrom', 0.5), 26, 0.062, 0.015, 8, wingW));
   });
   [-1, 1].forEach((s, i) => {
     const sp = i ? 0.028 : 0.010;
     parts.push(ribbonGeom(new THREE.CatmullRomCurve3([
       ornV(0.010 * s, -0.012, 0.006), ornV(0.028 * s, -0.098, 0.014), ornV(0.062 * s + sp * s, -0.176, 0.022),
       ornV(0.090 * s + sp * s, -0.246, 0.020), ornV(0.100 * s + sp * s, -0.318, 0.010)
-    ], false, 'catmullrom', 0.5), 24, 0.048, 0.012, 8, t => 1.02 - 0.55 * t));
+    ], false, 'catmullrom', 0.5), 24, 0.056, 0.013, 8, t => 1.02 - 0.55 * t));
   });
   const knot = [];
   for (let i = 0; i < 20; i++) {
     const a = i / 20 * Math.PI * 2;
     knot.push(ornV(Math.cos(a) * 0.050, Math.sin(a) * 0.040, 0.006 + Math.sin(a * 2) * 0.007));
   }
-  parts.push(ribbonGeom(new THREE.CatmullRomCurve3(knot, true, 'catmullrom', 0.5), 22, 0.030, 0.016, 8, () => 1));
-  parts.push(bake(new THREE.SphereGeometry(0.034, 14, 10).applyMatrix4(MX(0, 0, 0.010, 1.1, 0.92, 0.78)), '#ffffff'));
+  parts.push(ribbonGeom(new THREE.CatmullRomCurve3(knot, true, 'catmullrom', 0.5), 22, 0.036, 0.018, 8, () => 1));
+  parts.push(bake(new THREE.SphereGeometry(0.038, 14, 10).applyMatrix4(MX(0, 0, 0.012, 1.12, 0.94, 0.8)), '#ffffff'));
   return merge(parts.map(g => bake(g, '#ffffff')));
 }
 function ornStarGeom(R, dep, inner) { // 베벨 살아있는 5각 별
@@ -3824,16 +3824,16 @@ const ORN_GEO = {
   ball: new THREE.SphereGeometry(0.29, 36, 26),
   crown: ornCrownGeom(),
   hanger: ornHangerGeom(),
-  star: ornStarGeom(0.38, 0.10, 0.44),
-  starCore: (function () { const g = new THREE.OctahedronGeometry(0.135, 0); g.scale(1, 1.1, 0.62); g.translate(0, 0, 0.082); return g; })(),
+  star: ornStarGeom(0.38, 0.145, 0.44),
+  starCore: (function () { const g = new THREE.OctahedronGeometry(0.150, 0); g.scale(1, 1.12, 0.68); g.translate(0, 0, 0.112); return g; })(),
   cane: ornCaneGeom(),
   caneEnd: new THREE.SphereGeometry(0.0585, 12, 9),
   caneKnot: merge([
-    new THREE.TorusGeometry(0.046, 0.015, 8, 16).applyMatrix4(MX(0.030, 0.235, 0.055, 1, 1, 0.72, 0, 0.55, 0.25)),
-    new THREE.TorusGeometry(0.040, 0.013, 8, 16).applyMatrix4(MX(-0.026, 0.245, 0.048, 1, 1, 0.72, 0, -0.5, -0.2)),
-    new THREE.SphereGeometry(0.019, 10, 8).applyMatrix4(MX(0.002, 0.240, 0.052, 1.2, 1, 0.9)),
-    new THREE.BoxGeometry(0.016, 0.070, 0.008).applyMatrix4(MX(0.052, 0.196, 0.056, 1, 1, 1, 0.16, 0, 0.42)),
-    new THREE.BoxGeometry(0.014, 0.060, 0.008).applyMatrix4(MX(-0.044, 0.200, 0.050, 1, 1, 1, 0.16, 0, -0.38))
+    new THREE.TorusGeometry(0.043, 0.013, 8, 18).applyMatrix4(MX(0.000, 0.238, 0.062, 1, 1, 0.62, 0, 0.42, 0.18)),
+    new THREE.TorusGeometry(0.037, 0.011, 8, 18).applyMatrix4(MX(0.000, 0.246, 0.060, 1, 1, 0.62, 0, -0.38, -0.16)),
+    new THREE.SphereGeometry(0.017, 10, 8).applyMatrix4(MX(0.000, 0.242, 0.064, 1.25, 1, 0.85)),
+    new THREE.CylinderGeometry(0.009, 0.006, 0.075, 6).applyMatrix4(MX(0.028, 0.196, 0.060, 1, 1, 1, 0.18, 0, 0.30)),
+    new THREE.CylinderGeometry(0.008, 0.006, 0.065, 6).applyMatrix4(MX(-0.026, 0.200, 0.058, 1, 1, 1, 0.18, 0, -0.26))
   ].map(g => bake(g, '#ffffff'))),
   bow: ornBowGeom(),
   thread: new THREE.CylinderGeometry(0.010, 0.010, 1, 6)
@@ -3870,9 +3870,9 @@ const ORN_STAR_TOP = _ornBB(ORN_GEO.star).max.y;
 const ORN_VELVET = { color: '#a81f31', roughness: 0.74, metalness: 0.02, sheen: 0.92, sheenRoughness: 0.45, sheenColor: '#ffd2d9', clearcoat: 0.16, clearcoatRoughness: 0.5 };
 const ORN_MAT = {
   red: new THREE.MeshPhysicalMaterial({ map: ornBallTexture('red'), roughness: 0.16, metalness: 0.12, clearcoat: 1.0, clearcoatRoughness: 0.06, emissive: '#2a0508', emissiveIntensity: 0.35, envMapIntensity: 1.15 }),
-  gold: new THREE.MeshPhysicalMaterial({ map: ornBallTexture('gold'), roughness: 0.15, metalness: 0.62, clearcoat: 1.0, clearcoatRoughness: 0.07, emissive: '#2e1f05', emissiveIntensity: 0.3, envMapIntensity: 1.2 }),
+  gold: new THREE.MeshPhysicalMaterial({ map: ornBallTexture('gold'), roughness: 0.15, metalness: 0.52, clearcoat: 1.0, clearcoatRoughness: 0.07, emissive: '#2e1f05', emissiveIntensity: 0.3, envMapIntensity: 1.2 }),
   trim: new THREE.MeshPhysicalMaterial({ color: '#f0cf8c', roughness: 0.22, metalness: 0.9, clearcoat: 0.7, clearcoatRoughness: 0.12, emissive: '#3a2a08', emissiveIntensity: 0.35, envMapIntensity: 1.3 }),
-  star: new THREE.MeshPhysicalMaterial({ color: '#ffd98d', roughness: 0.18, metalness: 0.92, clearcoat: 0.65, clearcoatRoughness: 0.1, emissive: '#6a4a12', emissiveIntensity: 0.5, envMapIntensity: 1.3, flatShading: true }),
+  star: new THREE.MeshPhysicalMaterial({ color: '#ffe4a6', roughness: 0.16, metalness: 0.88, clearcoat: 0.7, clearcoatRoughness: 0.09, emissive: '#7a5518', emissiveIntensity: 0.55, envMapIntensity: 1.35, flatShading: true }),
   starCore: new THREE.MeshPhysicalMaterial({ color: '#fff0c4', roughness: 0.12, metalness: 0.95, clearcoat: 0.8, clearcoatRoughness: 0.08, emissive: '#c98c22', emissiveIntensity: 0.8, envMapIntensity: 1.4, flatShading: true }),
   cane: new THREE.MeshPhysicalMaterial({ map: caneTexture(), roughness: 0.18, metalness: 0.04, clearcoat: 0.95, clearcoatRoughness: 0.08, envMapIntensity: 0.9 }),
   caneEnd: new THREE.MeshPhysicalMaterial({ color: '#f7f0e0', roughness: 0.2, metalness: 0.03, clearcoat: 0.95, clearcoatRoughness: 0.08, envMapIntensity: 0.9 }),
