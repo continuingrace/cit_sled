@@ -334,7 +334,10 @@ body.paused *{animation-play-state:paused!important}
 #cardView .cv-env{position:absolute;left:50%;bottom:-16px;width:74%;height:112px;border-radius:16px;background:linear-gradient(180deg,#fbf5e8,#ecdfc6);border:1px solid #dccbab;box-shadow:0 22px 46px rgba(5,9,26,.46);animation:cvEnvIn .42s cubic-bezier(.22,1,.36,1) .02s both}
 #cardView .cv-env::after{content:'';position:absolute;left:0;right:0;bottom:0;height:74px;background:linear-gradient(180deg,#f4ead6,#e3d3b5);clip-path:polygon(0 0,50% 74%,100% 0,100% 100%,0 100%);border-radius:0 0 15px 15px;box-shadow:inset 0 1px 0 rgba(255,255,255,.7)}
 #cardView .cv-env::before{content:'';position:absolute;left:50%;bottom:24px;width:26px;height:26px;margin-left:-13px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#c4484b,#8d2429);box-shadow:0 2px 4px rgba(60,20,20,.35),inset 0 -2px 3px rgba(0,0,0,.25);z-index:3}
-#cardView .cv-card{position:relative;z-index:2;display:flex;flex-direction:column;gap:12px;border-radius:16px;padding:22px 22px 16px;border:1px solid var(--cv-edge);background-color:var(--cv-bg);background-image:radial-gradient(120% 100% at 50% 0%,rgba(255,255,255,.5),rgba(255,255,255,0) 70%),linear-gradient(180deg,rgba(255,255,255,.22),rgba(120,95,60,.05));box-shadow:0 26px 60px rgba(5,9,26,.5),inset 0 0 50px rgba(120,95,60,.08);color:var(--cv-ink);transform-origin:50% 100%;will-change:transform,opacity;animation:cvCardIn .38s cubic-bezier(.22,1,.36,1) .04s both}
+#cardView .cv-card{position:relative;z-index:2;display:flex;flex-direction:column;gap:12px;border-radius:16px;padding:24px 24px 18px;border:1px solid var(--cv-edge);background-color:var(--cv-bg);background-image:radial-gradient(120% 100% at 50% 0%,rgba(255,255,255,.16),rgba(255,255,255,0) 68%);box-shadow:0 26px 60px rgba(5,9,26,.5),inset 0 0 50px rgba(120,95,60,.08);color:var(--cv-ink);transform-origin:50% 100%;will-change:transform,opacity;animation:cvCardIn .38s cubic-bezier(.22,1,.36,1) .04s both}
+#cardView .cv-card::before{content:'';position:absolute;inset:7px;border:1px solid var(--cv-line);border-radius:11px;pointer-events:none}
+#cardView.dark .cv-post{mix-blend-mode:screen;opacity:1}
+#cardView .cv-msg{min-height:84px}
 #cardView.closing .cv-card{animation:cvCardOut .2s ease both}
 #cardView .cv-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;min-height:72px}
 #cardView .cv-post{width:118px;height:74px;flex:none;color:var(--cv-mark);transform:rotate(-7deg);opacity:.78;mix-blend-mode:multiply;overflow:visible;pointer-events:none}
@@ -1366,7 +1369,7 @@ function buildWorld(scene) {
       for (let vi = 0; vi < sp2.count; vi++) { const x = sp2.getX(vi), yy = sp2.getY(vi), z = sp2.getZ(vi), t = clamp((yy + h * 0.1) / (h * 0.2), 0, 1), th = Math.atan2(z, x), w = 1 + wav(th) * Math.pow(1 - t, 0.55); sp2.setX(vi, x * w); sp2.setZ(vi, z * w); }
       sl.computeVertexNormals();
       P.push(bake(sl, '#f7fbff', MX(0, y + h * 0.1, 0)));
-      for (let k2 = 0; k2 < 9; k2++) { const a2 = (k2 + 0.5) / 9 * Math.PI * 2 + ph, rr2 = rad * (1 + wav(a2)) * 1.01; P.push(bake(Sph(1, 8, 6), '#ffffff', MX(Math.cos(a2) * rr2, y + h * 0.12, Math.sin(a2) * rr2, 0.42, 0.22, 0.42))); }
+      for (let k2 = 0; k2 < 9; k2++) { const a2 = (k2 + 0.5) / 9 * Math.PI * 2 + ph, rr2 = rad * (1 + wav(a2)) * 1.01; P.push(bake(Sph(1, 8, 6), '#ffffff', MX(Math.cos(a2) * rr2, y + h * 0.1, Math.sin(a2) * rr2, 0.5, 0.17, 0.5))); }
       // 따뜻한 전구: 층마다 고르게
       const nb = 9;
       for (let k2 = 0; k2 < nb; k2++) {
@@ -1384,7 +1387,7 @@ function buildWorld(scene) {
         const rr = treeRadiusAt(yy) * 1.02 + off;
         pts.push(new THREE.Vector3(Math.cos(ang) * rr, yy, Math.sin(ang) * rr));
       }
-      goldGeo.push(bake(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 220, 0.075, 6, false), '#ffffff'));
+      goldGeo.push(bake(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 220, 0.11, 7, false), '#ffffff'));
       for (let k2 = 0; k2 < 12; k2++) {
         const t = (k2 + 0.5) / 12, yy = 3.35 + t * (topY - 1.1 - 3.35), ang = phase + t * Math.PI * 2 * turns;
         const rr = treeRadiusAt(yy) * 1.02 + off;
@@ -1400,7 +1403,7 @@ function buildWorld(scene) {
     const sp = PT(F, 0, topY + 2.0, 0);
     const st = new THREE.Mesh(starGeo5(2.0, 0.5), new THREE.MeshBasicMaterial({ color: '#ffd75a', toneMapped: false, side: THREE.DoubleSide }));
     st.position.copy(sp); st.frustumCulled = false; scene.add(st); W.star = st;
-    for (let k2 = 0; k2 < 5; k2++) bigGlow(sp, k2 % 2 ? '#ffe98a' : '#ffd24a');
+    bigGlow(sp, '#ffe98a'); bigGlow(sp, '#ffd24a');
     W.treeTop = sp.clone();
     W.treeMesh = m; W.treeFrame = F;
     W.cardLinks = []; W.cardProxies = [];
@@ -1936,10 +1939,10 @@ function setCam(dt, snap) {
   else if (st === 'intro') { menuCam(G.time); chaseCam(dt, true); const e = sst(0, 1, G.introT / 2.6), b = Math.sin(e * Math.PI); cam.pos.lerpVectors(mC.pos, cT.pos, e); cam.pos.y += b * 1.8; cam.look.lerpVectors(mC.look, cT.look, e); cam.fov = lerp(mC.fov, cT.fov, e); oP.copy(cam.pos); oL.copy(cam.look); fov = cam.fov; off = mC.off * (1 - e); }
   else { chaseCam(dt, snap); const k = snap ? 1 : 1 - Math.exp(-9 * dt); cam.pos.lerp(cT.pos, k); cam.look.lerp(cT.look, snap ? 1 : 1 - Math.exp(-12 * dt)); cam.fov += (cT.fov - cam.fov) * (snap ? 1 : Math.min(1, dt * 4)); oP.copy(cam.pos); oL.copy(cam.look); fov = cam.fov;
     if (G.treeView) { // 결승 대형 트리를 정면에서 천천히 둘러보는 카메라
-      const yaw = (G.treeBaseAng || 0) + (G.orbitYaw || 0), pit = Math.max(-0.06, Math.min(0.8, G.orbitPitch || 0)), treeH = treeTopY() + 2.6, wide = innerWidth / innerHeight > 1.15, dist = clamp(G.orbitDist || treeH * (wide ? 1.7 : 1.45), 4.5, 60);
+      const yaw = (G.treeBaseAng || 0) + (G.orbitYaw || 0), pit = Math.max(-0.06, Math.min(0.8, G.orbitPitch || 0)), treeH = treeTopY() + 2.6, wide = innerWidth / innerHeight > 1.15, dist = clamp(G.orbitDist || treeH * (wide ? 1.9 : 1.6), 4.5, 70);
       wpos(2112, 0, 0, eP);
       oP.set(eP.x + Math.sin(yaw) * Math.cos(pit) * dist, eP.y + 12 + Math.sin(pit) * dist, eP.z + Math.cos(yaw) * Math.cos(pit) * dist);
-      oL.set(eP.x, eP.y + treeH * 0.46, eP.z);
+      oL.set(eP.x, eP.y + treeH * 0.44, eP.z);
       fov = wide ? 48 : 62;
     } else if (st === 'finish' || st === 'result') { // 오두막 앞 마지막 장면으로 천천히 이동
       const e = sst(0.4, 4.2, G.finT), sw = Math.sin(G.time * 0.22), wide = innerWidth / innerHeight > 1.15;
@@ -2240,7 +2243,7 @@ function openTreeView() {
   G.treeView = true; G.state = 'result'; G.resOpen = false; G.finT = 4.5;
   const tP = wpos(2112, 0, 0, new THREE.Vector3()), hP = wpos(2080, 0, 0, new THREE.Vector3());
   G.treeBaseAng = Math.atan2(hP.x - tP.x, hP.z - tP.z);
-  G.autoSpin = true; G.orbitYaw = 0; G.orbitPitch = 0.18; G.orbitDist = (treeTopY() + 2.6) * (innerWidth / innerHeight > 1.15 ? 1.7 : 1.45);
+  G.autoSpin = true; G.orbitYaw = 0; G.orbitPitch = 0.18; G.orbitDist = (treeTopY() + 2.6) * (innerWidth / innerHeight > 1.15 ? 1.9 : 1.6);
   closeCardView();
   resetWorld(); G.lastSec = -1; G.offR = 0;
   $('#result').classList.add('hidden'); $('#endbar').classList.add('hidden'); orbitHint(false);
@@ -3157,7 +3160,7 @@ boot().catch(e => { console.error(e); const l = $('#loading'); l.classList.remov
   window.addEventListener('pointermove', function (e) {
     if (pts.has(e.pointerId)) pts.set(e.pointerId, { x: e.clientX, y: e.clientY });
     if (pts.size >= 2 && pinchD && window.G && G.treeView) {
-      const d = pinchNow(); if (d > 0) G.orbitDist = Math.max(4.5, Math.min(60, pinchZoom * pinchD / d));
+      const d = pinchNow(); if (d > 0) G.orbitDist = Math.max(4.5, Math.min(70, pinchZoom * pinchD / d));
       return;
     }
     if (isDrag && can()) {
@@ -3172,7 +3175,7 @@ boot().catch(e => { console.error(e); const l = $('#loading'); l.classList.remov
     if (!window.G || !G.treeView) return;
     if (e.target && e.target.closest && e.target.closest('.modal:not(.hidden), #treebar, #endbar')) return;
     e.preventDefault();
-    G.orbitDist = Math.max(4.5, Math.min(60, (G.orbitDist || 40) * (1 + Math.sign(e.deltaY) * 0.08)));
+    G.orbitDist = Math.max(4.5, Math.min(70, (G.orbitDist || 46) * (1 + Math.sign(e.deltaY) * 0.08)));
     G.autoSpin = false;
   }, { passive: false });
 })();
