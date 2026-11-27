@@ -46,6 +46,9 @@ button,input{font-family:inherit;letter-spacing:.02em;line-height:1.35}
 #bStart{margin-top:2px;background:linear-gradient(180deg,#f45c62,#dc3b44 58%,#c62f38);box-shadow:0 12px 28px rgba(214,58,65,.36),inset 0 1px 0 rgba(255,255,255,.32),inset 0 -2px 0 rgba(0,0,0,.18);letter-spacing:.02em}
 #bStart:hover{background:linear-gradient(180deg,#ff6d73,#e6454e 58%,#cf3540)}
 #bStart small{border-color:rgba(255,255,255,.55);background:rgba(0,0,0,.14)}
+/* 출발 글자는 버튼 정중앙에, ENTER 키캡은 오른쪽 끝 안쪽에 절대 배치 — 키캡 안 글자도 정중앙 */
+#bStart{position:relative}
+#bStart small{position:absolute;right:16px;top:50%;transform:translateY(-50%);display:inline-flex;align-items:center;justify-content:center;height:18px;padding:0 6px;line-height:1}
 #bVerify{background:linear-gradient(180deg,#10b981,#059669);color:#fff;font-weight:800;border:1px solid rgba(255,255,255,.35);box-shadow:0 8px 20px rgba(16,185,129,.45);text-shadow:0 1px 2px rgba(4,60,40,.35)}
 #bVerify:hover{background:linear-gradient(180deg,#16cf90,#05a877);box-shadow:0 10px 24px rgba(16,185,129,.55)}
 .btn.link{background:var(--acc);color:var(--ink);width:100%}.btn.link:hover{background:#ffe27a}
@@ -661,7 +664,7 @@ body.paused *{animation-play-state:paused!important}
     <div class="vin-field"><span class="vin-label">종이</span><div class="vin-picks trio" id="cardThemePick"><button type="button" class="vin-chip on" data-theme="cream"><i class="sw" style="background:#f8f2e6"></i>아이보리</button><button type="button" class="vin-chip" data-theme="kraft"><i class="sw" style="background:#ecdfc9"></i>크라프트</button><button type="button" class="vin-chip" data-theme="sage"><i class="sw" style="background:#22412f"></i>딥그린</button></div></div>
     <div class="vin-field"><span class="vin-label">우표</span><div class="vin-picks" id="cardStampPick"><button type="button" class="vin-chip on" data-stamp="tree">🎄 트리</button><button type="button" class="vin-chip" data-stamp="bell">🔔 종</button><button type="button" class="vin-chip" data-stamp="wreath">🌿 리스</button><button type="button" class="vin-chip" data-stamp="star">⭐ 별</button></div></div>
     <button type="button" class="vin-send" id="cardSend">트리에 걸기</button>
-    <p class="vin-note" id="cardNote">등록할 때 보안 확인(Turnstile)이 자동으로 함께 진행돼요.</p>
+    <p class="vin-note" id="cardNote">별도 절차 없이 자동 스팸 방지 확인 후 트리에 바로 걸려요.</p>
   </div>
   <div class="vin-sep">트리에 걸린 카드</div>
   <div class="vin-grid" id="cardList"></div>
@@ -1988,7 +1991,7 @@ function makeVillager(o) {
 }
 
 // ===== 버전 표기 (배포할 때마다 이 값만 올린다) =====
-const APP_VER = 'v1.10';
+const APP_VER = 'v1.11';
 try { const av = document.getElementById('appVer'); if (av) av.textContent = APP_VER; } catch (e) { }
 
 // ===== 사운드 (효과음: Web Audio 직접 합성 / BGM: 실제 캐럴 MP3) =====
@@ -3043,7 +3046,7 @@ async function sendCard() {
   if (/[<>]/.test(name + message + toName)) { cardNoteText('카드에는 < > 같은 괄호 기호를 쓸 수 없어요.', 'bad'); return; }
   if (/(https?:\/\/|www\.)/i.test(name + message + toName)) { cardNoteText('링크 주소는 카드에 적을 수 없어요.', 'bad'); return; }
   const btn = $('#cardSend'), old = btn.textContent;
-  btn.disabled = true; btn.textContent = '거는 중…'; cardNoteText('보안 확인 중이에요…');
+  btn.disabled = true; btn.textContent = '거는 중…'; cardNoteText('안전 확인 중이에요…');
   try {
     const token = await Promise.race([
       getTurnstileToken(),
@@ -3066,7 +3069,7 @@ async function sendCard() {
     cardNoteText(/429/.test(msg)
       ? '조금 전에 여러 장을 걸었어요. 잠시 뒤 다시 시도해 주세요.'
       : /turnstile/.test(msg)
-        ? '보안 확인이 끝나지 않았어요. 잠시 뒤 다시 시도해 주세요.'
+        ? '안전 확인이 끝나지 않았어요. 잠시 뒤 다시 시도해 주세요.'
         : '카드를 걸지 못했어요. 잠시 뒤 다시 시도해 주세요.', 'bad');
   } finally { btn.disabled = false; btn.textContent = old; }
 }
