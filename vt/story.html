@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="ko"><meta charset="utf-8"><title>story card test</title>
+<style>
+html,body{margin:0;background:#222;color:#eee;font:12px/1.4 monospace}
+#wrap{display:flex;gap:24px;padding:16px}
+figure{margin:0}
+canvas{display:block;box-shadow:0 8px 24px rgba(0,0,0,.5)}
+figcaption{margin-top:6px;color:#9f9f9f}
+#log{white-space:pre-wrap;padding:0 16px 24px}
+</style>
+<div id="wrap"></div>
+<div id="log">loading…</div>
+<script>
+(async () => {
+  const log = document.getElementById('log');
+  try {
+    const src = await (await fetch('../index.html?_=' + Date.now())).text();
+    const start = src.indexOf('function shareCard(kind) {');
+    const end = src.indexOf('const IS_IOS =', start);
+    if (start < 0 || end < 0) throw new Error('shareCard 코드를 찾지 못했습니다');
+    const code = src.slice(start, end);
+    const FONT_K = "'Pretendard Variable',Pretendard,-apple-system,'Malgun Gothic',sans-serif";
+    const G = { last: { score: 1630, time: 131.98 }, R: { racers: [{ id: 0 }, { id: 1 }, { id: 2 }, { id: 3 }] }, saved: 1, diff: 'hard' };
+    try { localStorage.setItem('sledName', '디자이너리'); } catch (e) { }
+    const ch = () => ({ name: '이성장' });
+    const ranking = () => [{ id: 3 }, { id: 1 }, { id: 2 }, { id: 0 }];
+    const rr = (x, a, b, w, h, r) => { x.beginPath(); x.roundRect(a, b, w, h, r); };
+    const fmt = () => '2:11.98';
+    let OUT = null;
+    const grab = (w, h) => {
+      const c = document.createElement('canvas'); c.width = w; c.height = h;
+      const x = c.getContext('2d');
+      const g = x.createLinearGradient(0, 0, 0, h);
+      g.addColorStop(0, '#0b1238'); g.addColorStop(0.45, '#1a2a52'); g.addColorStop(0.75, '#9fb3cf'); g.addColorStop(1, '#e8eef7');
+      x.fillStyle = g; x.fillRect(0, 0, w, h);
+      x.fillStyle = 'rgba(255,255,255,.9)'; x.font = '600 40px sans-serif';
+      x.fillText('(테스트 배경 — 실제는 3D 장면)', 60, h * 0.42);
+      return [c, x];
+    };
+    const openShot = (c, title, name) => { OUT = [c, title, name]; };
+    eval(code + '\nwindow.__shareCard = shareCard;');
+    const wrap = document.getElementById('wrap');
+    for (const kind of ['story', 'feed']) {
+      OUT = null;
+      window.__shareCard(kind);
+      if (!OUT) throw new Error(kind + ' 결과 없음');
+      const fig = document.createElement('figure');
+      const c = OUT[0].cloneNode(false);           // 캔버스 크기 유지, 내용은 픽셀로 복사
+      const cc = document.createElement('canvas'); cc.width = c.width || OUT[0].width; cc.height = c.height || OUT[0].height;
+      cc.getContext('2d').drawImage(OUT[0], 0, 0);
+      cc.style.width = (kind === 'story' ? 300 : 360) + 'px';
+      const cap = document.createElement('figcaption');
+      cap.textContent = kind + ' · ' + OUT[1] + ' · ' + OUT[2] + ' (' + cc.width + '×' + cc.height + ')';
+      fig.appendChild(cc); fig.appendChild(cap); wrap.appendChild(fig);
+    }
+    log.textContent = 'OK — 그리기 코드 실행 완료 (오류 없음)';
+  } catch (e) {
+    log.textContent = 'ERR ' + (e && e.message ? e.message : e);
+  }
+})();
+</script>
+</html>
