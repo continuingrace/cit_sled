@@ -2103,6 +2103,7 @@ function openTreeView() {
 function closeTreeView() {
   G.treeView = false; G.autoSpin = false;
   $('#treebar').classList.add('hidden');
+  const tb = $('#treeCount'); if (tb) { tb.classList.remove('on'); tb.innerHTML = ''; }
   whiteFade(() => { toMenu(true); $('#menu').classList.remove('out'); });
 }
 function cardWhen(ts) { const d = new Date((+ts || 0) * 1000); return isNaN(d.getTime()) ? '' : (d.getMonth() + 1) + '월 ' + d.getDate() + '일'; }
@@ -2115,7 +2116,7 @@ function cardCount() { // 몇 명이 카드를 걸었는지(이름 기준) + 장
     ? '지금까지 <b>' + people + '</b>명이 트리에 카드를 걸었어요 · <b>' + total + '</b>장' + (partial ? ' (최근 ' + CARDS.length + '장 표시)' : '')
     : '아직 트리에 걸린 카드가 없어요';
   const tb = $('#treeCount');
-  if (tb) { if (total) { tb.innerHTML = '🎄 지금까지 <b>' + people + '</b>명 참여 · <b>' + total + '</b>장'; tb.classList.add('on'); } else { tb.innerHTML = ''; tb.classList.remove('on'); } }
+  if (tb) { if (total && G.treeView) { tb.innerHTML = '🎄 지금까지 <b>' + people + '</b>명 참여 · <b>' + total + '</b>장'; tb.classList.add('on'); } else { tb.innerHTML = ''; tb.classList.remove('on'); } }
 }
 function cardNoteText(t, kind) { const el = $('#cardNote'); if (!el) return; el.className = 'vin-note' + (kind ? ' ' + kind : ''); el.textContent = t; }
 function paintCards() {
