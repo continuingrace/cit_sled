@@ -500,6 +500,33 @@ body.paused *{animation-play-state:paused!important}
   #menu .row .btn.sub{padding:9px 8px;font-size:14px}
   #menu .best{font-size:12.5px;line-height:1.45}
 }
+/* 3) 결과창(#result): 위아래로 잘리지 않게 — 패널 높이를 안전영역 안으로 묶고 넘치면 패널 안에서 스크롤 */
+#result.modal{align-items:center;justify-content:center;padding:calc(var(--sat) + 12px) 10px calc(var(--sab) + 12px)}
+#result .panel{max-height:calc(100lvh - var(--sat) - var(--sab) - 24px);overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+@media (max-width:560px){
+  #result.modal.side{padding:calc(var(--sat) + 10px) 8px calc(var(--sab) + 10px)}
+  #result .panel{width:calc(100vw - 16px);max-width:none;padding:14px 14px 12px;gap:8px}
+  #result .rhead{padding-right:84px}
+  #result .rhead b{font-size:40px}
+  #result .rhead span{font-size:20px}
+  #result .rhead em{font-size:12.5px;margin-left:6px}
+  #result .rlist{gap:3px}
+  #result .rlist li{font-size:12px;gap:5px;padding:6px 7px}
+  #result .rlist li span{font-size:12px;letter-spacing:-.03em}
+  #result .rlist li b{font-size:12px}
+  #result .rlist li i{width:8px;height:8px}
+  #result .stats{gap:3px}
+  #result .stats div{padding:6px 3px 7px;font-size:11px}
+  #result .stats b{font-size:15px}
+  #result .total{padding:8px 12px;font-size:14px}
+  #result .total b{font-size:26px}
+  #result .namerow input{font-size:14px;padding:10px 11px}
+  #result .namerow .btn{padding:10px 12px;font-size:14px}
+  #result .btn{padding:10px 12px;font-size:14.5px}
+  #result .best{font-size:12px}
+  #result .row{gap:6px}
+  #bResX{right:12px;top:12px}
+}
 </style>
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
 </head>
