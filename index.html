@@ -1939,10 +1939,10 @@ function setCam(dt, snap) {
   else if (st === 'intro') { menuCam(G.time); chaseCam(dt, true); const e = sst(0, 1, G.introT / 2.6), b = Math.sin(e * Math.PI); cam.pos.lerpVectors(mC.pos, cT.pos, e); cam.pos.y += b * 1.8; cam.look.lerpVectors(mC.look, cT.look, e); cam.fov = lerp(mC.fov, cT.fov, e); oP.copy(cam.pos); oL.copy(cam.look); fov = cam.fov; off = mC.off * (1 - e); }
   else { chaseCam(dt, snap); const k = snap ? 1 : 1 - Math.exp(-9 * dt); cam.pos.lerp(cT.pos, k); cam.look.lerp(cT.look, snap ? 1 : 1 - Math.exp(-12 * dt)); cam.fov += (cT.fov - cam.fov) * (snap ? 1 : Math.min(1, dt * 4)); oP.copy(cam.pos); oL.copy(cam.look); fov = cam.fov;
     if (G.treeView) { // 결승 대형 트리를 정면에서 천천히 둘러보는 카메라
-      const yaw = (G.treeBaseAng || 0) + (G.orbitYaw || 0), pit = Math.max(-0.06, Math.min(0.8, G.orbitPitch || 0)), treeH = treeTopY() + 2.6, wide = innerWidth / innerHeight > 1.15, dist = clamp(G.orbitDist || treeH * (wide ? 1.9 : 1.6), 4.5, 70);
+      const yaw = (G.treeBaseAng || 0) + (G.orbitYaw || 0), pit = Math.max(-0.06, Math.min(0.8, G.orbitPitch || 0)), treeH = treeTopY() + 2.6, wide = innerWidth / innerHeight > 1.15, dist = clamp(G.orbitDist || treeH * (wide ? 1.58 : 1.36), 4.5, 70);
       wpos(2112, 0, 0, eP);
       oP.set(eP.x + Math.sin(yaw) * Math.cos(pit) * dist, eP.y + 12 + Math.sin(pit) * dist, eP.z + Math.cos(yaw) * Math.cos(pit) * dist);
-      oL.set(eP.x, eP.y + treeH * 0.44, eP.z);
+      oL.set(eP.x, eP.y + treeH * 0.45, eP.z);
       fov = wide ? 48 : 62;
     } else if (st === 'finish' || st === 'result') { // 오두막 앞 마지막 장면으로 천천히 이동
       const e = sst(0.4, 4.2, G.finT), sw = Math.sin(G.time * 0.22), wide = innerWidth / innerHeight > 1.15;
@@ -2243,7 +2243,7 @@ function openTreeView() {
   G.treeView = true; G.state = 'result'; G.resOpen = false; G.finT = 4.5;
   const tP = wpos(2112, 0, 0, new THREE.Vector3()), hP = wpos(2080, 0, 0, new THREE.Vector3());
   G.treeBaseAng = Math.atan2(hP.x - tP.x, hP.z - tP.z);
-  G.autoSpin = true; G.orbitYaw = 0; G.orbitPitch = 0.18; G.orbitDist = (treeTopY() + 2.6) * (innerWidth / innerHeight > 1.15 ? 1.9 : 1.6);
+  G.autoSpin = true; G.orbitYaw = 0; G.orbitPitch = 0.18; G.orbitDist = (treeTopY() + 2.6) * (innerWidth / innerHeight > 1.15 ? 1.58 : 1.36);
   window.__dbg = { W, camera };
   closeCardView();
   resetWorld(); G.lastSec = -1; G.offR = 0;
