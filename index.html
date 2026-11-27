@@ -3012,7 +3012,7 @@ function startSanta(t) {
   initSanta(); if (!SANTA.group) return;
   wpos(2112, 0, 0, _sC);
   const az = (G.treeBaseAng || 0) + (G.orbitYaw || 0);
-  SANTA.cx = _sC.x; SANTA.cz = _sC.z;
+  SANTA.cx = _sC.x; SANTA.cz = _sC.z; SANTA.baseY = _sC.y; // 지면 높이 기준 (월드 y=0이 아님)
   SANTA.a0 = az + Math.PI - 0.9; SANTA.a1 = az + Math.PI + 0.9;
   SANTA.rad = 44 + Math.random() * 8; SANTA.alt = 30 + Math.random() * 5; // 기본 카메라 프레임 안에 들어오는 높이
   SANTA.t = 0; SANTA.T = 13 + Math.random() * 2; SANTA.active = true; SANTA.group.visible = true; SANTA.bellT = 0;
@@ -3050,7 +3050,7 @@ function updateSanta(dt, t) {
     SANTA.t += dt;
     const e = Math.min(1, SANTA.t / SANTA.T), sm = e * e * (3 - 2 * e);
     const a = SANTA.a0 + (SANTA.a1 - SANTA.a0) * sm;
-    const y = SANTA.alt + Math.sin(sm * Math.PI) * 4.5;
+    const y = (SANTA.baseY || 0) + SANTA.alt + Math.sin(sm * Math.PI) * 4.5;
     const x = SANTA.cx + Math.sin(a) * SANTA.rad, z = SANTA.cz + Math.cos(a) * SANTA.rad;
     const prev = SANTA.group.position.clone();
     SANTA.group.position.set(x, y, z);
