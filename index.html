@@ -2031,10 +2031,12 @@ function setCam(dt, snap) {
   else if (st === 'intro') { menuCam(G.time); chaseCam(dt, true); const e = sst(0, 1, G.introT / 2.6), b = Math.sin(e * Math.PI); cam.pos.lerpVectors(mC.pos, cT.pos, e); cam.pos.y += b * 1.8; cam.look.lerpVectors(mC.look, cT.look, e); cam.fov = lerp(mC.fov, cT.fov, e); oP.copy(cam.pos); oL.copy(cam.look); fov = cam.fov; off = mC.off * (1 - e); }
   else { chaseCam(dt, snap); const k = snap ? 1 : 1 - Math.exp(-9 * dt); cam.pos.lerp(cT.pos, k); cam.look.lerp(cT.look, snap ? 1 : 1 - Math.exp(-12 * dt)); cam.fov += (cT.fov - cam.fov) * (snap ? 1 : Math.min(1, dt * 4)); oP.copy(cam.pos); oL.copy(cam.look); fov = cam.fov;
     if (G.treeView) { // 결승 대형 트리를 정면에서 천천히 둘러보는 카메라
-      const yaw = (G.treeBaseAng || 0) + (G.orbitYaw || 0), pit = Math.max(-0.06, Math.min(0.8, G.orbitPitch || 0)), treeH = treeTopY() + 2.6, wide = innerWidth / innerHeight > 1.15, dist = clamp(G.orbitDist || treeH * (wide ? 1.58 : 1.36), 4.5, 70);
+      const yaw = (G.treeBaseAng || 0) + (G.orbitYaw || 0), pit = Math.max(-0.35, Math.min(0.9, G.orbitPitch || 0)), treeH = treeTopY() + 2.6, wide = innerWidth / innerHeight > 1.15, dist = clamp(G.orbitDist || treeH * (wide ? 1.58 : 1.36), 4.5, 70);
       wpos(2112, 0, 0, eP);
-      oP.set(eP.x + Math.sin(yaw) * Math.cos(pit) * dist, eP.y + 12 + Math.sin(pit) * dist, eP.z + Math.cos(yaw) * Math.cos(pit) * dist);
-      oL.set(eP.x, eP.y + treeH * 0.45, eP.z);
+      const fy = G.orbitFocus == null ? 0.45 : G.orbitFocus, ty = eP.y + 1.0 + fy * (treeH - 1.6); // 시선 높이: 선물상자(아래) ~ 꼭대기 별(위)
+      oP.set(eP.x + Math.sin(yaw) * Math.cos(pit) * dist, ty + Math.sin(pit) * dist, eP.z + Math.cos(yaw) * Math.cos(pit) * dist);
+      oL.set(eP.x, ty, eP.z);
+      if (oP.y < eP.y + 0.4) oP.y = eP.y + 0.4; // 땅 아래로 파고들지 않게
       fov = wide ? 48 : 62;
     } else if (st === 'finish' || st === 'result') { // 오두막 앞 마지막 장면으로 천천히 이동
       const e = sst(0.4, 4.2, G.finT), sw = Math.sin(G.time * 0.22), wide = innerWidth / innerHeight > 1.15;
@@ -2335,7 +2337,7 @@ function openTreeView() {
   G.treeView = true; G.state = 'result'; G.resOpen = false; G.finT = 4.5;
   const tP = wpos(2112, 0, 0, new THREE.Vector3()), hP = wpos(2080, 0, 0, new THREE.Vector3());
   G.treeBaseAng = Math.atan2(hP.x - tP.x, hP.z - tP.z);
-  G.autoSpin = true; G.orbitYaw = 0; G.orbitPitch = 0.18; G.orbitDist = (treeTopY() + 2.6) * (innerWidth / innerHeight > 1.15 ? 1.58 : 1.36);
+  G.autoSpin = true; G.orbitYaw = 0; G.orbitPitch = 0.18; G.orbitFocus = 0.45; G.orbitDist = (treeTopY() + 2.6) * (innerWidth / innerHeight > 1.15 ? 1.58 : 1.36);
   closeCardView();
   resetWorld(); G.lastSec = -1; G.offR = 0;
   $('#result').classList.add('hidden'); $('#endbar').classList.add('hidden'); orbitHint(false);
@@ -2345,7 +2347,7 @@ function openTreeView() {
   $('#hud').classList.add('hidden');
   $('#treebar').classList.remove('hidden');
   const oh = $('#orbitHint');
-  if (oh) { oh.innerHTML = '👆 드래그 360° · 두 손가락·휠로 확대 · 봉투를 누르면 엽서가 열려요'; oh.classList.add('on'); setTimeout(() => { if (G.treeView) oh.classList.remove('on'); }, 5600); }
+  if (oh) { oh.innerHTML = '👆 좌우로 360° · 위아래로 시선 이동 · 두 손가락·휠로 확대 · 봉투를 누르면 엽서가 열려요'; oh.classList.add('on'); setTimeout(() => { if (G.treeView) oh.classList.remove('on'); }, 5600); }
   loadCards();
 }
 function closeTreeView() {
@@ -3186,7 +3188,7 @@ function whiteFade(fn) { const f = $('#fade'); f.classList.add('on'); setTimeout
 function pause(v, silent) { if (G.state !== 'race' && !G.paused) return; G.paused = v === undefined ? !G.paused : v; $('#pause').classList.toggle('hidden', !G.paused || !!silent || !$('#help').classList.contains('hidden')); document.body.classList.toggle('paused', G.paused); if (G.paused) auEngine(0, false, true); }
 function resetWorld() { Object.values(W.snowmen).forEach(m => { m.visible = true; m.position.copy(m.userData.home); m.rotation.x = m.rotation.z = 0; }); trails.forEach(t => t.reset()); W.fireOn = false; G.lastSec = -1; G.offR = 0; G.last = null; G.saved = 0; G.mine = null; G.resOpen = false; $('#endbar').classList.add('hidden'); orbitHint(false); $('#shot').classList.add('hidden'); $('#turbo').classList.remove('on'); $('#gl').style.cursor = ''; }
 function toMenu(first) {
-  G.state = 'menu'; G.R = newRace(G.diff, 1); resetWorld(); G.finT = 0; G.orbitYaw = 0; G.orbitPitch = 0; G.autoSpin = false; G.orbitDist = 22; G.snowball = false; G.ornMode = false; ['#tbSnow', '#bSnow', '#tbOrn'].forEach(q => { const b = $(q); if (b) b.classList.remove('on'); }); const ob = $('#ornbar'); if (ob) ob.classList.remove('on'); AU.celeb = false; bgm(false); auEngine(0, false, true);
+  G.state = 'menu'; G.R = newRace(G.diff, 1); resetWorld(); G.finT = 0; G.orbitYaw = 0; G.orbitPitch = 0; G.orbitFocus = 0.45; G.autoSpin = false; G.orbitDist = 22; G.snowball = false; G.ornMode = false; ['#tbSnow', '#bSnow', '#tbOrn'].forEach(q => { const b = $(q); if (b) b.classList.remove('on'); }); const ob = $('#ornbar'); if (ob) ob.classList.remove('on'); AU.celeb = false; bgm(false); auEngine(0, false, true);
   $('#result').classList.add('hidden'); $('#board').classList.add('hidden'); $('#hud').classList.remove('on'); $('#menu').classList.remove('hidden'); requestAnimationFrame(() => $('#menu').classList.remove('out')); showBest(); $('#speedlines').style.opacity = 0;
   if (!first) setTimeout(() => { if (G.state === 'menu') $('#hud').classList.add('hidden'); }, 500); else $('#hud').classList.add('hidden');
   setTimeout(() => { if (G.state === 'menu') menuBgm(true); }, 60);
@@ -3382,7 +3384,7 @@ boot().catch(e => { console.error(e); const l = $('#loading'); l.classList.remov
 
 // ---------- 주변 구경하기 360도 드래그 · 핀치/휠 확대 ----------
 (function () {
-  let isDrag = false, dragX = 0, dragY = 0, startYaw = 0, startPitch = 0;
+  let isDrag = false, dragX = 0, dragY = 0, startYaw = 0, startPitch = 0, startFocus = 0.45;
   const pts = new Map();
   let pinchD = 0, pinchZoom = 0;
   const can = () => window.G && (G.state === 'finish' || G.state === 'result') && !G.resOpen;
@@ -3401,6 +3403,7 @@ boot().catch(e => { console.error(e); const l = $('#loading'); l.classList.remov
     dragX = e.clientX; dragY = e.clientY;
     startYaw = G.orbitYaw || 0;
     startPitch = G.orbitPitch || 0;
+    startFocus = G.orbitFocus == null ? 0.45 : G.orbitFocus;
   });
   window.addEventListener('pointermove', function (e) {
     if (pts.has(e.pointerId)) pts.set(e.pointerId, { x: e.clientX, y: e.clientY });
@@ -3409,8 +3412,14 @@ boot().catch(e => { console.error(e); const l = $('#loading'); l.classList.remov
       return;
     }
     if (isDrag && can()) {
+      const dy = e.clientY - dragY;
       G.orbitYaw = startYaw + (e.clientX - dragX) * 0.008;
-      G.orbitPitch = Math.max(-0.05, Math.min(0.8, startPitch + (e.clientY - dragY) * 0.006));
+      if (window.G && G.treeView) {
+        G.orbitPitch = Math.max(-0.35, Math.min(0.9, startPitch + dy * 0.0008));
+        G.orbitFocus = Math.max(0, Math.min(1, startFocus - dy * 0.0016)); // 위로 끌면 위쪽, 아래로 끌면 선물상자 쪽
+      } else {
+        G.orbitPitch = Math.max(-0.05, Math.min(0.8, startPitch + dy * 0.006));
+      }
     }
   });
   const up = function (e) { pts.delete(e.pointerId); isDrag = false; if (pts.size < 2) { pinchD = 0; } };
