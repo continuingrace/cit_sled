@@ -229,7 +229,9 @@ body.paused *{animation-play-state:paused!important}
 #cards .panel.vint::-webkit-scrollbar{width:0;height:0}
 #cards .vint-sheet{position:relative;color:var(--iv-ink);border:1px solid var(--iv-line);border-radius:20px;padding:26px 26px 22px;background-color:var(--iv-bg);background-image:var(--iv-noise),var(--iv-fiber);background-size:160px 160px,220px 220px;box-shadow:0 26px 64px rgba(5,9,30,.42),inset 0 0 60px rgba(120,95,60,.07),inset 0 1px 0 rgba(255,255,255,.6)}
 #cards .vin-head{position:relative;padding:0 44px 0 0;text-align:left}
-#cards .vin-head .vin-eyebrow,#cards .vin-head .vin-title,#cards .vin-head .vin-count{text-align:left;margin-left:0;padding-left:0}
+#cards .vin-head .vin-title,#cards .vin-head .vin-count{text-align:left;margin-left:0;padding-left:0}
+/* 키커(CiT 2026 …) 줄은 10px 얇은 'C'의 광학 왼쪽선 때문에 1px 왼쪽으로 튀어 보여, 1px 밀어 타이틀·카드 수 줄과 시작선을 맞춤 */
+#cards .vin-head .vin-eyebrow{text-align:left;margin-left:0;padding-left:1px}
 #cards .vin-eyebrow{display:block;margin:0;padding:0;text-indent:-1px;font-size:10px;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:var(--iv-brass)}
 /* 키커는 타이틀 폭에 맞춰 양끝을 맞춤 (왼쪽 C ↔ 트, 오른쪽 T ↔ 기) */
 #cards .vin-head-top{width:fit-content;max-width:100%}
@@ -408,7 +410,10 @@ body.paused *{animation-play-state:paused!important}
 #cardView .cv-note{margin:10px auto 0;max-width:min(360px,88vw);font-size:11.5px;line-height:1.55;font-weight:600;letter-spacing:-.01em;text-align:center;color:rgba(246,236,214,.78);text-shadow:0 1px 4px rgba(4,8,26,.6);min-height:0}
 #cardView .cv-note.bad{color:#ffb4ab}
 #cardView .cv-note.good{color:#c8e8c2}
-.vin-copy{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 14px;border-radius:999px;border:1px solid rgba(240,220,170,.32);background:rgba(255,255,255,.06);color:#f0e4c8;font-family:inherit;font-size:12.5px;font-weight:700;cursor:pointer}
+/* 베이지 종이 위 버튼 — 어두운 모달용 밝은 글자색이 아니라 종이에 맞는 진한 잉크색 */
+.vin-copy{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 14px;border-radius:999px;border:1px solid rgba(110,88,58,.22);background:rgba(110,88,58,.08);color:#4a3f32;font-family:inherit;font-size:12.5px;font-weight:700;cursor:pointer;transition:color .15s,border-color .15s,background .15s}
+.vin-copy:hover{color:#3a3128;background:rgba(110,88,58,.14);border-color:rgba(110,88,58,.34)}
+.vin-copy:active{transform:scale(.98)}
 .vin-copy.hidden{display:none}
 #tbSnow.on{background:linear-gradient(180deg,#eaf6ff,#bcdcf5);color:#12233d;border-color:rgba(255,255,255,.62);box-shadow:0 12px 28px rgba(120,190,240,.36)}
 #treebar #tbSpot{width:44px;padding:12px 0;font-size:15px}
@@ -1983,7 +1988,7 @@ function makeVillager(o) {
 }
 
 // ===== 버전 표기 (배포할 때마다 이 값만 올린다) =====
-const APP_VER = 'v1.9';
+const APP_VER = 'v1.10';
 try { const av = document.getElementById('appVer'); if (av) av.textContent = APP_VER; } catch (e) { }
 
 // ===== 사운드 (효과음: Web Audio 직접 합성 / BGM: 실제 캐럴 MP3) =====
