@@ -2255,8 +2255,8 @@ function chaseCam(dt, snap) {
 }
 function menuCam(t) {
   const r = G.R.racers[0]; trk(r.s, tt); wpos(r.s, r.u, 0, P0); const c = Math.cos(tt.th), s = Math.sin(tt.th), wide = innerWidth / innerHeight > 1.15, sw = Math.sin(t * 0.35) * 0.35;
-  mC.pos.set(P0.x + c * (4.3 - sw) + s * (4.9 + sw), P0.y + 1.5 + Math.sin(t * 0.5) * 0.12, P0.z + s * (4.3 - sw) - c * (4.9 + sw));
-  mC.look.set(P0.x + s * 0.15, P0.y + (wide ? 1.0 : -0.7), P0.z - c * 0.15); mC.fov = wide ? 33 : 44; mC.off = wide ? 0.2 : 0;
+  mC.pos.set(P0.x + c * (4.3 - sw) + s * (4.9 + sw), P0.y + (wide ? 1.5 : 1.85) + Math.sin(t * 0.5) * 0.12, P0.z + s * (4.3 - sw) - c * (4.9 + sw));
+  mC.look.set(P0.x + s * 0.15, P0.y + (wide ? 1.0 : -1.0), P0.z - c * 0.15); mC.fov = wide ? 33 : 44; mC.off = wide ? 0.2 : 0; // 모바일은 캐릭터 얼굴이 바텀시트 위로 보이게
 }
 const oP = new THREE.Vector3(), oL = new THREE.Vector3(), eP = new THREE.Vector3(), eL = new THREE.Vector3(), eP2 = new THREE.Vector3();
 function setCam(dt, snap) {
@@ -2297,7 +2297,7 @@ function setCam(dt, snap) {
       }
       G.offR += (((st === 'result' && wide && G.resOpen) ? 0.17 : 0) - G.offR) * Math.min(1, dt * 2.2); off = G.offR; } }
   if ((st === 'finish' || st === 'result') && W.floorY && oP.y < W.floorY) oP.y = W.floorY; // 어떤 각도에서도 카메라가 설면을 뚫지 않게
-  if (W && W.groundY) { // 경사진 눈밭에서도 카메라·시선이 지면 아래로 내려가지 않게 실제 지형 높이 기준으로 가볍게만
+  if (W && W.groundY && (st === 'finish' || st === 'result')) { // 경사진 눈밭에서도 둘러보기 카메라·시선이 지면 아래로 내려가지 않게
     const gy = W.groundY(oP.x, oP.z); if (gy != null && oP.y < gy + 0.35) oP.y = gy + 0.35;
     const gt = W.groundY(oL.x, oL.z); if (gt != null && oL.y < gt + 0.25) oL.y = gt + 0.25;
   }
