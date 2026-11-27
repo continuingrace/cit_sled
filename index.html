@@ -1999,7 +1999,7 @@ function makeVillager(o) {
 }
 
 // ===== 버전 표기 (배포할 때마다 이 값만 올린다) =====
-const APP_VER = 'v1.17';
+const APP_VER = 'v1.18';
 try { const av = document.getElementById('appVer'); if (av) av.textContent = APP_VER; } catch (e) { }
 
 // ===== 사운드 (효과음: Web Audio 직접 합성 / BGM: 실제 캐럴 MP3) =====
@@ -2804,11 +2804,12 @@ async function drawCardCanvas(card) { // card를 넘기면 그 카드(내 카드
       x.globalAlpha = pass ? alpha * 0.4 : alpha;
       x.lineWidth = pass ? lw * 0.55 : lw;
       let pen = false;
+      x.beginPath();
       for (let a = 0; a <= 360; a += 3) {
         if (gaps && Math.random() < gaps) { pen = false; continue; }
         const t2 = a * Math.PI / 180, rr = rad + rnd(-jit, jit);
         const px = Math.cos(t2) * rr, py = Math.sin(t2) * rr;
-        if (!pen) { x.beginPath(); x.moveTo(px, py); pen = true; } else x.lineTo(px, py);
+        if (!pen) { x.moveTo(px, py); pen = true; } else x.lineTo(px, py);
       }
       x.stroke();
     }
