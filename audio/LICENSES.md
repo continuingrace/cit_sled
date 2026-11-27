@@ -99,3 +99,20 @@ Airmen of Note(재즈 오케스트라) 2곡, Diplomats(재즈 앙상블) 3곡, �
 
 - 원본: [File:Good King Wenceslas and His Merry Band - Airmen of Note - United States Air Force Band.mp3](https://commons.wikimedia.org/wiki/File:Good_King_Wenceslas_and_His_Merry_Band_-_Airmen_of_Note_-_United_States_Air_Force_Band.mp3)
 - 직링크: https://upload.wikimedia.org/wikipedia/commons/a/a8/Good_King_Wenceslas_and_His_Merry_Band_-_Airmen_of_Note_-_United_States_Air_Force_Band.mp3
+
+## 3D 트리 보기 배경음악 (2026-11-27 추가)
+
+`3D 트리 보기` 화면에 들어가면 첫 화면 음악 대신 이 곡이 **반복 재생**되고, `← 첫 화면으로`로 나오면
+다시 첫 화면(<호두까기인형>) 음악으로 돌아갑니다(`index.html`의 `TGA` + `treeBgm()`).
+
+| 파일 | 곡 | 연주 | 원본 길이 | 이 파일 | 원본(위키미디어 공용) |
+| --- | --- | --- | --- | --- | --- |
+| `tree-o-christmas-tree.mp3` | O Christmas Tree / O Tannenbaum (소나무야) — 재즈 편성 | 미 공군 Heartland of America Band의 재즈 앙상블 **Raptor**, 앨범 *Christmas from the Heartland*(1994) Track 3 | 2:50 | 2:49 | [File:Oh Christmas Tree - Raptor … Band.mp3](https://commons.wikimedia.org/wiki/File:Oh_Christmas_Tree_-_Raptor_-_United_States_Air_Force_Heartland_of_America_Band.mp3) |
+
+- **곡(작곡)**: 19세기 이전 독일 전통 민요 *O Tannenbaum* — 작곡·가사 저작권 만료(퍼블릭 도메인).
+- **연주·녹음**: 미 공군 악단 단원의 직무 수행물이라 미국 연방정부 저작물(17 U.S.C. §105)로 퍼블릭 도메인.
+  위키미디어 공용 문서의 라이선스 틀이 `PD-USGov-Military-Air Force`이고 `AttributionRequired: false`입니다.
+  출처 표기: 미 공군 음악국 퍼블릭 도메인 음원 페이지 `music.af.mil/Multimedia/Music/Public-Domain-Music/`.
+- 원본 직링크: https://upload.wikimedia.org/wikipedia/commons/5/5a/Oh_Christmas_Tree_-_Raptor_-_United_States_Air_Force_Heartland_of_America_Band.mp3
+- 편집: 앞 0.65초 무음 컷, 0.05초 페이드인·끝 3.5초 페이드아웃, `loudnorm I=-18:TP=-1.5:LRA=11`로 −18 LUFS 정규화,
+  44.1 kHz 스테레오 MP3 112 kbps (2:49, 2.3 MB). 반복 재생용이라 끝은 부드럽게 사라집니다.

@@ -1781,6 +1781,24 @@ function menuBgm(on) {
     if (MGA.paused) { const p = MGA.play(); if (p && p.catch) p.catch(() => { }); }
   } catch (e) { }
 }
+// 3D 트리 보기 전용 BGM — O Christmas Tree (미 공군 Heartland of America Band 'Raptor' 재즈 연주, PD-USGov)
+const TREE_BGM = { file: './audio/tree-o-christmas-tree.mp3' };
+const TGA = new Audio();
+TGA.loop = true; TGA.preload = 'none'; TGA.volume = BGM_VOL * 0.62; TGA.muted = true;
+TGA.setAttribute('playsinline', ''); TGA.setAttribute('webkit-playsinline', '');
+try { window.TGA = TGA; } catch (e) { }
+function prepareTreeBgm() {
+  try { if (!TGA.getAttribute('src')) { TGA.src = new URL(TREE_BGM.file, location.href).href; TGA.preload = 'auto'; TGA.load(); } } catch (e) { }
+}
+function treeBgm(on) {
+  try {
+    if (!on) { TGA.pause(); return; }
+    if (AU.muted) { TGA.muted = true; TGA.pause(); return; }
+    prepareTreeBgm();
+    TGA.muted = AU.muted; TGA.volume = BGM_VOL * 0.62;
+    if (TGA.paused) { const p = TGA.play(); if (p && p.catch) p.catch(() => { }); }
+  } catch (e) { }
+}
 function bgmTrack() { if (AU.celeb) return CELEB[(AU.celebI || 0) % CELEB.length]; return AU.carol || TRACKS[0]; }
 function nextCeleb() { AU.celebI = ((AU.celebI || 0) + 1) % CELEB.length; return CELEB[AU.celebI]; }
 function bgmSrc(tr) { return new URL(tr.file, location.href).href; }
@@ -1804,7 +1822,7 @@ function setPlaybackSession() {
 setPlaybackSession();
 function auResume() {
   // 첫 제스처에서 메뉴 음악이 실제 소리로 나오도록 음소거 상태를 맞춰 둔다
-  try { MGA.muted = AU.muted; if (G.state === 'menu' && !AU.muted) menuBgm(true); } catch (e) { }
+  try { MGA.muted = AU.muted; TGA.muted = AU.muted; if (G.state === 'menu' && !AU.muted) menuBgm(true); if (G.treeView && !AU.muted) treeBgm(true); } catch (e) { }
   const c = AU.ctx; if (!c) return;
   if (c.state === 'suspended' || c.state === 'interrupted') {
     try { const p = c.resume(); if (p && p.catch) p.catch(() => { }); } catch (e) { }
@@ -1833,7 +1851,7 @@ function auInit() {
   AU.music = c.createGain(); AU.music.gain.value = 0.55; AU.music.connect(AU.master);
   auResume();
 }
-function auMute(m) { AU.muted = m; BGA.muted = m; MGA.muted = m; if (m) MGA.pause(); else if (G.state === 'menu') menuBgm(true); try { localStorage.setItem('sledMute', m ? '1' : '0'); } catch (e) { } if (AU.master) AU.master.gain.setTargetAtTime(m ? 0 : 0.85, AU.ctx.currentTime, 0.03); }
+function auMute(m) { AU.muted = m; BGA.muted = m; MGA.muted = m; try { TGA.muted = m; if (m) TGA.pause(); else if (G.treeView) treeBgm(true); } catch (e) { } if (m) MGA.pause(); else if (G.state === 'menu') menuBgm(true); try { localStorage.setItem('sledMute', m ? '1' : '0'); } catch (e) { } if (AU.master) AU.master.gain.setTargetAtTime(m ? 0 : 0.85, AU.ctx.currentTime, 0.03); }
 function tone(f, t0, dur, type, vol, dest, f2) { const c = AU.ctx; if (!c) return; const o = c.createOscillator(), g = c.createGain(); o.type = type || 'sine'; o.frequency.setValueAtTime(f, t0); if (f2) o.frequency.exponentialRampToValueAtTime(f2, t0 + dur); g.gain.setValueAtTime(0.0001, t0); g.gain.exponentialRampToValueAtTime(vol, t0 + 0.012); g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur); o.connect(g); g.connect(dest || AU.master); o.start(t0); o.stop(t0 + dur + 0.05); }
 function nzSweep(t0, dur, f0, f1, q, vol, type, dest) { // 필터 주파수를 훑는 노이즈 (휙 지나가는 바람소리)
   const c = AU.ctx; if (!c) return; const s = c.createBufferSource(); s.buffer = AU.noise; s.loop = true;
@@ -2361,6 +2379,7 @@ function openTreeView() {
   const tP = wpos(2112, 0, 0, new THREE.Vector3()), hP = wpos(2080, 0, 0, new THREE.Vector3());
   G.treeBaseAng = Math.atan2(hP.x - tP.x, hP.z - tP.z);
   G.autoSpin = true; G.orbitYaw = 0; G.orbitPitch = 0.18; G.orbitFocus = 0.45; G.orbitDist = (treeTopY() + 2.6) * (innerWidth / innerHeight > 1.15 ? 1.58 : 1.36);
+  menuBgm(false); treeBgm(true);
   closeCardView();
   resetWorld(); G.lastSec = -1; G.offR = 0;
   $('#result').classList.add('hidden'); $('#endbar').classList.add('hidden'); orbitHint(false);
@@ -2374,7 +2393,7 @@ function openTreeView() {
   loadCards();
 }
 function closeTreeView() {
-  G.treeView = false; G.autoSpin = false;
+  G.treeView = false; G.autoSpin = false; treeBgm(false);
   const oh = $('#orbitHint'); if (oh) { oh.classList.remove('on'); oh.innerHTML = '👆 드래그해서 360° 둘러보기 · 팻말 터치'; }
   $('#treebar').classList.add('hidden');
   const tb = $('#treeCount'); if (tb) { tb.classList.remove('on'); tb.innerHTML = ''; }
@@ -2478,8 +2497,8 @@ function toggleCards(v) {
 }
 function initCards() {
   const b1 = $('#bCards'), b2 = $('#bCards2');
-  if (b1) b1.onclick = () => { auInit(); toggleCards(true); };
-  if (b2) b2.onclick = () => { auInit(); toggleCards(true); };
+  if (b1) b1.onclick = () => { auInit(); prepareTreeBgm(); toggleCards(true); };
+  if (b2) b2.onclick = () => { auInit(); prepareTreeBgm(); toggleCards(true); };
   $('#cardsX').onclick = () => toggleCards(false);
   $('#cards').addEventListener('click', (e) => { if (e.target.id === 'cards') toggleCards(false); });
   $('#cardSend').onclick = sendCard;
