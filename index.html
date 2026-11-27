@@ -410,8 +410,6 @@ body.paused *{animation-play-state:paused!important}
 #cardView .cv-note.good{color:#c8e8c2}
 .vin-copy{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 14px;border-radius:999px;border:1px solid rgba(240,220,170,.32);background:rgba(255,255,255,.06);color:#f0e4c8;font-family:inherit;font-size:12.5px;font-weight:700;cursor:pointer}
 .vin-copy.hidden{display:none}
-#cardView .cv-share{display:flex;align-items:center;justify-content:center;width:100%;box-sizing:border-box;padding:10px 12px;border-radius:999px;border:1px solid rgba(124,35,41,.4);background:rgba(255,255,255,.55);color:#6f2b30;font-family:inherit;font-size:12.5px;font-weight:800;white-space:nowrap;cursor:pointer}
-#cardView .cv-share:hover{background:#fff}
 #tbSnow.on{background:linear-gradient(180deg,#eaf6ff,#bcdcf5);color:#12233d;border-color:rgba(255,255,255,.62);box-shadow:0 12px 28px rgba(120,190,240,.36)}
 #treebar #tbSpot{width:44px;padding:12px 0;font-size:15px}
 #treebar #tbSpot.on{background:rgba(232,208,150,.18);border-color:rgba(240,220,170,.85);box-shadow:0 0 0 1px rgba(240,220,170,.26),0 12px 26px rgba(4,8,26,.42)}
@@ -580,7 +578,7 @@ body.paused *{animation-play-state:paused!important}
       <button class="btn big" id="bStart">출발 <small>ENTER</small></button>
       <div class="row"><button class="btn sub" id="bHelp">조작법</button><button class="btn sub" id="bBoard">순위표</button><button class="btn sub" id="bCards">카드 남기기</button></div>
       <div class="best" id="best"></div>
-      <div class="appver" id="appVer">v1.7</div>
+      <div class="appver" id="appVer">v1.8</div>
     </div>
   </div>
 </div>
@@ -1985,7 +1983,7 @@ function makeVillager(o) {
 }
 
 // ===== 버전 표기 (배포할 때마다 이 값만 올린다) =====
-const APP_VER = 'v1.7';
+const APP_VER = 'v1.8';
 try { const av = document.getElementById('appVer'); if (av) av.textContent = APP_VER; } catch (e) { }
 
 // ===== 사운드 (효과음: Web Audio 직접 합성 / BGM: 실제 캐럴 MP3) =====
