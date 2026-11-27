@@ -3560,33 +3560,45 @@ function polaroidCanvas(raw, customText) { // 3D 원본 장면 + 실제 폴라�
   // ③ 사진 창 경계 — 바깥쪽 얇은 빛(종이 두께) + 안쪽 헤어라인
   x.strokeStyle = 'rgba(255,255,255,.5)'; x.lineWidth = 2; rr(IX - 1.5, IY - 1.5, IW + 3, IW + 3, 0); x.stroke();
   x.strokeStyle = 'rgba(96,80,58,.2)'; x.lineWidth = 1; rr(IX + 0.5, IY + 0.5, IW - 1, IW - 1, 0); x.stroke();
-  // ④ 하단 친 여백 — 제목(CiT ｜ 썰매대작전 · WINTER SPECIAL GAME) / 문구(고운바탕) / 출처
-  x.textAlign = 'center'; x.textBaseline = 'middle';
+  // ④ 하단 친 여백 — 제목(CiT ｜ 썰매대작전) / 보조제목 / 문구 / 출처 (양끝·상하 정렬)
   const msgF = `400 38px ${FONT_T}`;
+  x.textAlign = 'left'; x.textBaseline = 'alphabetic';
   x.font = msgF;
   const lines = wrapLines(x, customText, IW - 96, 2);
-  const TITLE_H = 44, SUB_GAP = 18, SUB_H = 21, MSG_GAP = 26, MSG_LH = 46, FOOT = 68;
-  const blockH = TITLE_H + SUB_GAP + SUB_H + (lines.length ? MSG_GAP + lines.length * MSG_LH : 0);
-  let by = IY + IW + Math.max(14, (CHIN - FOOT - blockH) / 2);
-  { // 'CiT'는 웜골드 · '썰매대작전'은 뮤트 슬레이트 · 사이는 얇은 세로 실선
-    const t1 = 'CiT', t2 = '썰매대작전', PAD = 15, BW = 2.4, BH = 26;
-    x.font = `800 40px ${FONT_P}`; x.textAlign = 'left';
-    const w1 = x.measureText(t1).width;
-    x.font = `700 40px ${FONT_P}`;
-    const w2 = x.measureText(t2).width;
-    const total = w1 + PAD + BW + PAD + w2, sx = PW / 2 - total / 2, ty2 = by + TITLE_H / 2;
-    x.font = `800 40px ${FONT_P}`; x.fillStyle = '#8a734a'; x.fillText(t1, sx, ty2);
-    x.fillStyle = 'rgba(107,116,130,.5)'; x.fillRect(sx + w1 + PAD, ty2 - BH / 2, BW, BH);
-    x.font = `700 40px ${FONT_P}`; x.fillStyle = '#39414f'; x.fillText(t2, sx + w1 + PAD + BW + PAD, ty2);
+  const subTxt = 'WINTER SPECIAL GAME';
+  // 제목 폭·잉크 높이 측정
+  x.font = `800 40px ${FONT_P}`; const mCit = x.measureText('CiT'); const w1 = mCit.width;
+  x.font = `700 40px ${FONT_P}`; const mKor = x.measureText('썰매대작전'); const w2 = mKor.width;
+  const PAD = 15, BW = 2.4, totalW = w1 + PAD + BW + PAD + w2, sx = PW / 2 - totalW / 2;
+  const tAsc = Math.max(mCit.actualBoundingBoxAscent || 30, mKor.actualBoundingBoxAscent || 30);
+  const tDesc = Math.max(mCit.actualBoundingBoxDescent || 3, mKor.actualBoundingBoxDescent || 3);
+  const inkH = tAsc + tDesc;
+  // 보조제목: 자간을 계산해 'W' 왼끝 = 'C' 왼끝, 'E' 오른끝 = '전' 오른끝
+  let subFs = 19; x.font = `600 ${subFs}px ${FONT_P}`;
+  let chars = Array.from(subTxt), ws = chars.map(ch => x.measureText(ch).width), adv = ws.reduce((a, b) => a + b, 0);
+  if (adv > totalW) { subFs = Math.max(14, subFs * totalW / adv); x.font = `600 ${subFs.toFixed(1)}px ${FONT_P}`; ws = chars.map(ch => x.measureText(ch).width); adv = ws.reduce((a, b) => a + b, 0); }
+  const subExtra = (totalW - adv) / Math.max(1, chars.length - 1);
+  const mSub = x.measureText(subTxt);
+  const sAsc = mSub.actualBoundingBoxAscent || 14, sDesc = mSub.actualBoundingBoxDescent || 4;
+  x.font = msgF; const mMsg = x.measureText('가나'); const mAsc = mMsg.actualBoundingBoxAscent || 34, mDesc = mMsg.actualBoundingBoxDescent || 6;
+  const GAP_TS = 20, GAP_SM = 28, MLH = 46;
+  const blockH = inkH + GAP_TS + (sAsc + sDesc) + (lines.length ? GAP_SM + (lines.length - 1) * MLH + (mAsc + mDesc) : 0);
+  const areaTop = IY + IW, areaBot = PH - 34 - 56;
+  const yTop = areaTop + Math.max(30, (areaBot - areaTop - blockH) / 2);
+  const titleBase = yTop + tAsc, inkMid = yTop + inkH / 2, subBase = yTop + inkH + GAP_TS + sAsc;
+  {
+    x.textAlign = 'left';
+    x.font = `800 40px ${FONT_P}`; x.fillStyle = '#8a734a'; x.fillText('CiT', sx, titleBase);
+    x.fillStyle = 'rgba(107,116,130,.5)'; x.fillRect(sx + w1 + PAD, inkMid - inkH * 0.41, BW, inkH * 0.82); // 세로 실선: 글자 잉크 세로 중앙
+    x.font = `700 40px ${FONT_P}`; x.fillStyle = '#39414f'; x.fillText('썰매대작전', sx + w1 + PAD + BW + PAD, titleBase);
+    x.font = `600 ${subFs.toFixed(1)}px ${FONT_P}`; x.fillStyle = '#6b7482';
+    let cx = sx; for (let i = 0; i < chars.length; i++) { x.fillText(chars[i], cx, subBase); cx += ws[i] + subExtra; }
   }
-  by += TITLE_H + SUB_GAP;
-  x.textAlign = 'center'; x.font = `600 19px ${FONT_P}`; x.fillStyle = '#6b7482';
-  try { x.letterSpacing = '3px'; } catch (e) { }
-  x.fillText('WINTER SPECIAL GAME', PW / 2, by + SUB_H / 2, IW - 40);
-  try { x.letterSpacing = '0px'; } catch (e) { }
-  by += SUB_H + MSG_GAP;
-  x.font = msgF; x.fillStyle = '#1c2430';
-  lines.forEach((ln) => { x.fillText(ln, PW / 2, by + MSG_LH / 2, IW - 96); by += MSG_LH; });
+  if (lines.length) {
+    x.textAlign = 'center'; x.font = msgF; x.fillStyle = '#1c2430';
+    const mTop = subBase + sDesc + GAP_SM + mAsc;
+    lines.forEach((ln, i) => x.fillText(ln, PW / 2, mTop + i * MLH, IW - 96));
+  }
   const dd = new Date(), ds = `${dd.getFullYear()}.${String(dd.getMonth() + 1).padStart(2, '0')}.${String(dd.getDate()).padStart(2, '0')}`;
   x.textBaseline = 'alphabetic'; x.fillStyle = '#9aa2af'; x.font = `500 21px ${FONT_P}`;
   x.textAlign = 'left'; x.fillText('citkorea.co.kr', S + 4, PH - 34);
