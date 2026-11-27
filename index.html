@@ -1465,13 +1465,13 @@ function buildWorld(scene) {
     const sp = PT(F, 0, topY + 2.0, 0);
     const st = new THREE.Mesh(starGeo3D(2.35, 0.66, 0.42), new THREE.MeshStandardMaterial({ color: '#ffd24e', metalness: 0.9, roughness: 0.2, emissive: '#a06a10', emissiveIntensity: 0.75, flatShading: true }));
     st.position.copy(sp); st.frustumCulled = false; scene.add(st); W.star = st;
-    const st2 = new THREE.Mesh(starGeo3D(1.05, 0.34, 0.42), new THREE.MeshBasicMaterial({ color: '#fff6cf', transparent: true, opacity: 0.6, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false }));
+    const st2 = new THREE.Mesh(starGeo3D(1.05, 0.34, 0.42), new THREE.MeshBasicMaterial({ color: '#fff6cf', transparent: true, opacity: 0.42, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false }));
     st2.position.copy(sp); st2.position.z += 0.1; st2.frustumCulled = false; scene.add(st2); W.starSpark = st2;
-    const rays = new THREE.Sprite(new THREE.SpriteMaterial({ map: starRayTexture(), color: '#ffe2a0', transparent: true, opacity: 0.5, blending: THREE.AdditiveBlending, depthWrite: false, fog: false }));
+    const rays = new THREE.Sprite(new THREE.SpriteMaterial({ map: starRayTexture(), color: '#ffe2a0', transparent: true, opacity: 0.4, blending: THREE.AdditiveBlending, depthWrite: false, fog: false }));
     rays.position.copy(sp); rays.scale.set(19, 19, 1); rays.frustumCulled = false; scene.add(rays); W.starRays = rays;
     const sl = new THREE.PointLight('#ffd08a', 0, 26, 1.8); sl.position.copy(sp); sl.position.y -= 1.4; scene.add(sl); W.starLight = sl;
     const halo = new THREE.Sprite(new THREE.SpriteMaterial({ map: TEX.glow, color: '#ffdf9a', transparent: true, opacity: 0.9, blending: THREE.AdditiveBlending, depthWrite: false, fog: false }));
-    halo.position.copy(sp); halo.scale.set(15, 15, 1); halo.frustumCulled = false; scene.add(halo); W.starHalo = halo;
+    halo.position.copy(sp); halo.scale.set(14, 14, 1); halo.frustumCulled = false; scene.add(halo); W.starHalo = halo;
     const halo2 = new THREE.Sprite(new THREE.SpriteMaterial({ map: TEX.glow, color: '#fff3c8', transparent: true, opacity: 0.85, blending: THREE.AdditiveBlending, depthWrite: false, fog: false }));
     halo2.position.copy(sp); halo2.scale.set(6, 6, 1); halo2.frustumCulled = false; scene.add(halo2);
     bigGlow(sp, '#ffe98a'); bigGlow(sp, '#ffd24a');
@@ -2767,14 +2767,15 @@ function caneTexture() {
   return t;
 }
 const ORN_GEO = {
-  ball: new THREE.SphereGeometry(0.2, 20, 14),
-  cap: new THREE.CylinderGeometry(0.055, 0.07, 0.07, 10),
-  ring: new THREE.TorusGeometry(0.045, 0.012, 6, 12),
-  star: starGeo3D(0.26, 0.075, 0.42),
+  ball: new THREE.SphereGeometry(0.29, 20, 14),
+  cap: new THREE.CylinderGeometry(0.08, 0.1, 0.09, 10),
+  ring: new THREE.TorusGeometry(0.062, 0.016, 6, 12),
+  star: starGeo3D(0.38, 0.1, 0.42),
   cane: new THREE.TubeGeometry(new THREE.CatmullRomCurve3([[0, -0.06, 0], [0, 0.24, 0], [0.02, 0.38, 0], [0.1, 0.44, 0], [0.18, 0.38, 0], [0.2, 0.3, 0]].map(q => new THREE.Vector3(q[0], q[1], q[2]))), 22, 0.06, 7),
   bow: merge([bake(new THREE.SphereGeometry(1, 12, 8), '#ffffff', MX(-0.13, 0.02, 0, 0.14, 0.1, 0.06)), bake(new THREE.SphereGeometry(1, 12, 8), '#ffffff', MX(0.13, 0.02, 0, 0.14, 0.1, 0.06)), bake(new THREE.SphereGeometry(1, 10, 8), '#ffffff', MX(0, 0, 0.03, 0.055, 0.055, 0.055)), bake(new THREE.BoxGeometry(1, 1, 1), '#ffffff', MX(-0.09, -0.14, 0, 0.05, 0.16, 0.03, 0, 0, 0.3)), bake(new THREE.BoxGeometry(1, 1, 1), '#ffffff', MX(0.09, -0.14, 0, 0.05, 0.16, 0.03, 0, 0, -0.3))]),
-  thread: new THREE.CylinderGeometry(0.008, 0.008, 1, 5)
+  thread: new THREE.CylinderGeometry(0.01, 0.01, 1, 5)
 };
+ORN_GEO.cane.scale(1.45, 1.45, 1.45); ORN_GEO.bow.scale(1.4, 1.4, 1.4);
 const ORN_MAT = {
   red: new THREE.MeshStandardMaterial({ color: '#d5353c', roughness: 0.16, metalness: 0.45, emissive: '#3a0a0c', emissiveIntensity: 0.4 }),
   gold: new THREE.MeshStandardMaterial({ color: '#f2c65f', roughness: 0.18, metalness: 0.9, emissive: '#4a3408', emissiveIntensity: 0.5 }),
@@ -2787,7 +2788,7 @@ const ORN_MAT = {
 function ornPlace(o) {
   const n = new THREE.Vector3(o.nx || 0, 0, o.nz || 1); if (n.lengthSq() < 1e-6) n.set(0, 0, 1); n.normalize();
   const p = new THREE.Vector3(o.x, o.y, o.z);
-  return { p, n, center: p.clone().addScaledVector(n, 0.14).add(new THREE.Vector3(0, -0.24, 0)) };
+  return { p, n, center: p.clone().addScaledVector(n, 0.2).add(new THREE.Vector3(0, -0.32, 0)) };
 }
 function rebuildOrnaments() {
   if (!scene) return;
@@ -2804,8 +2805,8 @@ function rebuildOrnaments() {
     arr.forEach(o => {
       const center = ornPlace(o).center;
       bm.push(new THREE.Matrix4().compose(center, I, S));
-      cm.push(new THREE.Matrix4().compose(center.clone().add(new THREE.Vector3(0, 0.2, 0)), I, S));
-      rm.push(new THREE.Matrix4().compose(center.clone().add(new THREE.Vector3(0, 0.27, 0)), I, S));
+      cm.push(new THREE.Matrix4().compose(center.clone().add(new THREE.Vector3(0, 0.29, 0)), I, S));
+      rm.push(new THREE.Matrix4().compose(center.clone().add(new THREE.Vector3(0, 0.37, 0)), I, S));
     });
     mk(ORN_GEO.ball, ORN_MAT[k], bm); mk(ORN_GEO.cap, ORN_MAT.trim, cm); mk(ORN_GEO.ring, ORN_MAT.trim, rm);
   });
@@ -2816,7 +2817,7 @@ function rebuildOrnaments() {
   });
   if (by.cane) mk(ORN_GEO.cane, ORN_MAT.cane, by.cane.map(o => new THREE.Matrix4().compose(ornPlace(o).center, I, S)));
   const tm = ORNS.map(o => {
-    const q = ornPlace(o), top = q.center.clone().add(new THREE.Vector3(0, 0.19, 0));
+    const q = ornPlace(o), top = q.center.clone().add(new THREE.Vector3(0, 0.29, 0));
     const mid = q.p.clone().lerp(top, 0.5), len = Math.max(0.02, q.p.distanceTo(top));
     return new THREE.Matrix4().compose(mid, I, new THREE.Vector3(1, len, 1));
   });
