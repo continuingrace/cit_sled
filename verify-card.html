@@ -10,18 +10,25 @@
 </style>
 </head>
 <body>
-<iframe id="f" src="./index.html?verify=1" style="position:fixed;left:-3200px;top:0;width:390px;height:800px;border:0" aria-hidden="true"></iframe>
+<iframe id="f" src="./index.html?v=119a" style="position:fixed;left:-3200px;top:0;width:390px;height:800px;border:0" aria-hidden="true"></iframe>
 <div id="out"></div>
 <script>
-  var fr = document.getElementById('f');
-  fr.addEventListener('load', function () {
+  var fr = document.getElementById('f'), started = false;
+  function render() {
+    if (started) return;
+    started = true;
     setTimeout(function () {
       var w = fr.contentWindow;
       Promise.resolve(w.drawCardCanvas({ theme: 'cream', stamp: 'tree', name: '혜련', toName: '모두에게', message: '메리 크리스마스, 따뜻한 연말 보내세요!' }))
         .then(function (cv) { document.getElementById('out').appendChild(cv); document.title = 'done'; })
         .catch(function (e) { document.title = 'error ' + (e && e.message); });
-    }, 3000);
-  });
+    }, 2500);
+  }
+  fr.addEventListener('load', render);
+  // 이미 load가 끝나 버린 경우도 처리
+  var iv = setInterval(function () {
+    try { if (fr.contentDocument && fr.contentDocument.readyState === 'complete' && fr.contentWindow.drawCardCanvas) { clearInterval(iv); render(); } } catch (e) { }
+  }, 400);
 </script>
 </body>
 </html>
