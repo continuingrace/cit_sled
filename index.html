@@ -3410,20 +3410,30 @@ function polaroidCanvas(raw, customText) { // 3D 원본 장면 + 실제 폴라�
   // ③ 사진 창 경계 — 바깥쪽 얇은 빛(종이 두께) + 안쪽 헤어라인
   x.strokeStyle = 'rgba(255,255,255,.5)'; x.lineWidth = 2; rr(IX - 1.5, IY - 1.5, IW + 3, IW + 3, 0); x.stroke();
   x.strokeStyle = 'rgba(96,80,58,.2)'; x.lineWidth = 1; rr(IX + 0.5, IY + 0.5, IW - 1, IW - 1, 0); x.stroke();
-  // ④ 하단 친 여백 — 넓은 여백 안에 제목·문구·출처를 여백과 균형 있게
+  // ④ 하단 친 여백 — 제목(CiT | 썰매대작전 · WINTER SPECIAL GAME) / 문구(고운바탕) / 출처
   x.textAlign = 'center'; x.textBaseline = 'middle';
-  const titleF = `700 40px ${FONT_T}`, msgF = `400 38px ${FONT_T}`;
+  const msgF = `400 38px ${FONT_T}`;
   x.font = msgF;
   const lines = wrapLines(x, customText, IW - 96, 2);
-  const TITLE_H = 50, MSG_LH = 46, GAP = 16, FOOT = 68;
-  const blockH = TITLE_H + (lines.length ? GAP + lines.length * MSG_LH : 0);
-  let by = IY + IW + Math.max(18, (CHIN - FOOT - blockH) / 2);
-  x.font = titleF; x.fillStyle = '#1b2144'; x.fillText('CiT코칭연구소 · 2026 크리스마스', PW / 2, by + TITLE_H / 2, IW - 40);
-  by += TITLE_H + GAP;
-  x.font = msgF; x.fillStyle = '#252b50';
+  const TITLE_H = 46, SUB_H = 26, MSG_LH = 46, GAP = 16, FOOT = 68;
+  const blockH = TITLE_H + SUB_H + (lines.length ? GAP + lines.length * MSG_LH : 0);
+  let by = IY + IW + Math.max(16, (CHIN - FOOT - blockH) / 2);
+  { // 메인 타이틀과 같은 톤 — 'CiT'는 웜골드, 나머지는 뮤트 슬레이트
+    const t1 = 'CiT', t2 = ' | 썰매대작전';
+    x.font = `800 40px ${FONT_P}`; x.textAlign = 'left';
+    const w1 = x.measureText(t1).width, w2 = x.measureText(t2).width, sx = PW / 2 - (w1 + w2) / 2, ty2 = by + TITLE_H / 2;
+    x.fillStyle = '#8a734a'; x.fillText(t1, sx, ty2); x.fillStyle = '#39414f'; x.fillText(t2, sx + w1, ty2);
+  }
+  by += TITLE_H;
+  x.textAlign = 'center'; x.font = `600 19px ${FONT_P}`; x.fillStyle = '#6b7482';
+  try { x.letterSpacing = '3px'; } catch (e) { }
+  x.fillText('WINTER SPECIAL GAME', PW / 2, by + SUB_H / 2, IW - 40);
+  try { x.letterSpacing = '0px'; } catch (e) { }
+  by += SUB_H + GAP;
+  x.font = msgF; x.fillStyle = '#1c2430';
   lines.forEach((ln) => { x.fillText(ln, PW / 2, by + MSG_LH / 2, IW - 96); by += MSG_LH; });
   const dd = new Date(), ds = `${dd.getFullYear()}.${String(dd.getMonth() + 1).padStart(2, '0')}.${String(dd.getDate()).padStart(2, '0')}`;
-  x.textBaseline = 'alphabetic'; x.fillStyle = '#a8a294'; x.font = `400 22px ${FONT_T}`;
+  x.textBaseline = 'alphabetic'; x.fillStyle = '#9aa2af'; x.font = `500 21px ${FONT_P}`;
   x.textAlign = 'left'; x.fillText('citkorea.co.kr', S + 4, PH - 34);
   x.textAlign = 'right'; x.fillText(ds, PW - S - 4, PH - 34);
   x.restore();
@@ -3434,7 +3444,7 @@ function polaroidCanvas(raw, customText) { // 3D 원본 장면 + 실제 폴라�
 async function takePolaroid() { // 지금 화면 구도 그대로 한 장 찍어 폴라로이드 틀에 담는다
   if (!(G.state === 'finish' || G.state === 'result')) return;
   SFX.click();
-  try { await Promise.race([Promise.all([`400 38px ${FONT_T}`, `700 40px ${FONT_T}`, `400 22px ${FONT_T}`].map(f => document.fonts.load(f, '가A1').catch(() => null))), new Promise(r => setTimeout(r, 1200))]); } catch (e) { }
+  try { await Promise.race([Promise.all([`400 38px ${FONT_T}`, `800 40px ${FONT_P}`, `600 19px ${FONT_P}`, `500 21px ${FONT_P}`].map(f => document.fonts.load(f, '가A1').catch(() => null))), new Promise(r => setTimeout(r, 1200))]); } catch (e) { }
   let src = null;
   try { src = grab(1200, 1200)[0]; } catch (e) { src = null; }   // 사용자가 맞춘 카메라 구도를 정사각으로 그대로 촬영(UI 제외)
   if (!src) return;
