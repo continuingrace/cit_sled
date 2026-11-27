@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>verify</title>
+<style>
+  html,body{margin:0;background:#12161f}
+  #out{display:flex;justify-content:center;padding:14px}
+  #out canvas{width:1080px;max-width:97vw;height:auto;box-shadow:0 12px 40px rgba(0,0,0,.55)}
+</style>
+</head>
+<body>
+<iframe id="f" src="./index.html?verify=1" style="position:fixed;left:-3200px;top:0;width:390px;height:800px;border:0" aria-hidden="true"></iframe>
+<div id="out"></div>
+<script>
+  var fr = document.getElementById('f');
+  fr.addEventListener('load', function () {
+    setTimeout(function () {
+      var w = fr.contentWindow;
+      Promise.resolve(w.drawCardCanvas({ theme: 'cream', stamp: 'tree', name: '혜련', toName: '모두에게', message: '메리 크리스마스, 따뜻한 연말 보내세요!' }))
+        .then(function (cv) { document.getElementById('out').appendChild(cv); document.title = 'done'; })
+        .catch(function (e) { document.title = 'error ' + (e && e.message); });
+    }, 3000);
+  });
+</script>
+</body>
+</html>
