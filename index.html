@@ -727,8 +727,8 @@ const HAIR = {
     fringe: (p) => 0.125 + 0.03 * Math.cos(p * 10) + 0.075 * Math.exp(-((p / 0.075) ** 2))
   },
   short: {
-    thick: (p, t) => 0.07 + 0.06 * Math.exp(-((p / 1.0) ** 2)) * Math.sin(Math.min(t, 1.5)) , ymin: (p) => 0.06 - 0.36 * sst(1.75, 2.5, Math.abs(p)), L: 0.3, bulge: 0.0, tuck: 0.25, lip: 0.1, n: 13, twist: 0.0, part: 0.0, win: [0.72, 1.1],
-    fringe: (p) => 0.19 + 0.17 * Math.exp(-((p / 0.2) ** 2)) - 0.03 * sst(0.3, 0.8, Math.abs(p))
+    thick: (p, t) => 0.052 + 0.052 * Math.exp(-((p / 1.08) ** 2)) * Math.sin(Math.min(t, 1.45)) + 0.011 * Math.cos(p * 2.4), ymin: (p) => 0.04 - 0.34 * sst(1.45, 2.4, Math.abs(p)), L: 0.36, bulge: 0.02, tuck: 0.16, lip: 0.045, n: 15, twist: 0.08, part: 0.0, win: [0.66, 1.05],
+    fringe: (p) => 0.175 + 0.185 * Math.exp(-((p / 0.22) ** 2)) - 0.025 * sst(0.3, 0.8, Math.abs(p))
   }
 };
 function hairShell(THREE, dims, o) {
@@ -800,6 +800,14 @@ function makeHuman(THREE, spec, root) {
     B(ell(THREE, '#3c3c42', [0.018, 0.018, 0.012], [0.03, 0.52, 0.2], null, 0.3)); // 단추
   }
   if (spec.collar) [-1, 1].forEach(s => B(ell(THREE, spec.collar, [0.075, 0.04, 0.03], [0.07 * s, 0.86, 0.15], [0.5, 0.2 * s, 0.5 * s])));
+  if (spec.scarf) { // 크리스마스 목도리: 목둘레 + 앞으로 늘어뜨린 두 갈래
+    const sc = spec.scarf;
+    const ring = new THREE.Mesh(new THREE.TorusGeometry(0.205, 0.058, 12, 26), mat(THREE, sc, 0.9));
+    ring.position.set(0, 0.855, 0.015); ring.rotation.set(Math.PI / 2 - 0.07, 0, 0.03); ring.scale.set(1, 1, 0.86); ring.castShadow = true; B(ring);
+    B(ell(THREE, sc, [0.052, 0.115, 0.038], [0.085, 0.735, 0.185], [0.18, 0, 0.06]));
+    B(ell(THREE, sc, [0.046, 0.085, 0.034], [0.015, 0.705, 0.21], [0.22, 0, -0.05]));
+    if (spec.scarfTip) B(ell(THREE, spec.scarfTip, [0.048, 0.03, 0.036], [0.085, 0.63, 0.205], [0.18, 0, 0.06], 1));
+  }
   if (spec.necklace) {
     const ch = new THREE.Mesh(new THREE.TorusGeometry(0.125, 0.006, 6, 30), mat(THREE, '#e7b648', 0.3, { metalness: 0.5 })); ch.position.set(0, 0.845, 0.085); ch.rotation.x = 1.0; B(ch);
     B(ell(THREE, '#e7b648', [0.024, 0.032, 0.014], [0, 0.752, 0.205], null, 0.3));
@@ -838,10 +846,22 @@ function makeHuman(THREE, spec, root) {
   const head = new THREE.Group(); head.position.set(0, 1.3, 0.0); body.add(head);
   const dims = [0.54, 0.475, 0.5];
   head.add(ell(THREE, skin, dims)).geometry = sphHi(THREE);
-  if (spec.ears) [-1, 1].forEach(s => { head.add(ell(THREE, skin, [0.06, 0.1, 0.085], [0.545 * s, -0.08, 0.0])); head.add(ell(THREE, '#eebb9d', [0.02, 0.055, 0.045], [0.6 * s, -0.08, 0.02])); });
+  if (spec.ears) [-1, 1].forEach(s => { head.add(ell(THREE, skin, [0.05, 0.082, 0.062], [0.512 * s, -0.075, -0.01], [0, 0, -0.2 * s])); });
   addFace(THREE, head, dims, spec);
   addHair(THREE, head, dims, spec);
   let hatTip = null; if (spec.hat) hatTip = addHat(THREE, head, 0.5);
+  if (spec.beanie) { // 겨울 방울 비니
+    const cap = new THREE.Mesh(new THREE.SphereGeometry(1, 26, 18, 0, Math.PI * 2, 0, Math.PI * 0.56), mat(THREE, spec.beanie, 0.94, { side: 2 }));
+    cap.scale.set(0.578, 0.53, 0.54); cap.position.y = 0.006; cap.castShadow = true; head.add(cap);
+    const br = new THREE.Mesh(new THREE.TorusGeometry(0.556, 0.048, 10, 30), mat(THREE, spec.beanie, 0.95));
+    br.rotation.x = Math.PI / 2; br.scale.set(1, 0.93, 1); br.position.y = 0.055; head.add(br);
+    head.add(ell(THREE, spec.beanieTip || '#fff7ec', [0.072, 0.072, 0.072], [0, 0.6, 0], null, 1));
+  }
+  if (spec.earmuffs) { // 털 귀마개
+    const band = new THREE.Mesh(new THREE.TorusGeometry(0.5, 0.026, 8, 26, Math.PI), mat(THREE, spec.earmuffs, 0.9));
+    band.position.y = 0.07; band.rotation.z = 0; band.castShadow = true; head.add(band);
+    [-1, 1].forEach(k => { const p = ell(THREE, spec.earmuffs, [0.1, 0.1, 0.085], [0.535 * k, 0.03, -0.01], [0, 0, -0.12 * k], 1); head.add(p); });
+  }
   // 로프
   [-1, 1].forEach(s => B(tube(THREE, '#f3e6cb', [[0.425 * s, 0.45, 0.27], [0.37 * s, 0.4, 0.5], [0.3 * s, 0.47, 0.74]], 0.011, 0.9, 12)));
   return { body, head, hatTip };
@@ -861,6 +881,12 @@ function makeMascot(THREE, spec, root) {
   const dims = [0.56, 0.53, 0.53];
   const ball = outlined(dims, [0, 0, 0], 0.038); ball.children[0].geometry = sphHi(THREE); head.add(ball);
   addFace(THREE, head, dims, spec);
+  if (spec.scarf) { // 빨간 산타 머픔리
+    const ring = new THREE.Mesh(new THREE.TorusGeometry(0.3, 0.075, 12, 28), mat(THREE, spec.scarf, 0.92));
+    ring.rotation.x = Math.PI / 2 - 0.08; ring.position.set(0, 0.47, 0.02); ring.scale.set(1, 1, 0.9); ring.castShadow = true; body.add(ring);
+    body.add(ell(THREE, spec.scarf, [0.075, 0.14, 0.05], [0.16, 0.33, 0.25], [0.12, 0, 0.14], 0.95));
+    body.add(ell(THREE, spec.scarfTip || '#fff6ea', [0.055, 0.045, 0.04], [0.19, 0.21, 0.27], [0.12, 0, 0.14], 1));
+  }
   [-1, 1].forEach(s => body.add(outlined([0.11, 0.085, 0.15], [0.21 * s, 0.39, 0.4], 0.023)));   // 발
   // 만세 하는 팔: 흰 속 + 굵은 먹선
   const arms = [];
@@ -875,7 +901,8 @@ function makeMascot(THREE, spec, root) {
     arms.push(a);
   });
   // 반짝이 장식은 제거했습니다(머리 위에 검은 4꼭지 별이 떠 보이던 문제).
-  return { body, head, hatTip: null, arms };
+  let hatTip = null; if (spec.hat === 'santa') hatTip = addHat(THREE, head, 0.5);
+  return { body, head, hatTip, arms };
 }
 
 function makeRacer(THREE, spec) {
@@ -887,10 +914,10 @@ function makeRacer(THREE, spec) {
 }
 
 const CAST = {
-  kapi: { name: '정영', skin: '#fddcc4', hair: '#2a282e', hairStyle: 'bob', eyes: 'big', brows: '#2a282e', browUp: 0.3, mouth: 'open', glasses: true, top: '#a7a7ad', inner: '#2b2b31', necklace: true, pants: '#303038', shoes: '#141417', hat: true, sled: '#e2463f' },
-  hr: { name: 'HR둥이', type: 'mascot', eyes: 'arc', eyeX: 0.34, eyeY: 0.02, nose: '#232328', noseY: -0.13, mouth: 'mascot', mouthY: -0.36, blushX: 0.72, blushY: -0.22, sled: '#f4b63a' },
-  hwan: { name: '이환승', skin: '#fddcc4', hair: '#27262b', hairStyle: 'short', ears: true, eyes: 'dot', brows: '#27262b', browUp: 0.3, mouth: 'flat', top: '#f4f5fa', collar: '#ffffff', tie: '#2f66e0', lanyard: '#2f66e0', pants: '#2b2b31', shoes: '#141417', sled: '#3b7fe6' },
-  coach: { name: '이코칭', skin: '#fee0cb', hair: '#7d4f3b', hairStyle: 'long', hairRough: 0.5, eyes: 'dot', nose: '#f3a996', mouth: 'smile', top: '#6f6c71', inner: '#ffffff', collar: '#ffffff', cuff: '#ef5f8f', skirt: '#232327', shoes: '#141417', bag: '#ef5f8f', sled: '#f07aa5' }
+  kapi: { name: '정영', skin: '#fddcc4', hair: '#2a282e', hairStyle: 'bob', eyes: 'big', brows: '#2a282e', browUp: 0.3, mouth: 'open', glasses: true, top: '#efe3ca', scarf: '#8e2f36', scarfTip: '#efe3ca', pants: '#303038', shoes: '#141417', hat: true, sled: '#e2463f' },
+  hr: { name: 'HR둥이', type: 'mascot', eyes: 'arc', eyeX: 0.34, eyeY: 0.02, nose: '#232328', noseY: -0.13, mouth: 'mascot', mouthY: -0.36, blushX: 0.72, blushY: -0.22, scarf: '#c8343f', scarfTip: '#fff6ea', hat: 'santa', sled: '#f4b63a' },
+  hwan: { name: '이환승', skin: '#fddcc4', hair: '#27262b', hairStyle: 'short', ears: true, eyes: 'dot', brows: '#27262b', browUp: 0.3, mouth: 'flat', top: '#33513f', scarf: '#b23a3a', scarfTip: '#f4ecdd', beanie: '#2c4a3c', beanieTip: '#f7f1e2', pants: '#2b2b31', shoes: '#141417', sled: '#3b7fe6' },
+  coach: { name: '이코칭', skin: '#fee0cb', hair: '#7d4f3b', hairStyle: 'long', hairRough: 0.5, eyes: 'dot', nose: '#f3a996', mouth: 'smile', top: '#7c2530', scarf: '#f0e3cd', scarfTip: '#c9a24a', earmuffs: '#efd9b6', cuff: '#f0e3cd', skirt: '#2c2c34', shoes: '#141417', sled: '#f07aa5' }
 };
 
 // ===== 공통 유틸 · 캔버스 텍스처 · 트랙 수학 =====
