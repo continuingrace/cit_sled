@@ -2130,6 +2130,7 @@ function stopRaceBgm() { racePlayGen++; hardPause(BGA); }
 function stopTreeBgm() { treePlayGen++; hardPause(TGA); }
 function wantMenuBgm() { return !AU.muted && !G.treeView && G.state === 'menu'; }
 function playMenuGuarded() {
+  if (document.hidden) return;   // 백그라운드에서는 어떤 경로로도 소리를 켜지 않는다
   const gen = ++menuPlayGen;
   try {
     const p = MGA.play();
@@ -2138,6 +2139,7 @@ function playMenuGuarded() {
   } catch (e) { }
 }
 function playRaceGuarded(onFail) {
+  if (document.hidden) return;
   const gen = ++racePlayGen;
   try {
     const p = BGA.play();
@@ -2146,6 +2148,7 @@ function playRaceGuarded(onFail) {
   } catch (e) { if (onFail) onFail(); }
 }
 function playTreeGuarded() {
+  if (document.hidden) return;
   const gen = ++treePlayGen;
   try {
     const p = TGA.play();
@@ -2196,10 +2199,43 @@ function auResume() {
     auResume();
   }, { passive: true });
 });
+// ===== 백그라운드 오디오 차단 =====
+// 홈 화면으로 나가거나 다른 앱으로 전환하면(document.hidden) 화면 곡을 즉시 모두 멈추고
+// Web Audio(효과음·합성 멜로디·바람 소리)까지 suspend 한다. iOS PWA는 visibilitychange와
+// pagehide 중 한쪽만 오는 경우가 있어 둘 다에서 같은 정지를 건다.
+function pauseAllBgm() {
+  stopMenuBgm(); stopRaceBgm(); stopTreeBgm();   // 세대 번호도 올려, 늦게 끝난 play()가 소리를 되살리지 못하게
+  try {
+    const c = AU.ctx;
+    if (c && (c.state === 'running' || c.state === 'suspended')) { const p = c.suspend(); if (p && p.catch) p.catch(() => { }); }
+  } catch (e) { }
+}
+function resumeBgmForScreen() { // 복귀: 현재 화면의 곡 '하나'만 다시 튼다
+  if (AU.muted) return;
+  try {
+    if (G.treeView) { treeBgm(true); return; }
+    if (G.state === 'menu') { menuBgm(true); return; }
+    if (AU.on && (G.state === 'race' || G.state === 'finish' || G.state === 'result')) {
+      stopMenuBgm(); stopTreeBgm();
+      BGA.muted = AU.muted; BGA.volume = BGM_VOL;
+      if (BGA.paused) playRaceGuarded();
+    }
+  } catch (e) { }
+}
+function resumeAllAudio() {
+  try {
+    const c = AU.ctx;
+    if (c && (c.state === 'suspended' || c.state === 'interrupted')) { const p = c.resume(); if (p && p.catch) p.catch(() => { }); }
+  } catch (e) { }
+  resumeBgmForScreen();
+}
 document.addEventListener('visibilitychange', () => {
-  if (document.hidden) { try { BGA.pause(); } catch (e) { } }
-  else if (AU.on && !G.treeView) { try { const p = BGA.play(); if (p && p.catch) p.catch(() => { }); } catch (e) { } }
+  if (document.hidden) pauseAllBgm();
+  else resumeAllAudio();
 });
+window.addEventListener('pagehide', () => { pauseAllBgm(); });
+document.addEventListener('freeze', () => { pauseAllBgm(); });
+window.addEventListener('pageshow', (e) => { if (e.persisted) resumeAllAudio(); });   // bfcache에서 되돌아온 경우
 
 function auInit() {
   setPlaybackSession();
