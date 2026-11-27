@@ -218,16 +218,20 @@ async function submitCard(request, env, origin) {
     return json({ error: '보안 확인에 실패했습니다. 다시 시도해 주세요.' }, 403, origin);
   }
 
-  await env.DB.batch([
+  const batch = await env.DB.batch([
     env.DB.prepare(`
       INSERT INTO cards (name, to_name, message, theme, stamp, created_at)
       VALUES (?, ?, ?, ?, ?, ?)
+      RETURNING id, created_at AS createdAt
     `).bind(checked.value.name, checked.value.toName, checked.value.message, checked.value.theme, checked.value.stamp, now),
     env.DB.prepare('INSERT INTO card_rate_events (ip_hash, created_at) VALUES (?, ?)').bind(ipHash, now),
     env.DB.prepare('DELETE FROM card_rate_events WHERE created_at < ?').bind(now - 2 * 24 * 60 * 60)
   ]);
+  // 방금 만든 카드의 id를 돌려준다 — 기기(localStorage)가 자기 카드만 공유할 수 있게 하는 표식.
+  const inserted = batch?.[0]?.results?.[0] || null;
+  const id = Number(inserted?.id || batch?.[0]?.meta?.last_row_id || 0);
   const total = await env.DB.prepare('SELECT COUNT(*) AS n FROM cards').first();
-  return json({ ok: true, total: Number(total?.n || 0) }, 201, origin);
+  return json({ ok: true, id, createdAt: Number(inserted?.createdAt || now), total: Number(total?.n || 0) }, 201, origin);
 }
 
 export default {

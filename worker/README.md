@@ -37,7 +37,7 @@
 - `POST /v1/session` — 게임 세션 발급
 - `POST /v1/scores` — 점수 등록 (Turnstile + 세션 + 레이트리밋)
 - `GET /v1/cards` — 결승 트리에 걸린 빈티지 카드 최신 100장 + 총 개수(`total`)
-- `POST /v1/cards` — 카드 등록 (Turnstile + IP 레이트리밋 + 입력 검증: 닉네임 12자·내용 140자, `< >`·URL·연락처·긴 숫자·비속어/광고 문구 차단)
+- `POST /v1/cards` — 카드 등록 (Turnstile + IP 레이트리밋 + 입력 검증: 닉네임 12자·내용 140자, `< >`·URL·연락처·긴 숫자·비속어/광고 문구 차단). 응답은 `{ ok, id, createdAt, total }` — `id`는 그 기기가 자기 카드에만 공유 버튼을 붙이는 데 쓴다(서버는 소유자 판별을 하지 않고, 공개 목록은 모두에게 읽기 전용).
 
 카드 테이블과 카드 전용 레이트리밋 테이블은 `schema.sql`에 함께 들어 있습니다(기존 `rate_events`의 `action` CHECK 제약을 건드리지 않으려고 `card_rate_events`를 따로 둠).
 원격 반영은 `npx wrangler d1 execute cit-sled-db --remote --file=schema.sql` 후 `npx wrangler deploy`.

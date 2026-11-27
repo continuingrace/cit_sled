@@ -266,6 +266,11 @@ body.paused *{animation-play-state:paused!important}
 #cards .vcard .vc-msg{position:relative;flex:1;margin:0;padding-right:15px;font-size:12.5px;font-weight:500;line-height:1.62;letter-spacing:0;text-align:left;white-space:pre-wrap;word-break:keep-all;overflow-wrap:break-word;color:inherit}
 #cards .vcard .vc-foot{position:relative;display:flex;justify-content:space-between;align-items:center;gap:6px;padding-top:8px;border-top:1px solid;font-size:10px;font-weight:600;letter-spacing:.02em;opacity:.75}
 #cards .vcard .vc-foot b{font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#cards .vcard .vc-own{position:relative;display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:1px;padding-top:8px;border-top:1px dashed;border-color:currentColor;opacity:.95}
+#cards .vcard .vc-mine{font-size:9px;font-weight:700;letter-spacing:.08em;opacity:.55}
+#cards .vcard .vc-share{display:inline-flex;align-items:center;gap:5px;padding:6px 11px;border-radius:999px;border:1px solid;border-color:currentColor;background:rgba(255,255,255,.4);color:inherit;font-family:inherit;font-size:10.5px;font-weight:700;letter-spacing:.01em;cursor:pointer;opacity:.9}
+#cards .vcard .vc-share:hover{opacity:1}
+#cards .vcard .vc-share:active{transform:scale(.97)}
 #cards .vin-empty{grid-column:1/-1;margin:0;text-align:center;font-size:12px;font-weight:500;line-height:1.7;color:var(--iv-sub);padding:22px 6px}
 /* 첫 화면에서 트리 구경하기 바 */
 #treebar{position:fixed;left:0;right:0;bottom:0;z-index:18;display:flex;gap:8px;justify-content:center;padding:16px 14px calc(16px + env(safe-area-inset-bottom,0px));pointer-events:none}
@@ -273,6 +278,9 @@ body.paused *{animation-play-state:paused!important}
 #treebar button:active{transform:scale(.97)}
 #treebar button.primary{background:linear-gradient(180deg,#a3373a,#7c2329);border-color:rgba(255,255,255,.16)}
 #treebar button:hover{border-color:rgba(255,255,255,.34)}
+#treeCount{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(84px + env(safe-area-inset-bottom,0px));z-index:18;display:none;padding:9px 16px;border-radius:999px;background:rgba(13,19,42,.84);border:1px solid rgba(255,255,255,.16);color:#f6f2e8;font-family:inherit;font-size:12.5px;font-weight:700;letter-spacing:.01em;box-shadow:0 12px 30px rgba(4,8,26,.44);pointer-events:none;white-space:nowrap}
+#treeCount.on{display:block}
+#treeCount b{color:#ffd84d}
 /* 첫 화면 다듬기 (브랜드·글래스 카드·세그먼트·출발 버튼·3버튼 줄) */
 #menu{background:linear-gradient(90deg,rgba(9,14,34,.78),rgba(9,14,34,.34) 42%,rgba(9,14,34,0) 68%)}
 .brand{display:flex;flex-direction:column;gap:7px}
@@ -433,6 +441,7 @@ body.paused *{animation-play-state:paused!important}
   <div class="vin-grid" id="cardList"></div>
 </div></div></div>
 <div id="treebar" class="hidden"><button id="tbBack">← 첫 화면으로</button><button id="tbCard" class="primary">🎄 카드 남기기</button></div>
+<div id="treeCount" aria-live="polite"></div>
 <div id="endbar" class="hidden"><button class="btn" id="bSpinToggle">360° 회전</button><button class="btn" id="bPhoto">📸 기념사진</button><button class="btn sub" id="bResOpen">결과 보기</button><button class="btn sub" id="bShot2">장면 캡처</button><button class="btn sub" id="bRetry3">한 번 더</button></div>
 <div id="orbitHint" aria-hidden="true">👆 드래그해서 360° 둘러보기 · 팻말 터치</div>
 <div id="shot" class="modal hidden"><div class="panel shotbox">
@@ -1888,6 +1897,15 @@ const CARD_STAMPS = { tree: '🎄', bell: '🔔', santa: '🎅', wreath: '🌿',
 const CARD_MSG_MAX = 140, CARD_NAME_MAX = 12, CARD_ORNAMENT_MAX = 48;
 let CARDS = [], CARDS_TOTAL = 0, CARDS_STATE = 'idle';
 const cardPick = { theme: 'cream', stamp: 'tree' };
+// 내가 이 기기에서 남긴 카드만 '공유하기'를 보여 준다 (다른 사람 카드에는 어떤 버튼도 붙이지 않는다)
+const MY_CARDS_KEY = 'cit_sled_my_cards_v1';
+function myCards() { try { const a = JSON.parse(localStorage.getItem(MY_CARDS_KEY) || '[]'); return Array.isArray(a) ? a : []; } catch (e) { return []; } }
+function myCardById(id) { const n = +id; return n ? (myCards().find(c => +c.id === n) || null) : null; }
+function rememberMyCard(c) {
+  if (!c || !(+c.id)) return;
+  const list = myCards().filter(o => +o.id !== +c.id); list.unshift({ id: +c.id, name: c.name, toName: c.toName, message: c.message, theme: c.theme, stamp: c.stamp, createdAt: +c.createdAt || Math.floor(Date.now() / 1000) });
+  try { localStorage.setItem(MY_CARDS_KEY, JSON.stringify(list.slice(0, 30))); } catch (e) { }
+}
 
 // ---- 천공 우표/이중 원형 소인 (마스크로 모양만 그리고 색은 CSS 변수로) ----
 const STAMP_IMG = { tree: 'images/stamps/tree.png', bell: 'images/stamps/bell.png', santa: 'images/stamps/santa.png', wreath: 'images/stamps/wreath.png', star: 'images/stamps/star.png' };
@@ -1958,11 +1976,13 @@ function wrapCanvasText(ctx, text, maxW) { // 한글 어절 단위로 끊고(wor
   });
   return out;
 }
-async function drawCardCanvas() {
-  const CW = 1080, CH = 1350, th = CARD_THEMES[cardPick.theme] || CARD_THEMES.cream;
-  const name = ($('#cardName').value || '').trim() || '익명';
-  const to = ($('#cardToIn').value || '').trim() || '모두에게';
-  const msg = ($('#cardMsg').value || '').trim() || '메리 크리스마스!';
+async function drawCardCanvas(card) { // card를 넘기면 그 카드(내 카드 재공유)를, 없으면 지금 작성 중인 카드를 그린다
+  const src = card || { theme: cardPick.theme, stamp: cardPick.stamp, name: $('#cardName').value, toName: $('#cardToIn').value, message: $('#cardMsg').value };
+  const theme = CARD_THEMES[src.theme] ? src.theme : 'cream', stamp = CARD_STAMPS[src.stamp] ? src.stamp : 'tree';
+  const CW = 1080, CH = 1350, th = CARD_THEMES[theme] || CARD_THEMES.cream;
+  const name = String(src.name || '').trim() || '익명';
+  const to = String(src.toName || '').trim() || '모두에게';
+  const msg = String(src.message || '').trim() || '메리 크리스마스!';
   const cv = document.createElement('canvas'); cv.width = CW; cv.height = CH;
   const x = cv.getContext('2d');
   try { await Promise.race([document.fonts.load('400 44px TypewriterKR', '엽서'), document.fonts.load('700 28px TypewriterKR', 'From'), new Promise(r => setTimeout(r, 1500))]); } catch (e) { }
@@ -1971,7 +1991,7 @@ async function drawCardCanvas() {
   x.strokeStyle = th.edge; x.lineWidth = 4; x.strokeRect(28, 28, CW - 56, CH - 56);
   x.strokeStyle = th.dark ? 'rgba(250,244,230,.35)' : 'rgba(60,45,30,.22)'; x.lineWidth = 1.4; x.strokeRect(44, 44, CW - 88, CH - 88);
   try {
-    const im = await loadImg(stampArt(cardPick.stamp));
+    const im = await loadImg(stampArt(stamp));
     const sc = document.createElement('canvas'); sc.width = 150; sc.height = 188;
     const sx = sc.getContext('2d');
     sx.fillStyle = '#f6f0e2'; sx.fillRect(0, 0, 150, 188);
@@ -2023,6 +2043,27 @@ async function shareVintageCard() {
     cardNoteText('카드 이미지를 만들지 못했어요. 잠시 뒤 다시 시도해 주세요.', 'bad');
   } finally { if (bt) { bt.disabled = false; bt.innerHTML = old; } }
 }
+async function shareMyCard(id) { // 내가 남긴 카드만 — 이 기기에 저장된 스냅샷으로 공유 이미지를 만든다
+  const c = myCardById(id);
+  if (!c) { cardNoteText('내가 이 기기에서 남긴 카드만 공유할 수 있어요.', 'bad'); return; }
+  cardNoteText('공유 이미지를 만드는 중이에요…');
+  try {
+    const cv = await drawCardCanvas(c);
+    const to = String(c.toName || '모두에게');
+    const text = to + '에게 보내는 크리스마스 카드 🎄\nhttps://continuingrace.github.io/cit_sled/';
+    const blob = await new Promise(r => cv.toBlob(r, 'image/png'));
+    const file = blob ? new File([blob], 'cit-christmas-card.png', { type: 'image/png' }) : null;
+    if (file && navigator.canShare && navigator.canShare({ files: [file] })) {
+      try { await navigator.share({ files: [file], title: 'CiT 크리스마스 카드', text: text }); cardNoteText('카드를 공유했어요.', 'good'); return; }
+      catch (e) { if (e && e.name === 'AbortError') return; }
+    }
+    try { if (navigator.clipboard && navigator.clipboard.writeText) await navigator.clipboard.writeText(text); } catch (e) { }
+    openShot(cv, '카드 공유', 'cit-christmas-card.png');
+    cardNoteText('공유 시트를 쓸 수 없어 카드 이미지를 열었어요. 저장한 뒤 카톡·문자로 보내 주세요.', 'good');
+  } catch (e) {
+    cardNoteText('카드 이미지를 만들지 못했어요. 잠시 뒤 다시 시도해 주세요.', 'bad');
+  }
+}
 function renderCardPreview() {
   const pv = $('#cardPreview'); if (!pv) return;
   const th = CARD_THEMES[cardPick.theme] || CARD_THEMES.cream;
@@ -2065,10 +2106,20 @@ function closeTreeView() {
   whiteFade(() => { toMenu(true); $('#menu').classList.remove('out'); });
 }
 function cardWhen(ts) { const d = new Date((+ts || 0) * 1000); return isNaN(d.getTime()) ? '' : (d.getMonth() + 1) + '월 ' + d.getDate() + '일'; }
-function cardCount(n) { const el = $('#cardCount'); if (el) el.innerHTML = '트리에 <b>' + (n | 0) + '</b>장의 카드가 걸려 있어요'; }
+function cardCount() { // 몇 명이 카드를 걸었는지(이름 기준) + 장수 — 모달 상단과 3D 트리 화면에 같이 보여 준다
+  const total = Math.max(0, CARDS_TOTAL || 0);
+  const people = new Set(CARDS.map(c => String(c.name || '').trim()).filter(Boolean)).size;
+  const partial = total > CARDS.length;
+  const el = $('#cardCount');
+  if (el) el.innerHTML = total
+    ? '지금까지 <b>' + people + '</b>명이 트리에 카드를 걸었어요 · <b>' + total + '</b>장' + (partial ? ' (최근 ' + CARDS.length + '장 표시)' : '')
+    : '아직 트리에 걸린 카드가 없어요';
+  const tb = $('#treeCount');
+  if (tb) { if (total) { tb.innerHTML = '🎄 지금까지 <b>' + people + '</b>명 참여 · <b>' + total + '</b>장'; tb.classList.add('on'); } else { tb.innerHTML = ''; tb.classList.remove('on'); } }
+}
 function cardNoteText(t, kind) { const el = $('#cardNote'); if (!el) return; el.className = 'vin-note' + (kind ? ' ' + kind : ''); el.textContent = t; }
 function paintCards() {
-  cardCount(CARDS_TOTAL || 0);
+  cardCount();
   const list = $('#cardList'); if (!list) return;
   if (!CARDS.length) {
     list.innerHTML = CARDS_STATE === 'fail'
@@ -2082,7 +2133,9 @@ function paintCards() {
       + '<span class="vc-stamp" style="background-image:url(\'' + stampArt(c.stamp) + '\')"></span>'
       + '<p class="vc-msg">' + esc(c.message) + '</p>'
       + '<div class="vc-foot"><b>From. ' + esc(c.name) + '</b><span>To. ' + esc(c.toName || '모두에게') + '</span></div>'
-      + '<div class="vc-when">' + esc(cardWhen(c.createdAt)) + '</div></article>';
+      + '<div class="vc-when">' + esc(cardWhen(c.createdAt)) + '</div>'
+      + (myCardById(c.id) ? '<div class="vc-own"><span class="vc-mine">내 카드</span><button type="button" class="vc-share" data-card-id="' + (c.id | 0) + '">💌 공유하기</button></div>' : '')
+      + '</article>';
   }).join('');
 }
 async function loadCards() {
@@ -2119,11 +2172,16 @@ async function sendCard() {
       new Promise((_, reject) => setTimeout(() => reject(new Error('turnstile timeout')), 20000))
     ]);
     cardNoteText('카드를 트리에 거는 중이에요…');
-    await apiFetch('/cards', { method: 'POST', body: JSON.stringify({ turnstileToken: token, name: name, toName: toName, message: message, theme: cardPick.theme, stamp: cardPick.stamp }) });
+    const res = await apiFetch('/cards', { method: 'POST', body: JSON.stringify({ turnstileToken: token, name: name, toName: toName, message: message, theme: cardPick.theme, stamp: cardPick.stamp }) });
+    let saved = null; try { saved = await res.json(); } catch (e) { }
     $('#cardMsg').value = ''; $('#cardCounter').textContent = '0 / ' + CARD_MSG_MAX;
     cardNoteText('카드를 트리에 걸었어요. 고마워요!', 'good');
     try { SFX.gate(); } catch (e) { }
     CARDS_STATE = 'idle'; await loadCards();
+    // 이 기기에서 남긴 카드로 기록 — 목록에서 이 카드에만 💌 공유하기가 뜬다.
+    const byId = saved && +saved.id ? CARDS.find(c => +c.id === +saved.id) : null;
+    const mine = byId || CARDS.find(c => c.name === name && c.message === message && c.theme === cardPick.theme && c.stamp === cardPick.stamp && Math.abs((+c.createdAt || 0) - Math.floor(Date.now() / 1000)) < 300);
+    if (mine) { rememberMyCard(mine); paintCards(); }
     const l = $('#cardList'); if (l) l.scrollTop = 0;
   } catch (e) {
     const msg = String(e && e.message);
@@ -2150,6 +2208,12 @@ function initCards() {
   $('#cardsX').onclick = () => toggleCards(false);
   $('#cards').addEventListener('click', (e) => { if (e.target.id === 'cards') toggleCards(false); });
   $('#cardSend').onclick = sendCard;
+  $('#cardList').addEventListener('click', (e) => { // 목록에서 내 카드에만 붙는 공유 버튼
+    const b = e.target && e.target.closest ? e.target.closest('.vc-share') : null;
+    if (!b) return;
+    e.preventDefault(); e.stopPropagation();
+    shareMyCard(+b.dataset.cardId);
+  });
   $('#cardMsg').addEventListener('input', () => { $('#cardCounter').textContent = $('#cardMsg').value.length + ' / ' + CARD_MSG_MAX; renderCardPreview(); });
   $('#cardName').addEventListener('input', renderCardPreview);
   $('#cardToIn').addEventListener('input', renderCardPreview);
