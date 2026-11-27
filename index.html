@@ -1369,7 +1369,7 @@ function buildWorld(scene) {
       for (let vi = 0; vi < sp2.count; vi++) { const x = sp2.getX(vi), yy = sp2.getY(vi), z = sp2.getZ(vi), t = clamp((yy + h * 0.1) / (h * 0.2), 0, 1), th = Math.atan2(z, x), w = 1 + wav(th) * Math.pow(1 - t, 0.55); sp2.setX(vi, x * w); sp2.setZ(vi, z * w); }
       sl.computeVertexNormals();
       P.push(bake(sl, '#f7fbff', MX(0, y + h * 0.1, 0)));
-      for (let k2 = 0; k2 < 6; k2++) { const a2 = (k2 + 0.5) / 6 * Math.PI * 2 + ph, rr2 = rad * (1 + wav(a2)) * 1.0; P.push(bake(Sph(1, 8, 6), '#ffffff', MX(Math.cos(a2) * rr2, y + h * 0.08, Math.sin(a2) * rr2, 0.34, 0.1, 0.34))); }
+      for (let k2 = 0; k2 < 4; k2++) { const a2 = (k2 + 0.5) / 4 * Math.PI * 2 + ph, rr2 = rad * (1 + wav(a2)) * 0.995; P.push(bake(Sph(1, 8, 6), '#ffffff', MX(Math.cos(a2) * rr2, y + h * 0.055, Math.sin(a2) * rr2, 0.32, 0.085, 0.32))); }
       // 따뜻한 전구: 층마다 고르게
       const nb = 9;
       for (let k2 = 0; k2 < nb; k2++) {
@@ -2461,7 +2461,7 @@ const cardSph = (r, a, b) => new THREE.SphereGeometry(r, a || 10, b || 8);
 const cardPlaneGeo = new THREE.PlaneGeometry(0.72, 0.46);
 const cardProxyGeo = new THREE.BoxGeometry(1.32, 1.62, 0.64);
 const cardProxyMat = new THREE.MeshBasicMaterial({ visible: false });
-const cardEnvMat = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.86, metalness: 0.02, emissive: '#2a2416', emissiveIntensity: 0.35 });
+const cardEnvMat = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.9, metalness: 0.0, emissive: '#7a6236', emissiveIntensity: 0.5 });
 function cardTri(w, h) { // 봉투 앞면 삼각 플랩
   const g = new THREE.BufferGeometry();
   g.setAttribute('position', new THREE.Float32BufferAttribute([-w / 2, h / 2, 0, 0, -h / 2, 0, w / 2, h / 2, 0], 3));
@@ -2507,18 +2507,19 @@ function updateTreeCards() { // 카드 배열과 봉투 오너먼트를 정확�
     const M = new THREE.Matrix4().compose(pos, new THREE.Quaternion().setFromEuler(new THREE.Euler(rx, ry, rz, 'YXZ')), new THREE.Vector3(sc, sc, sc));
     const WM = L(W.treeFrame, M); // 트리 로컬 좌표 → 월드 좌표 (cardGroup은 변환이 없다)
     const add = (geo, col, mx) => parts.push(bake(geo, col, L(WM, mx)));
-    const body = ['#fdf7e8', '#faf3e2', '#f6ecd6'][Math.floor(cardRnd(c.id, 7) * 3) % 3];
+    const body = ['#fff9e9', '#fcf3de', '#f8eed4'][Math.floor(cardRnd(c.id, 7) * 3) % 3];
     // 밝은 봉투 몸체 — 짙은 전나무 위에서도 또렷하게 보이도록 크림/크라프트
     add(CARD_BOX, body, MX(0, 0, 0, 1.06, 0.72, 0.075));
     add(CARD_BOX, '#e6d7ba', MX(0, -0.03, 0.042, 1.0, 0.62, 0.018));
     add(cardTri(1.02, 0.64), '#e9dbbf', MX(0, 0.02, 0.055));
     add(cardTri(0.86, 0.5), '#f2e7d1', MX(0, 0.055, 0.059));
-    add(cardCyl(0.105, 0.105, 0.04, 14), '#a5302f', MX(0, -0.10, 0.064, 1, 1, 1, Math.PI / 2, 0, 0));
+    add(cardCyl(0.105, 0.105, 0.04, 14), '#b83a3c', MX(0, -0.10, 0.064, 1, 1, 1, Math.PI / 2, 0, 0));
     add(cardSph(0.042), '#e8c377', MX(0, -0.10, 0.088));
-    add(CARD_BOX, '#fbf5e6', MX(0.34, 0.19, 0.058, 0.18, 0.22, 0.012));
-    add(CARD_BOX, ['#2f6a4c', '#a5302f', '#2b4f8a'][Math.floor(cardRnd(c.id, 8) * 3) % 3], MX(0.34, 0.19, 0.066, 0.13, 0.17, 0.008));
+    add(CARD_BOX, '#fdf8ec', MX(0.34, 0.19, 0.058, 0.145, 0.175, 0.012));
+    add(CARD_BOX, ['#3d8560', '#b8434a', '#3a63a8'][Math.floor(cardRnd(c.id, 8) * 3) % 3], MX(0.34, 0.19, 0.066, 0.1, 0.128, 0.008));
     [0.3, 0.22, 0.13].forEach((w, k) => add(CARD_BOX, '#9b8a6f', MX(0.05, -0.22 - k * 0.055, 0.06, w, 0.012, 0.006)));
-    cardCharm(c.stamp, parts, WM, c.id);  // 고른 우표 모양 참(별·종·리스·미니트리)
+    const CM = L(WM, MX(0.44, 0.5, 0.02).multiply(new THREE.Matrix4().makeScale(1.4, 1.4, 1.4)).multiply(new THREE.Matrix4().makeTranslation(-0.44, -0.5, -0.02)));
+    cardCharm(c.stamp, parts, CM, c.id);  // 고른 우표 모양 참(별·종·리스·미니트리)
     // 엽서 윗면이 봉투 위로 살짝 보이게
     const pp = new THREE.Mesh(cardPlaneGeo, new THREE.MeshBasicMaterial({ map: cardTexture(c), color: '#ffffff', side: THREE.DoubleSide }));
     pp.matrixAutoUpdate = false;
