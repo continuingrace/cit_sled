@@ -355,6 +355,8 @@ body.paused *{animation-play-state:paused!important}
 #cardView .cv-share{display:flex;align-items:center;justify-content:center;width:100%;box-sizing:border-box;padding:10px 12px;border-radius:999px;border:1px solid rgba(124,35,41,.4);background:rgba(255,255,255,.55);color:#6f2b30;font-family:inherit;font-size:12.5px;font-weight:800;white-space:nowrap;cursor:pointer}
 #cardView .cv-share:hover{background:#fff}
 #tbSnow.on{background:linear-gradient(180deg,#eaf6ff,#bcdcf5);color:#12233d;border-color:rgba(255,255,255,.62);box-shadow:0 12px 28px rgba(120,190,240,.36)}
+#treebar #tbSpot{width:44px;padding:12px 0;font-size:15px}
+#treebar #tbSpot.on{background:rgba(232,208,150,.18);border-color:rgba(240,220,170,.85);box-shadow:0 0 0 1px rgba(240,220,170,.26),0 12px 26px rgba(4,8,26,.42)}
 #endbar button.btn.on{background:linear-gradient(180deg,#eaf6ff,#bcdcf5);color:#12233d;border-color:rgba(255,255,255,.62)}
 @keyframes cvIn{0%{opacity:0;transform:translateY(34px) scale(.84) rotateX(-20deg)}55%{opacity:1}100%{opacity:1;transform:translateY(0) scale(1) rotateX(0)}}
 @keyframes cvOut{0%{opacity:1;transform:none}100%{opacity:0;transform:translateY(22px) scale(.9) rotateX(-12deg)}}
@@ -368,6 +370,7 @@ body.paused *{animation-play-state:paused!important}
   #cardView .cv-x{top:-42px;right:0}
   #treebar{gap:6px;padding:13px 8px calc(13px + env(safe-area-inset-bottom,0px))}
   #treebar button{padding:11px 13px;font-size:12.5px;gap:5px;letter-spacing:-.015em}
+  #treebar #tbSpot{width:40px;padding:11px 0;font-size:14px}
 }
 
 /* ---------- 트리 오너먼트 꾸미기 ---------- */
@@ -510,7 +513,7 @@ body.paused *{animation-play-state:paused!important}
   <div class="vin-grid" id="cardList"></div>
 </div></div></div>
 <div id="ornbar" aria-label="오너먼트 꾸미기"><div class="orn-picks"><button type="button" class="orn-chip on" data-k="red" title="버건디 오너먼트" aria-label="버건디 오너먼트"><svg viewBox="0 0 26 30" aria-hidden="true" focusable="false"><defs><radialGradient id="ogRed" cx="36%" cy="26%" r="80%"><stop offset="0" stop-color="#ff9ba1"/><stop offset=".44" stop-color="#c62c36"/><stop offset="1" stop-color="#5a0f16"/></radialGradient></defs><path d="M13 7.2c5.2 0 8.8 4.5 8.8 10.1 0 5.9-3.9 10.8-8.8 10.8S4.2 23.2 4.2 17.3c0-5.6 3.6-10.1 8.8-10.1Z" fill="url(#ogRed)"/><rect x="10.7" y="4.1" width="4.6" height="3.7" rx="1.1" fill="#e9c982"/><path d="M13 4.1V2" stroke="#e9c982" stroke-width="1.2" stroke-linecap="round"/><ellipse cx="9.5" cy="12.6" rx="1.9" ry="3" transform="rotate(-20 9.5 12.6)" fill="#fff" opacity=".36"/></svg></button><button type="button" class="orn-chip" data-k="gold" title="샴페인 골드 오너먼트" aria-label="샴페인 골드 오너먼트"><svg viewBox="0 0 26 30" aria-hidden="true" focusable="false"><defs><radialGradient id="ogGold" cx="36%" cy="26%" r="80%"><stop offset="0" stop-color="#fff6d9"/><stop offset=".46" stop-color="#e3bb66"/><stop offset="1" stop-color="#8a5f1c"/></radialGradient></defs><path d="M13 7.2c5.2 0 8.8 4.5 8.8 10.1 0 5.9-3.9 10.8-8.8 10.8S4.2 23.2 4.2 17.3c0-5.6 3.6-10.1 8.8-10.1Z" fill="url(#ogGold)"/><rect x="10.7" y="4.1" width="4.6" height="3.7" rx="1.1" fill="#f3dfa6"/><path d="M13 4.1V2" stroke="#f3dfa6" stroke-width="1.2" stroke-linecap="round"/><ellipse cx="9.5" cy="12.6" rx="1.9" ry="3" transform="rotate(-20 9.5 12.6)" fill="#fff" opacity=".5"/></svg></button><button type="button" class="orn-chip" data-k="star" title="샴페인 별" aria-label="샴페인 별"><svg viewBox="0 0 26 30" aria-hidden="true" focusable="false"><defs><linearGradient id="ogStar" x1="0" y1="0" x2="0.2" y2="1"><stop offset="0" stop-color="#fffaea"/><stop offset=".5" stop-color="#ecd096"/><stop offset="1" stop-color="#a97a2c"/></linearGradient></defs><path d="M13 2.6l2.9 6.5 7.1.6-5.4 4.7 1.7 7-6.3-3.8-6.3 3.8 1.7-7L2.9 9.7l7.1-.6Z" fill="url(#ogStar)" stroke="#fff3d6" stroke-width=".7" stroke-linejoin="round"/><path d="M13 7l1.4 3.2 3.5.3-2.7 2.3.9 3.4-3.1-1.9-3.1 1.9.9-3.4-2.7-2.3 3.5-.3Z" fill="#fff" opacity=".26"/></svg></button><button type="button" class="orn-chip" data-k="cane" title="캔디케인" aria-label="캔디케인"><svg viewBox="0 0 26 30" aria-hidden="true" focusable="false"><path d="M9.4 26.4V13.6a4.2 4.2 0 0 1 8.4 0v1.4" fill="none" stroke="#f7eeda" stroke-width="5.2" stroke-linecap="round"/><path d="M9.4 26.4V13.6a4.2 4.2 0 0 1 8.4 0v1.4" fill="none" stroke="#c4333f" stroke-width="5.2" stroke-linecap="butt" stroke-dasharray="2.1 3.3"/><path d="M9.4 26.4V13.6a4.2 4.2 0 0 1 8.4 0v1.4" fill="none" stroke="#3d0d12" stroke-opacity=".18" stroke-width="5.2" stroke-linecap="round" stroke-dasharray="0.4 5"/></svg></button><button type="button" class="orn-chip" data-k="bow" title="벨벳 리본" aria-label="벨벳 리본"><svg viewBox="0 0 26 30" aria-hidden="true" focusable="false"><defs><linearGradient id="ogBow" x1="0" y1="0" x2="0.3" y2="1"><stop offset="0" stop-color="#e5606b"/><stop offset=".55" stop-color="#b32a37"/><stop offset="1" stop-color="#79151f"/></linearGradient></defs><path d="M12.2 12.4C9.4 7.6 3.2 6.4 2.4 10.4c-.8 3.8 5 6.6 9.8 6.4Z" fill="url(#ogBow)"/><path d="M13.8 12.4c2.8-4.8 9-6 9.8-2 .8 3.8-5 6.6-9.8 6.4Z" fill="url(#ogBow)"/><path d="M12.1 14.8l-2.8 8.9 3.4-1.6Z" fill="#9c1f2b"/><path d="M13.9 14.8l2.8 8.9-3.4-1.6Z" fill="#9c1f2b"/><rect x="10.5" y="11.5" width="5" height="4.8" rx="1.7" fill="#e26973"/></svg></button></div><div class="orn-sep"></div><div class="orn-acts"><button type="button" id="ornUndo" title="되돌리기" aria-label="되돌리기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M9 7h6.5a5.5 5.5 0 0 1 0 11H8"/><path d="M12 4 9 7l3 3"/></svg></button><button type="button" id="ornClear" title="초기화" aria-label="초기화"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 7h16"/><path d="M9.5 7V5.2c0-.7.5-1.2 1.2-1.2h2.6c.7 0 1.2.5 1.2 1.2V7"/><path d="M6.5 7l.9 11.6c.06.8.7 1.4 1.5 1.4h6.2c.8 0 1.44-.6 1.5-1.4L17.5 7"/><path d="M10.4 10.6v6M13.6 10.6v6"/></svg></button></div><p class="orn-tip">나뭇가지를 눌러 오너먼트를 달아 보세요</p></div>
-<div id="treebar" class="hidden"><button id="tbBack">← 이전</button><button id="tbSnow">❄️ 눈</button><button id="tbOrn">🎀 꾸미기</button><button id="tbCard" class="primary">💌 카드</button></div>
+<div id="treebar" class="hidden"><button id="tbBack">← 이전</button><button id="tbSnow">❄️ 눈</button><button id="tbOrn">🎀 꾸미기</button><button id="tbSpot" title="오두막 보기" aria-label="오두막 보기">🏠</button><button id="tbCard" class="primary">💌 카드</button></div>
 <div id="treeCount" aria-live="polite"></div>
 <div id="endbar" class="hidden"><button class="btn" id="bSpinToggle">360° 회전</button><button class="btn" id="bPhoto">📸 기념사진</button><button class="btn sub" id="bSnow">❄️ 눈 던지기</button><button class="btn sub" id="bResOpen">결과 보기</button><button class="btn sub" id="bShot2">장면 캡처</button><button class="btn sub" id="bRetry3">한 번 더</button></div>
 <div id="orbitHint" aria-hidden="true">👆 드래그해서 360° 둘러보기 · 팻말 터치</div>
@@ -1915,7 +1918,20 @@ const SFX = {
     nzSweep(t, 0.22, 1800, 650, 1.1, 0.82, 'bandpass');
     nz(t + 0.004, 0.11, 2600, 2.0, 0.3, 'bandpass');
     nz(t + 0.03, 0.16, 4400, 1.5, 0.16, 'highpass');
-    nz(t + 0.055, 0.2, 1150, 0.9, 0.2, 'bandpass'); }
+    nz(t + 0.055, 0.2, 1150, 0.9, 0.2, 'bandpass'); },
+  sleighBell() { // 사슴썰매 방울 — 딸랑딸랑 맑은 고음
+    const t = AU.ctx && AU.ctx.currentTime; if (!t || AU.muted) return;
+    const k = 2 + (Math.random() * 2 | 0);
+    for (let i = 0; i < k; i++) {
+      const f = 2300 + Math.random() * 1900, d = t + i * (0.05 + Math.random() * 0.05);
+      tone(f, d, 0.14, 'sine', 0.2); tone(f * 1.48, d, 0.08, 'triangle', 0.06);
+    }
+    nz(t, 0.07, 7200, 3, 0.06, 'highpass');
+  },
+  sleighWind() { // 썰매가 지나가며 바람을 가르는 소리
+    const t = AU.ctx && AU.ctx.currentTime; if (!t || AU.muted) return;
+    nzSweep(t, 2.8, 260, 780, 0.7, 0.14, 'bandpass'); nzSweep(t + 0.4, 2.2, 1400, 420, 1.1, 0.05, 'bandpass');
+  }
 };
 // 캐럴 멜로디: 레이스마다 다른 캐럴이 흐른다 (모두 퍼블릭 도메인) + 방울 리듬
 const N = { C: 523.25, D: 587.33, E: 659.25, F: 698.46, Fs: 739.99, G: 783.99, A: 880.00, B: 493.88, C4: 261.63, D4: 293.66, E4: 329.63, F4: 349.23, G4: 392.00, A4: 440.00, B4: 493.88, C3: 130.81, D3: 146.83, E3: 164.81, F3: 174.61, Fs3: 185.00, G3: 196.00, A3: 220.00, B3: 246.94, C6: 1046.50, D6: 1174.66, E6: 1318.51, F6: 1396.91, G6: 1567.98 };
@@ -2108,16 +2124,24 @@ function menuCam(t) {
   mC.pos.set(P0.x + c * (4.3 - sw) + s * (4.9 + sw), P0.y + 1.5 + Math.sin(t * 0.5) * 0.12, P0.z + s * (4.3 - sw) - c * (4.9 + sw));
   mC.look.set(P0.x + s * 0.15, P0.y + (wide ? 1.0 : -0.7), P0.z - c * 0.15); mC.fov = wide ? 33 : 44; mC.off = wide ? 0.2 : 0;
 }
-const oP = new THREE.Vector3(), oL = new THREE.Vector3(), eP = new THREE.Vector3(), eL = new THREE.Vector3();
+const oP = new THREE.Vector3(), oL = new THREE.Vector3(), eP = new THREE.Vector3(), eL = new THREE.Vector3(), eP2 = new THREE.Vector3();
 function setCam(dt, snap) {
   const st = G.state; let fov, off = 0;
   if (st === 'menu' || st === 'boot') { menuCam(G.time); cam.pos.copy(mC.pos); cam.look.copy(mC.look); cam.fov = mC.fov; chaseCam(dt, true); oP.copy(mC.pos); oL.copy(mC.look); fov = mC.fov; off = mC.off; }
   else if (st === 'intro') { menuCam(G.time); chaseCam(dt, true); const e = sst(0, 1, G.introT / 2.6), b = Math.sin(e * Math.PI); cam.pos.lerpVectors(mC.pos, cT.pos, e); cam.pos.y += b * 1.8; cam.look.lerpVectors(mC.look, cT.look, e); cam.fov = lerp(mC.fov, cT.fov, e); oP.copy(cam.pos); oL.copy(cam.look); fov = cam.fov; off = mC.off * (1 - e); }
   else { chaseCam(dt, snap); const k = snap ? 1 : 1 - Math.exp(-9 * dt); cam.pos.lerp(cT.pos, k); cam.look.lerp(cT.look, snap ? 1 : 1 - Math.exp(-12 * dt)); cam.fov += (cT.fov - cam.fov) * (snap ? 1 : Math.min(1, dt * 4)); oP.copy(cam.pos); oL.copy(cam.look); fov = cam.fov;
-    if (G.treeView) { // 결승 대형 트리를 정면에서 천천히 둘러보는 카메라
+    if (G.treeView) { // 결승 대형 트리 ↔ 오두막을 둘러보는 카메라
       const yaw = (G.treeBaseAng || 0) + (G.orbitYaw || 0), pit = Math.max(-0.35, Math.min(0.9, G.orbitPitch || 0)), treeH = treeTopY() + 2.6, wide = innerWidth / innerHeight > 1.15, dist = clamp(G.orbitDist || treeH * (wide ? 1.58 : 1.36), 4.5, 70);
       wpos(2112, 0, 0, eP);
-      const fy = G.orbitFocus == null ? 0.45 : G.orbitFocus, ty = eP.y + 1.0 + fy * (treeH - 1.6); // 시선 높이: 선물상자(아래) ~ 꼭대기 별(위)
+      const fy = G.orbitFocus == null ? 0.45 : G.orbitFocus;
+      let ty = eP.y + 1.0 + fy * (treeH - 1.6); // 시선 높이: 선물상자(아래) ~ 꼭대기 별(위)
+      const mix = Math.max(0, Math.min(1, G.spotMix || 0));
+      if (mix > 0) { // 🏠 오두막·장학이벤트 팻말 쪽으로 부드럽게 비행
+        wpos(2074.5, 2.6, 0, eP2);
+        const tyH = eP2.y + (fy - 0.45) * 11;
+        eP.lerp(eP2, mix);
+        ty = ty * (1 - mix) + tyH * mix;
+      }
       const pitEff = pit - Math.max(0, 0.45 - fy) * (wide ? 0.5 : 0.58); // 아래를 볼 땐 카메라도 낮춰 가지 밑을 가리지 않게
       oP.set(eP.x + Math.sin(yaw) * Math.cos(pitEff) * dist, ty + Math.sin(pitEff) * dist, eP.z + Math.cos(yaw) * Math.cos(pitEff) * dist);
       oL.set(eP.x, ty, eP.z);
@@ -2419,6 +2443,30 @@ function renderCardPreview() {
   const st = $('#vpStampImg'); if (st) st.style.backgroundImage = 'url(' + stampArt(cardPick.stamp) + ')';
 }
 let treeReturnTo = 'menu', treeReturnCards = false, treeReturnResOpen = false;
+function defaultTreeDist() { return (treeTopY() + 2.6) * (innerWidth / innerHeight > 1.15 ? 1.58 : 1.36); }
+function updateSpot(dt) { // 트리 ↔ 오두막으로 부드럽게 이동
+  const tgt = G.spot ? 1 : 0, m = G.spotMix == null ? 0 : G.spotMix;
+  if (Math.abs(m - tgt) < 0.002) { G.spotMix = tgt; return; }
+  const k = Math.min(1, dt * 3.0);
+  G.spotMix = m + (tgt - m) * k;
+  if (G.spotDist) G.orbitDist = (G.orbitDist || G.spotDist) + (G.spotDist - (G.orbitDist || G.spotDist)) * k;
+}
+function setSpot(v) {
+  const to = v === undefined ? (G.spot ? 0 : 1) : (v ? 1 : 0);
+  if (to === (G.spot ? 1 : 0)) return;
+  G.spot = to;
+  if (to) { if (!G.spotDistTree) G.spotDistTree = G.orbitDist || defaultTreeDist(); G.spotDist = 27; }
+  else { G.spotDist = G.spotDistTree || defaultTreeDist(); }
+  G.orbitFocus = 0.45;
+  const b = $('#tbSpot');
+  if (b) { b.textContent = to ? '🎄' : '🏠'; b.title = to ? '트리로 돌아가기' : '오두막 보기'; b.setAttribute('aria-label', to ? '트리로 돌아가기' : '오두막 보기'); b.classList.toggle('on', !!to); }
+  const oh = $('#orbitHint');
+  if (oh && G.treeView) {
+    oh.innerHTML = to ? '🏠 오두막 앞이에요 · 팻말을 누르면 장학이벤트·기념사진 안내가 열려요' : '👆 좌우로 360° · 위아래로 시선 이동 · 두 손가락·휠로 확대 · 봉투를 누르면 엽서가 열려요';
+    oh.classList.add('on'); clearTimeout(G.spotHintT); G.spotHintT = setTimeout(() => oh.classList.remove('on'), 4200);
+  }
+  try { SFX.paper(); } catch (e) { }
+}
 function openTreeView() {
   if (!G.treeView) { // 어느 화면에서 들어왔는지 기억 — '← 이전'은 그 화면으로 되돌아간다
     treeReturnTo = (G.state === 'result' || G.state === 'finish') ? 'result' : 'menu';
@@ -2433,6 +2481,8 @@ function openTreeView() {
   const tP = wpos(2112, 0, 0, new THREE.Vector3()), hP = wpos(2080, 0, 0, new THREE.Vector3());
   G.treeBaseAng = Math.atan2(hP.x - tP.x, hP.z - tP.z);
   G.autoSpin = true; G.orbitYaw = 0; G.orbitPitch = 0.18; G.orbitFocus = 0.45; G.orbitDist = (treeTopY() + 2.6) * (innerWidth / innerHeight > 1.15 ? 1.58 : 1.36);
+  G.spot = 0; G.spotMix = 0; G.spotDist = 0; G.spotDistTree = 0; // 항상 트리에서 시작
+  const spb = $('#tbSpot'); if (spb) { spb.textContent = '🏠'; spb.title = '오두막 보기'; spb.setAttribute('aria-label', '오두막 보기'); spb.classList.remove('on'); }
   menuBgm(false); treeBgm(true);
   closeCardView();
   resetWorld(); G.lastSec = -1; G.offR = 0;
@@ -2604,6 +2654,7 @@ function initCards() {
   $('#cardTree').onclick = () => { auInit(); openTreeView(); }; // 동기 실행: 제스처 안에서 바로 트리 곡 재생
   const sb = $('#cardShare'); if (sb) sb.onclick = () => shareVintageCard();
   $('#tbCard').onclick = () => { auInit(); toggleCards(true); };
+  const spB = $('#tbSpot'); if (spB) spB.onclick = (e) => { e.preventDefault(); e.stopPropagation(); auInit(); setSpot(); };
   $('#tbBack').onclick = () => closeTreeView();
   renderCardPreview();
   paintCards();
@@ -2861,6 +2912,161 @@ function updateSnowballs(dt) {
       } catch (err) { }
     }
   }
+}
+
+// ---------- 🎅 루돌프 산타 썰매 — 밤하늘을 가끔 지나간다 (트리·360도 둘러보기) ----------
+const SANTA = { group: null, active: false, t: 0, T: 13, bellT: 0, cx: 0, cz: 0, a0: 0, a1: 0, rad: 46, alt: 38 };
+let SANTA_TRAIL = null, santaShown = false, santaNextAt = 0;
+const _sC = new THREE.Vector3(), _sP = new THREE.Vector3(), _sQ = new THREE.Vector3();
+function santaMat(c, o) { return new THREE.MeshStandardMaterial(Object.assign({ color: c, roughness: 0.6, metalness: 0.04 }, o || {})); }
+function santaDustTex() {
+  const cv = document.createElement('canvas'); cv.width = cv.height = 64;
+  const x = cv.getContext('2d'), g = x.createRadialGradient(32, 32, 0, 32, 32, 32);
+  g.addColorStop(0, 'rgba(255,244,214,1)'); g.addColorStop(0.35, 'rgba(255,226,160,0.55)'); g.addColorStop(1, 'rgba(255,210,130,0)');
+  x.fillStyle = g; x.fillRect(0, 0, 64, 64);
+  const t = new THREE.CanvasTexture(cv); try { if ('SRGBColorSpace' in THREE) t.colorSpace = THREE.SRGBColorSpace; } catch (e) { }
+  return t;
+}
+function buildDeer(lead) {
+  const g = new THREE.Group();
+  const fur = santaMat('#8a5a34', { roughness: 0.82 }), furL = santaMat('#bd8b5f', { roughness: 0.82 }), antler = santaMat('#eaddc2', { roughness: 0.7 });
+  const add = (geo, mat, p, r, s) => { const m = new THREE.Mesh(geo, mat); if (p) m.position.set(p[0], p[1], p[2]); if (r) m.rotation.set(r[0] || 0, r[1] || 0, r[2] || 0); if (s) m.scale.set(s[0], s[1], s[2]); g.add(m); return m; };
+  add(new THREE.SphereGeometry(0.42, 12, 9), fur, [0, 0, 0], null, [0.85, 0.9, 1.45]);
+  add(new THREE.SphereGeometry(0.25, 10, 8), fur, [0, 0.26, -0.62]);
+  add(new THREE.SphereGeometry(0.15, 8, 6), furL, [0, 0.16, -0.82], null, [1, 0.9, 1.2]);
+  add(new THREE.CylinderGeometry(0.12, 0.14, 0.32, 8), fur, [-0.02, 0.14, -0.52], [0.5, 0, 0]);
+  [-1, 1].forEach(k => add(new THREE.ConeGeometry(0.085, 0.24, 6), furL, [k * 0.19, 0.46, -0.58], [0.1, 0, k * 0.55]));
+  [-1, 1].forEach(k => {
+    add(new THREE.CylinderGeometry(0.028, 0.02, 0.52, 5), antler, [k * 0.13, 0.66, -0.58], [0.12, 0, k * 0.3]);
+    add(new THREE.CylinderGeometry(0.02, 0.013, 0.3, 5), antler, [k * 0.26, 0.82, -0.52], [0.3, 0, k * 0.95]);
+    add(new THREE.CylinderGeometry(0.02, 0.013, 0.28, 5), antler, [k * 0.04, 0.84, -0.64], [-0.25, 0, k * 0.18]);
+  });
+  [[-0.22, -0.5], [0.22, -0.5], [-0.22, 0.52], [0.22, 0.52]].forEach(([x, z]) => add(new THREE.CylinderGeometry(0.06, 0.045, 0.78, 6), fur, [x, -0.36, z], [z < 0 ? -0.62 : 0.5, 0, 0]));
+  add(new THREE.SphereGeometry(0.12, 8, 6), santaMat('#f4ead8', { roughness: 0.9 }), [0, 0.14, 0.58], null, [1, 0.9, 1]);
+  add(new THREE.TorusGeometry(0.4, 0.032, 6, 14), santaMat('#dcb862', { metalness: 0.5, roughness: 0.4 }), [0, 0.02, -0.1], [Math.PI / 2, 0, 0], [0.9, 1, 1.5]);
+  if (lead) {
+    const nm = new THREE.MeshBasicMaterial({ color: '#ff2b1f' }); nm.toneMapped = false;
+    add(new THREE.SphereGeometry(0.11, 10, 8), nm, [0, 0.14, -0.97]);
+    const gm = new THREE.MeshBasicMaterial({ color: '#ff4a30', transparent: true, opacity: 0.26, blending: THREE.AdditiveBlending, depthWrite: false, fog: false }); gm.toneMapped = false;
+    add(new THREE.SphereGeometry(0.26, 10, 8), gm, [0, 0.14, -0.97]);
+  }
+  return g;
+}
+function santaBeam(g, a, b, r, mat) { // 고삐 같은 가는 막대
+  const d = new THREE.Vector3().subVectors(b, a), len = d.length(); if (len < 0.001) return;
+  const m = new THREE.Mesh(new THREE.CylinderGeometry(r, r, len, 5), mat);
+  m.position.copy(a).lerp(b, 0.5); m.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), d.normalize()); g.add(m);
+}
+function buildSanta() {
+  const g = new THREE.Group();
+  const red = santaMat('#c3313a', { roughness: 0.42 }), redD = santaMat('#8d1d24', { roughness: 0.5 });
+  const gold = santaMat('#e6c37a', { metalness: 0.55, roughness: 0.34, emissive: '#3a2a08', emissiveIntensity: 0.3 });
+  const cream = santaMat('#f8f2e6', { roughness: 0.92 }), skin = santaMat('#f0c6a4', { roughness: 0.8 }), dark = santaMat('#2b211b', { roughness: 0.8 });
+  const M = (geo, mat, p, r, s) => { const m = new THREE.Mesh(geo, mat); if (p) m.position.set(p[0], p[1], p[2]); if (r) m.rotation.set(r[0] || 0, r[1] || 0, r[2] || 0); if (s) m.scale.set(s[0], s[1], s[2]); g.add(m); return m; };
+  // 썰매
+  M(new THREE.BoxGeometry(1.9, 0.85, 3.2), red, [0, 1.0, 0]);
+  M(new THREE.CylinderGeometry(0.43, 0.43, 1.86, 12), red, [0, 1.3, -1.52], [0, 0, Math.PI / 2]);
+  M(new THREE.BoxGeometry(1.9, 1.2, 0.16), redD, [0, 1.45, 1.55], [-0.18, 0, 0]);
+  M(new THREE.BoxGeometry(2.0, 0.1, 3.3), gold, [0, 0.56, 0]);
+  M(new THREE.BoxGeometry(1.75, 0.16, 1.1), cream, [0, 1.5, 0.45]);
+  [-1, 1].forEach(k => { M(new THREE.BoxGeometry(0.09, 0.09, 4.0), gold, [k * 0.88, 0.16, 0]); M(new THREE.BoxGeometry(0.09, 0.09, 0.7), gold, [k * 0.88, 0.4, -1.95], [-0.7, 0, 0]); });
+  // 산타
+  M(new THREE.SphereGeometry(0.52, 12, 10), red, [0, 1.95, 0.35], null, [1, 1.1, 0.9]);
+  M(new THREE.TorusGeometry(0.5, 0.085, 6, 14), dark, [0, 1.8, 0.35], [Math.PI / 2, 0, 0], [1, 1, 0.85]);
+  M(new THREE.SphereGeometry(0.33, 12, 10), skin, [0, 2.5, 0.32]);
+  M(new THREE.SphereGeometry(0.31, 12, 10), cream, [0, 2.33, 0.13], null, [1, 0.95, 0.78]);
+  M(new THREE.CylinderGeometry(0.34, 0.34, 0.1, 12), cream, [0, 2.71, 0.32]);
+  M(new THREE.ConeGeometry(0.32, 0.5, 12), red, [0, 2.95, 0.32], [-0.08, 0, 0]);
+  M(new THREE.SphereGeometry(0.1, 8, 6), cream, [0, 3.18, 0.22]);
+  M(new THREE.SphereGeometry(0.09, 8, 6), santaMat('#e8a48a'), [0, 2.45, 0.6]);
+  M(new THREE.CylinderGeometry(0.11, 0.1, 0.62, 8), red, [0.42, 2.02, 0.18], [1.15, 0, 0.22]);
+  M(new THREE.SphereGeometry(0.12, 8, 6), cream, [0.48, 1.8, -0.1]);
+  M(new THREE.CylinderGeometry(0.11, 0.1, 0.62, 8), red, [-0.42, 2.02, 0.18], [1.15, 0, -0.22]);
+  M(new THREE.SphereGeometry(0.12, 8, 6), cream, [-0.48, 1.8, -0.1]);
+  // 사슴 3마리 + 고삐
+  const deer = [[-4.3, 0.5, 1.0, true], [-6.7, -0.45, 0.95, false], [-9.0, 0.35, 0.9, false]];
+  g.userData.deer = deer.map(([z, x, s, lead], i) => {
+    const d = buildDeer(lead); d.position.set(x, 0.95, z); d.scale.setScalar(s); g.add(d); d.userData.baseY = 0.95; d.userData.ph = i * 1.7; return d;
+  });
+  santaBeam(g, new THREE.Vector3(0.52, 1.5, -1.4), new THREE.Vector3(0.5, 1.05, -4.3), 0.022, gold);
+  santaBeam(g, new THREE.Vector3(-0.52, 1.5, -1.4), new THREE.Vector3(-0.5 + 0.95, 1.05, -4.3), 0.022, gold);
+  g.scale.setScalar(0.92);
+  return g;
+}
+function initSanta() {
+  if (SANTA.group || !scene) return;
+  SANTA.group = buildSanta(); SANTA.group.visible = false; SANTA.group.frustumCulled = false; scene.add(SANTA.group);
+  // 금빛 별가루 꼬리
+  const N = 96, pos = new Float32Array(N * 3), col = new Float32Array(N * 3);
+  for (let i = 0; i < N; i++) { pos[i * 3 + 1] = -999; }
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  geo.setAttribute('color', new THREE.BufferAttribute(col, 3));
+  const mat = new THREE.PointsMaterial({ size: 1.25, map: santaDustTex(), transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, vertexColors: true, sizeAttenuation: true, fog: false });
+  mat.toneMapped = false;
+  const pts = new THREE.Points(geo, mat); pts.frustumCulled = false; scene.add(pts);
+  SANTA_TRAIL = { pts, geo, pos, col, life: new Float32Array(N), vel: new Float32Array(N * 3), i: 0, N };
+}
+function startSanta(t) {
+  initSanta(); if (!SANTA.group) return;
+  wpos(2112, 0, 0, _sC);
+  const az = (G.treeBaseAng || 0) + (G.orbitYaw || 0);
+  SANTA.cx = _sC.x; SANTA.cz = _sC.z;
+  SANTA.a0 = az + Math.PI - 0.9; SANTA.a1 = az + Math.PI + 0.9;
+  SANTA.rad = 44 + Math.random() * 8; SANTA.alt = 34 + Math.random() * 7;
+  SANTA.t = 0; SANTA.T = 13 + Math.random() * 2; SANTA.active = true; SANTA.group.visible = true; SANTA.bellT = 0;
+  try { if (!AU.muted) SFX.sleighWind(); } catch (e) { }
+}
+function santaDust(p) {
+  const T = SANTA_TRAIL; if (!T) return;
+  for (let k = 0; k < 2; k++) {
+    const i = T.i = (T.i + 1) % T.N;
+    T.pos[i * 3] = p.x + (Math.random() - 0.5) * 0.6; T.pos[i * 3 + 1] = p.y + (Math.random() - 0.5) * 0.6; T.pos[i * 3 + 2] = p.z + (Math.random() - 0.5) * 0.6;
+    T.vel[i * 3] = (Math.random() - 0.5) * 1.2; T.vel[i * 3 + 1] = -0.4 - Math.random() * 0.8; T.vel[i * 3 + 2] = (Math.random() - 0.5) * 1.2;
+    T.life[i] = 1;
+  }
+}
+function updateSantaTrail(dt) {
+  const T = SANTA_TRAIL; if (!T) return;
+  const P = T.pos, C = T.col;
+  for (let i = 0; i < T.N; i++) {
+    if (T.life[i] <= 0) { if (P[i * 3 + 1] > -900) { P[i * 3 + 1] = -999; } continue; }
+    T.life[i] -= dt / 1.5;
+    if (T.life[i] <= 0) { P[i * 3 + 1] = -999; continue; }
+    P[i * 3] += T.vel[i * 3] * dt; P[i * 3 + 1] += T.vel[i * 3 + 1] * dt; P[i * 3 + 2] += T.vel[i * 3 + 2] * dt;
+    const k = T.life[i] * T.life[i];
+    C[i * 3] = 1.0 * k; C[i * 3 + 1] = 0.9 * k; C[i * 3 + 2] = 0.62 * k;
+  }
+  T.geo.attributes.position.needsUpdate = true; T.geo.attributes.color.needsUpdate = true;
+}
+function updateSanta(dt, t) {
+  const show = !!G.treeView || ((G.state === 'finish' || G.state === 'result') && !G.resOpen);
+  initSanta();
+  if (!show) { santaShown = false; if (SANTA.group) SANTA.group.visible = false; SANTA.active = false; updateSantaTrail(dt); return; }
+  if (!santaShown) { santaShown = true; santaNextAt = t + 5 + Math.random() * 2; }
+  if (!SANTA.active && t >= santaNextAt) startSanta(t);
+  if (SANTA.active) {
+    SANTA.t += dt;
+    const e = Math.min(1, SANTA.t / SANTA.T), sm = e * e * (3 - 2 * e);
+    const a = SANTA.a0 + (SANTA.a1 - SANTA.a0) * sm;
+    const y = SANTA.alt + Math.sin(sm * Math.PI) * 5.5;
+    const x = SANTA.cx + Math.sin(a) * SANTA.rad, z = SANTA.cz + Math.cos(a) * SANTA.rad;
+    const prev = SANTA.group.position.clone();
+    SANTA.group.position.set(x, y, z);
+    _sQ.set(x - prev.x, 0, z - prev.z);
+    if (_sQ.lengthSq() > 0.0001) SANTA.group.rotation.y = Math.atan2(-_sQ.x, -_sQ.z);
+    SANTA.group.rotation.z = Math.sin(sm * Math.PI) * 0.1;
+    SANTA.group.rotation.x = -0.04 + Math.cos(sm * Math.PI) * 0.05;
+    const deer = SANTA.group.userData.deer || [];
+    deer.forEach((d, i) => { d.position.y = d.userData.baseY + Math.sin(t * 3.4 + d.userData.ph) * 0.16; d.rotation.z = Math.sin(t * 3.4 + d.userData.ph) * 0.06; });
+    SANTA.group.updateMatrixWorld();
+    _sP.set(0, 1.1, 1.9).applyMatrix4(SANTA.group.matrixWorld);
+    santaDust(_sP);
+    SANTA.bellT -= dt;
+    if (SANTA.bellT <= 0) { SANTA.bellT = 0.15 + Math.random() * 0.18; try { SFX.sleighBell(); } catch (e) { } }
+    if (SANTA.t >= SANTA.T) { SANTA.active = false; SANTA.group.visible = false; santaNextAt = t + 20 + Math.random() * 8; }
+  }
+  updateSantaTrail(dt);
 }
 
 // ---------- 🎀 트리 오너먼트 꾸미기 (이 기기에만 저장, 서버 요청 없음) ----------
@@ -3454,6 +3660,8 @@ function frame_(dt) {
   wpos(p.s, p.u, 0, P0); W.sun.target.position.copy(P0); W.sun.position.set(P0.x + 34, P0.y + 72, P0.z + 46);
   W.update(dt, t, camera, G.state === 'menu' ? 0 : p.s);
   updateSnowballs(dt);
+  updateSpot(dt);
+  try { updateSanta(dt, t); } catch (e) { }
   renderer.render(scene, camera);
 }
 function devShot(v) { // 개발용: ?shot=<s|result>
