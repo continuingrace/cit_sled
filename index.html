@@ -422,7 +422,7 @@ body.paused *{animation-play-state:paused!important}
 #cardView .cv-note.bad{color:#ffb4ab}
 #cardView .cv-note.good{color:#c8e8c2}
 /* 베이지 종이 위 버튼 — 어두운 모달용 밝은 글자색이 아니라 종이에 맞는 진한 잉크색 */
-.vin-copy{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 14px;border-radius:999px;border:1px solid rgba(110,88,58,.22);background:rgba(110,88,58,.08);color:#4a3f32;font-family:inherit;font-size:12.5px;font-weight:700;cursor:pointer;transition:color .15s,border-color .15s,background .15s}
+.vin-copy{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 14px;border-radius:11px;border:1px solid rgba(110,88,58,.22);background:rgba(110,88,58,.08);color:#4a3f32;font-family:inherit;font-size:12.5px;font-weight:700;cursor:pointer;transition:color .15s,border-color .15s,background .15s}
 .vin-copy:hover{color:#3a3128;background:rgba(110,88,58,.14);border-color:rgba(110,88,58,.34)}
 .vin-copy:active{transform:scale(.98)}
 .vin-copy.hidden{display:none}
@@ -1999,7 +1999,7 @@ function makeVillager(o) {
 }
 
 // ===== 버전 표기 (배포할 때마다 이 값만 올린다) =====
-const APP_VER = 'v1.12';
+const APP_VER = 'v1.13';
 try { const av = document.getElementById('appVer'); if (av) av.textContent = APP_VER; } catch (e) { }
 
 // ===== 사운드 (효과음: Web Audio 직접 합성 / BGM: 실제 캐럴 MP3) =====
