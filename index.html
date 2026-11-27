@@ -1999,7 +1999,7 @@ function makeVillager(o) {
 }
 
 // ===== 버전 표기 (배포할 때마다 이 값만 올린다) =====
-const APP_VER = 'v1.13';
+const APP_VER = 'v1.14';
 try { const av = document.getElementById('appVer'); if (av) av.textContent = APP_VER; } catch (e) { }
 
 // ===== 사운드 (효과음: Web Audio 직접 합성 / BGM: 실제 캐럴 MP3) =====
@@ -2792,10 +2792,10 @@ async function drawCardCanvas(card) { // card를 넘기면 그 카드(내 카드
     sx.globalCompositeOperation = 'source-over';
     sx.strokeStyle = 'rgba(110,84,50,.3)'; sx.lineWidth = 1.4;
     holes.forEach(function (q) { sx.beginPath(); sx.arc(q[0], q[1], 7, 0, Math.PI * 2); sx.stroke(); });
-    x.save(); x.translate(CW - 135, 150); x.rotate(0.038); x.shadowColor = 'rgba(36,22,8,.22)'; x.shadowBlur = 7; x.shadowOffsetY = 2; x.drawImage(sc, -75, -94); x.restore();
+    x.save(); x.translate(CW - 135, 170); x.rotate(0.038); x.shadowColor = 'rgba(36,22,8,.22)'; x.shadowBlur = 7; x.shadowOffsetY = 2; x.drawImage(sc, -75, -94); x.restore();
   } catch (e) { }
   const mark = th.dark ? 'rgba(244,226,184,.8)' : 'rgba(124,35,41,.5)';
-  x.save(); x.translate(CW - 300, 152); x.rotate(-0.12); x.strokeStyle = mark;
+  x.save(); x.translate(CW - 300, 172); x.rotate(-0.12); x.strokeStyle = mark;
   x.lineWidth = 4; x.beginPath(); x.arc(0, 0, 46, 0, Math.PI * 2); x.stroke();
   x.lineWidth = 1.8; x.beginPath(); x.arc(0, 0, 36, 0, Math.PI * 2); x.stroke();
   x.lineWidth = 4; for (let i = -1; i <= 1; i++) { x.beginPath(); const yy0 = i * 26; for (let t = 0; t <= 190; t += 4) { const xx = 56 + t, yy = yy0 + Math.sin(t / 18) * 7; if (t === 0) x.moveTo(xx, yy); else x.lineTo(xx, yy); } x.stroke(); }
