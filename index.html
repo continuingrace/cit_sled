@@ -1438,7 +1438,7 @@ function buildWorld(scene) {
       }
     });
     // 샴페인 골드 리본 가랜드 — 두 줄로 트리를 감아 내려온다 + 작은 골드 구슬
-    [[0.35, 2.55, 0.04], [1.9, 2.15, 0.13]].forEach(([phase, turns, off]) => {
+    [[0.35, 2.55, 0.09], [1.9, 2.15, 0.19]].forEach(([phase, turns, off]) => {
       const pts = [];
       for (let k2 = 0; k2 <= 240; k2++) {
         const t = k2 / 240, yy = 3.35 + t * (topY - 1.1 - 3.35), ang = phase + t * Math.PI * 2 * turns;
@@ -1480,13 +1480,13 @@ function buildWorld(scene) {
     const sp = PT(F, 0, topY + 2.0, 0);
     const st = new THREE.Mesh(starGeo3D(2.35, 0.66, 0.42), new THREE.MeshStandardMaterial({ color: '#f7e2b0', metalness: 0.35, roughness: 0.32, emissive: '#b8862f', emissiveIntensity: 0.55, flatShading: true }));
     st.position.copy(sp); st.frustumCulled = false; scene.add(st); W.star = st;
-    const st2 = new THREE.Mesh(starGeo3D(1.05, 0.34, 0.42), new THREE.MeshBasicMaterial({ color: '#fff6cf', transparent: true, opacity: 0.24, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false }));
+    const st2 = new THREE.Mesh(starGeo3D(1.05, 0.34, 0.42), new THREE.MeshBasicMaterial({ color: '#fff6cf', transparent: true, opacity: 0.12, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false }));
     st2.position.copy(sp); st2.position.z += 0.1; st2.frustumCulled = false; scene.add(st2); W.starSpark = st2;
     const rays = new THREE.Sprite(new THREE.SpriteMaterial({ map: starRayTexture(), color: '#ffe2a0', transparent: true, opacity: 0.4, blending: THREE.AdditiveBlending, depthWrite: false, fog: false }));
     rays.position.copy(sp); rays.scale.set(14, 14, 1); rays.frustumCulled = false; scene.add(rays); W.starRays = rays;
     const sl = new THREE.PointLight('#ffd08a', 0, 26, 1.8); sl.position.copy(sp); sl.position.y -= 1.4; scene.add(sl); W.starLight = sl;
     const starGlowTex = starGlowTexture();
-    const halo = new THREE.Sprite(new THREE.SpriteMaterial({ map: starGlowTex, color: '#ffe9bd', transparent: true, opacity: 0.62, blending: THREE.AdditiveBlending, depthWrite: false, fog: false }));
+    const halo = new THREE.Sprite(new THREE.SpriteMaterial({ map: starGlowTex, color: '#ffe9bd', transparent: true, opacity: 0.5, blending: THREE.AdditiveBlending, depthWrite: false, fog: false }));
     halo.position.copy(sp); halo.scale.set(9.5, 9.5, 1); halo.frustumCulled = false; scene.add(halo); W.starHalo = halo;
     const halo2 = new THREE.Sprite(new THREE.SpriteMaterial({ map: starGlowTex, color: '#fff4d6', transparent: true, opacity: 0.5, blending: THREE.AdditiveBlending, depthWrite: false, fog: false }));
     halo2.position.copy(sp); halo2.scale.set(4.2, 4.2, 1); halo2.frustumCulled = false; scene.add(halo2);
@@ -1657,7 +1657,7 @@ function buildWorld(scene) {
     W.sky.position.copy(cam.position); W.stars.position.copy(cam.position); W.aurora.position.set(cam.position.x, cam.position.y - 60, cam.position.z); W.aurora.material.uniforms.t.value = time;
     W.padMat.map.offset.y = (time * 1.6) % 1; if (W.star) W.star.rotation.y = Math.sin(time * 0.7) * 0.22;
     if (W.starHalo) { const hs = 9.4 + Math.sin(time * 1.6) * 0.6; W.starHalo.scale.set(hs, hs, 1); W.starHalo.material.opacity = 0.56 + Math.sin(time * 1.9) * 0.08; }
-    if (W.starRays) { W.starRays.material.rotation = time * 0.1; W.starRays.material.opacity = 0.3 + Math.sin(time * 2.3) * 0.06; W.starRays.scale.setScalar(13.6 + Math.sin(time * 1.7) * 0.7); }
+    if (W.starRays) { W.starRays.material.rotation = time * 0.1; W.starRays.material.opacity = 0.26 + Math.sin(time * 2.3) * 0.05; W.starRays.scale.setScalar(13.6 + Math.sin(time * 1.7) * 0.7); }
     if (W.starSpark) { W.starSpark.material.opacity = 0.42 + 0.28 * Math.sin(time * 3.4); W.starSpark.rotation.y = -time * 0.5; }
     if (W.starLight) W.starLight.intensity *= 0.9 + 0.1 * Math.sin(time * 2.9);
     const P = W.snow.geometry.attributes.position.array, cx = cam.position.x, cy = cam.position.y, cz = cam.position.z;
@@ -2050,7 +2050,8 @@ function setCam(dt, snap) {
       const yaw = (G.treeBaseAng || 0) + (G.orbitYaw || 0), pit = Math.max(-0.35, Math.min(0.9, G.orbitPitch || 0)), treeH = treeTopY() + 2.6, wide = innerWidth / innerHeight > 1.15, dist = clamp(G.orbitDist || treeH * (wide ? 1.58 : 1.36), 4.5, 70);
       wpos(2112, 0, 0, eP);
       const fy = G.orbitFocus == null ? 0.45 : G.orbitFocus, ty = eP.y + 1.0 + fy * (treeH - 1.6); // 시선 높이: 선물상자(아래) ~ 꼭대기 별(위)
-      oP.set(eP.x + Math.sin(yaw) * Math.cos(pit) * dist, ty + Math.sin(pit) * dist, eP.z + Math.cos(yaw) * Math.cos(pit) * dist);
+      const pitEff = pit - Math.max(0, 0.45 - fy) * (wide ? 0.5 : 0.58); // 아래를 볼 땐 카메라도 낮춰 가지 밑을 가리지 않게
+      oP.set(eP.x + Math.sin(yaw) * Math.cos(pitEff) * dist, ty + Math.sin(pitEff) * dist, eP.z + Math.cos(yaw) * Math.cos(pitEff) * dist);
       oL.set(eP.x, ty, eP.z);
       if (oP.y < eP.y + 0.4) oP.y = eP.y + 0.4; // 땅 아래로 파고들지 않게
       fov = wide ? 48 : 62;
