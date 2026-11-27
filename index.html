@@ -1999,7 +1999,7 @@ function makeVillager(o) {
 }
 
 // ===== 버전 표기 (배포할 때마다 이 값만 올린다) =====
-const APP_VER = 'v1.19';
+const APP_VER = 'v1.20';
 try { const av = document.getElementById('appVer'); if (av) av.textContent = APP_VER; } catch (e) { }
 
 // ===== 사운드 (효과음: Web Audio 직접 합성 / BGM: 실제 캐럴 MP3) =====
@@ -2799,23 +2799,22 @@ async function drawCardCanvas(card) { // card를 넘기면 그 카드(내 카드
   const rnd = (a, b) => a + Math.random() * (b - a);
   x.save(); x.translate(CW - 300, 186); x.rotate(-0.12);
   x.strokeStyle = 'rgba(' + INK + ',1)'; x.fillStyle = 'rgba(' + INK + ',1)'; x.lineCap = 'round'; x.lineJoin = 'round';
-  const ring = (rad, lw, alpha, jit, gaps) => {
-    for (let pass = 0; pass < 2; pass++) {                    // 두 번 겹찍어 잉크 농도 차이
-      x.globalAlpha = pass ? alpha * 0.4 : alpha;
-      x.lineWidth = pass ? lw * 0.55 : lw;
-      let pen = false;
-      x.beginPath();
-      for (let a = 0; a <= 360; a += 3) {
-        if (gaps && Math.random() < gaps) { pen = false; continue; }
-        const t2 = a * Math.PI / 180, rr = rad + rnd(-jit, jit);
-        const px = Math.cos(t2) * rr, py = Math.sin(t2) * rr;
-        if (!pen) { x.moveTo(px, py); pen = true; } else x.lineTo(px, py);
-      }
-      x.stroke();
-    }
+  const ring = (rad, lw, alpha) => {
+    x.globalAlpha = alpha; x.lineWidth = lw;                  // 본 잉크
+    x.beginPath(); x.arc(0, 0, rad, 0, Math.PI * 2); x.stroke();
+    x.globalAlpha = alpha * 0.34; x.lineWidth = lw * 2.1;     // 번진 가장자리
+    x.beginPath(); x.arc(0, 0, rad, 0, Math.PI * 2); x.stroke();
+    x.globalAlpha = alpha * 0.3; x.lineWidth = lw * 0.5;      // 안쪽 결
+    x.beginPath(); x.arc(0, 0, rad + rnd(-1, 1), 0, Math.PI * 2); x.stroke();
   };
-  ring(46, 3.8, 0.42, 0.85, 0.05);
-  ring(36, 1.7, 0.36, 0.55, 0.06);
+  ring(46, 3.2, 0.4);
+  ring(36, 1.6, 0.34);
+  for (let i = 0; i < 5; i++) {                               // 군데군데 잉크가 덜 묻은 자리
+    const a0 = rnd(0, Math.PI * 2), len = rnd(0.12, 0.42), rr = i % 2 ? 46 : 36;
+    x.globalAlpha = rnd(0.35, 0.6); x.strokeStyle = PPR; x.lineWidth = i % 2 ? 4.4 : 2.6;
+    x.beginPath(); x.arc(0, 0, rr, a0, a0 + len); x.stroke();
+    x.strokeStyle = 'rgba(' + INK + ',1)';
+  }
   for (let i = -1; i <= 1; i++) {                             // 소인파선 — 두 번 겹찍어 잉크 농도가 고르지 않게
     for (let pass = 0; pass < 2; pass++) {
       x.globalAlpha = pass ? 0.12 : 0.32;
