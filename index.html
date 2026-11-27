@@ -150,9 +150,10 @@ kbd{display:inline-block;min-width:26px;padding:1px 7px;margin:0 2px;border-radi
 #bResX b{font-size:15px;font-weight:700;line-height:1}
 #bResX:hover{background:rgba(255,255,255,.34);border-color:rgba(255,255,255,.62)}
 #result .rhead{padding-right:92px}
-#endbar{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;width:min(92vw,370px);box-sizing:border-box;z-index:19;padding:10px;border-radius:20px;background:rgba(13,19,42,.78);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid rgba(255,255,255,.14);box-shadow:0 18px 44px rgba(4,8,26,.45)}
+#endbar{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:8px;width:min(92vw,370px);box-sizing:border-box;z-index:19;padding:10px;border-radius:20px;background:rgba(13,19,42,.78);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid rgba(255,255,255,.14);box-shadow:0 18px 44px rgba(4,8,26,.45)}
 #endbar button{white-space:nowrap;font-size:12.5px;font-weight:700;padding:11px 6px;border-radius:13px;letter-spacing:-.01em;min-width:0;overflow:hidden;text-overflow:ellipsis;line-height:1.25}
-#endbar #bSpinToggle,#endbar #bPhoto{grid-column:span 3}
+#endbar #bSpinToggle,#endbar #bPhoto{grid-column:span 4}
+#endbar #bSnow{grid-column:span 2}
 #endbar #bResOpen,#endbar #bShot2,#endbar #bRetry3{grid-column:span 2}
 #endbar #bSpinToggle{background:rgba(232,208,150,.10);border:1px solid rgba(232,208,150,.42);color:#f0dfb5;box-shadow:inset 0 1px 0 rgba(255,255,255,.07)}
 #endbar #bSpinToggle:hover{background:rgba(232,208,150,.18)}
@@ -264,8 +265,13 @@ body.paused *{animation-play-state:paused!important}
 #cards .vcard{position:relative;border-radius:12px;border:1px solid;padding:15px 14px 12px;display:flex;flex-direction:column;gap:9px;background-image:var(--iv-noise),var(--iv-fiber);background-size:160px 160px,220px 220px;box-shadow:inset 0 0 30px rgba(120,95,60,.06),0 8px 20px rgba(45,30,15,.06)}
 #cards .vcard .vc-stamp{position:absolute;right:8px;top:8px;width:26px;height:32px;background-repeat:no-repeat;background-position:center;background-size:100% 100%;opacity:.92;filter:drop-shadow(0 1px 2px rgba(45,30,15,.16))}
 #cards .vcard .vc-msg{position:relative;flex:1;margin:0;padding-right:15px;font-size:12.5px;font-weight:500;line-height:1.62;letter-spacing:0;text-align:left;white-space:pre-wrap;word-break:keep-all;overflow-wrap:break-word;color:inherit}
-#cards .vcard .vc-foot{position:relative;display:flex;justify-content:space-between;align-items:center;gap:6px;padding-top:8px;border-top:1px solid;font-size:10px;font-weight:600;letter-spacing:.02em;opacity:.75}
-#cards .vcard .vc-foot b{font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#cards .vcard .vc-foot{position:relative;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:2px 8px;padding-top:8px;border-top:1px solid;font-size:10.5px;font-weight:600;letter-spacing:.01em;line-height:1.5;opacity:.8}
+#cards .vcard .vc-foot b{flex:1 1 auto;min-width:0;max-width:100%;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#cards .vcard .vc-foot span{flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#cards .vcard{cursor:pointer;transition:transform .16s ease,box-shadow .16s ease,border-color .16s ease}
+#cards .vcard:hover{transform:translateY(-1px);box-shadow:inset 0 0 30px rgba(120,95,60,.06),0 12px 24px rgba(45,30,15,.12)}
+#cards .vcard:active{transform:scale(.985)}
+#cards .vcard:focus-visible{outline:2px solid rgba(124,35,41,.5);outline-offset:2px}
 #cards .vcard .vc-own{position:relative;display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:1px;padding-top:8px;border-top:1px dashed;border-color:currentColor;opacity:.95}
 #cards .vcard .vc-mine{font-size:9px;font-weight:700;letter-spacing:.08em;opacity:.55}
 #cards .vcard .vc-share{display:inline-flex;align-items:center;gap:5px;padding:6px 11px;border-radius:999px;border:1px solid;border-color:currentColor;background:rgba(255,255,255,.4);color:inherit;font-family:inherit;font-size:10.5px;font-weight:700;letter-spacing:.01em;cursor:pointer;opacity:.9}
@@ -317,6 +323,45 @@ body.paused *{animation-play-state:paused!important}
   #cards .vin-chip .sw{width:10px;height:10px}
   .brand .logo{font-size:38px}
   #menu .row .btn.sub{font-size:12.5px}
+}
+
+/* ---------- 트리에서 봉투를 열면 나오는 엽서 뷰어 ---------- */
+#cardView{perspective:1100px;--cv-bg:#f8f2e6;--cv-ink:#2b221a;--cv-edge:#e2d7c4;--cv-line:rgba(60,45,30,.14);--cv-soft:rgba(38,29,22,.66);--cv-mark:rgba(124,35,41,.55)}
+#cardView .panel.cvbox{position:relative;width:min(520px,93vw);max-width:min(520px,93vw);max-height:92vh;padding:0;background:transparent;border:0;box-shadow:none;overflow:visible;transform-origin:50% 12%;will-change:transform,opacity;animation:cvIn .36s cubic-bezier(.22,1,.36,1) both}
+#cardView.closing .panel.cvbox{animation:cvOut .22s cubic-bezier(.45,0,.7,.25) both}
+#cardView .cv-x{position:absolute;right:2px;top:-44px;width:36px;height:36px;padding:0;border-radius:50%;border:1px solid rgba(255,255,255,.22);background:rgba(13,19,42,.8);color:#f6f2e8;font-size:15px;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:5;box-shadow:0 8px 20px rgba(5,9,26,.4)}
+#cardView .cv-x:hover{border-color:rgba(255,255,255,.45)}
+#cardView .cv-env{position:absolute;left:50%;bottom:-16px;width:74%;height:112px;border-radius:16px;background:linear-gradient(180deg,#fbf5e8,#ecdfc6);border:1px solid #dccbab;box-shadow:0 22px 46px rgba(5,9,26,.46);animation:cvEnvIn .42s cubic-bezier(.22,1,.36,1) .02s both}
+#cardView .cv-env::after{content:'';position:absolute;left:0;right:0;bottom:0;height:74px;background:linear-gradient(180deg,#f4ead6,#e3d3b5);clip-path:polygon(0 0,50% 74%,100% 0,100% 100%,0 100%);border-radius:0 0 15px 15px;box-shadow:inset 0 1px 0 rgba(255,255,255,.7)}
+#cardView .cv-env::before{content:'';position:absolute;left:50%;bottom:24px;width:26px;height:26px;margin-left:-13px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#c4484b,#8d2429);box-shadow:0 2px 4px rgba(60,20,20,.35),inset 0 -2px 3px rgba(0,0,0,.25);z-index:3}
+#cardView .cv-card{position:relative;z-index:2;display:flex;flex-direction:column;gap:12px;border-radius:16px;padding:22px 22px 16px;border:1px solid var(--cv-edge);background-color:var(--cv-bg);background-image:radial-gradient(120% 100% at 50% 0%,rgba(255,255,255,.5),rgba(255,255,255,0) 70%),linear-gradient(180deg,rgba(255,255,255,.22),rgba(120,95,60,.05));box-shadow:0 26px 60px rgba(5,9,26,.5),inset 0 0 50px rgba(120,95,60,.08);color:var(--cv-ink);transform-origin:50% 100%;will-change:transform,opacity;animation:cvCardIn .38s cubic-bezier(.22,1,.36,1) .04s both}
+#cardView.closing .cv-card{animation:cvCardOut .2s ease both}
+#cardView .cv-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;min-height:72px}
+#cardView .cv-post{width:118px;height:74px;flex:none;color:var(--cv-mark);transform:rotate(-7deg);opacity:.78;mix-blend-mode:multiply;overflow:visible;pointer-events:none}
+#cardView .cv-stamp{width:54px;height:66px;padding:5px;box-sizing:border-box;border:1px dashed rgba(120,90,50,.45);background:#fbf6ea;transform:rotate(2.4deg);box-shadow:0 2px 6px rgba(36,22,8,.2);flex:none}
+#cardView .cv-stamp i{display:block;width:100%;height:100%;background-size:cover;background-position:center}
+#cardView .cv-msg{margin:0;font-family:'TypewriterKR','Courier New',ui-monospace,'AppleMyungjo',serif;font-size:15px;line-height:1.8;letter-spacing:.01em;white-space:pre-wrap;word-break:keep-all;overflow-wrap:break-word;min-height:64px;text-align:left}
+#cardView .cv-foot{display:flex;justify-content:space-between;align-items:flex-end;gap:10px;border-top:1px solid var(--cv-line);padding-top:10px;font-family:'TypewriterKR','Courier New',ui-monospace,'AppleMyungjo',serif;font-size:12px;letter-spacing:.02em;color:var(--cv-soft)}
+#cardView .cv-from{font-weight:700;max-width:64%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#cardView .cv-to{max-width:48%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:right}
+#cardView .cv-when{font-size:10.5px;font-weight:600;letter-spacing:.04em;color:var(--cv-soft);opacity:.8;text-align:right}
+#cardView .cv-own{display:flex;align-items:center;justify-content:space-between;gap:8px;border-top:1px dashed var(--cv-line);padding-top:10px;font-size:10.5px;font-weight:700;letter-spacing:.06em;color:var(--cv-soft)}
+#cardView .cv-own.hidden{display:none}
+#cardView .cv-share{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:999px;border:1px solid rgba(124,35,41,.4);background:rgba(255,255,255,.55);color:#6f2b30;font-family:inherit;font-size:12px;font-weight:800;cursor:pointer}
+#cardView .cv-share:hover{background:#fff}
+#treebar button.on{background:linear-gradient(180deg,#eaf6ff,#bcdcf5);color:#12233d;border-color:rgba(255,255,255,.62);box-shadow:0 12px 28px rgba(120,190,240,.36)}
+#endbar button.btn.on{background:linear-gradient(180deg,#eaf6ff,#bcdcf5);color:#12233d;border-color:rgba(255,255,255,.62)}
+@keyframes cvIn{0%{opacity:0;transform:translateY(34px) scale(.84) rotateX(-20deg)}55%{opacity:1}100%{opacity:1;transform:translateY(0) scale(1) rotateX(0)}}
+@keyframes cvOut{0%{opacity:1;transform:none}100%{opacity:0;transform:translateY(22px) scale(.9) rotateX(-12deg)}}
+@keyframes cvCardIn{0%{opacity:0;transform:translateY(56px) rotateX(-28deg) scaleY(.82)}100%{opacity:1;transform:translateY(0) rotateX(0) scaleY(1)}}
+@keyframes cvCardOut{0%{opacity:1;transform:none}100%{opacity:0;transform:translateY(42px) rotateX(-18deg) scaleY(.9)}}
+@keyframes cvEnvIn{0%{opacity:0;transform:translateX(-50%) translateY(20px)}100%{opacity:1;transform:translateX(-50%) translateY(0)}}
+@media (max-width:520px){
+  #cardView .cv-card{padding:18px 16px 14px}
+  #cardView .cv-msg{font-size:14px;line-height:1.74}
+  #cardView .cv-post{width:96px;height:60px}
+  #cardView .cv-stamp{width:48px;height:58px}
+  #cardView .cv-x{top:-42px;right:0}
 }
 * { touch-action: manipulation; }
 #gl, canvas, #touch, .tb, button, .btn { touch-action: none !important; }
@@ -440,10 +485,35 @@ body.paused *{animation-play-state:paused!important}
   <div class="vin-sep">트리에 걸린 카드</div>
   <div class="vin-grid" id="cardList"></div>
 </div></div></div>
-<div id="treebar" class="hidden"><button id="tbBack">← 첫 화면으로</button><button id="tbCard" class="primary">🎄 카드 남기기</button></div>
+<div id="treebar" class="hidden"><button id="tbBack">← 첫 화면으로</button><button id="tbSnow">❄️ 눈 던지기</button><button id="tbCard" class="primary">🎄 카드 남기기</button></div>
 <div id="treeCount" aria-live="polite"></div>
-<div id="endbar" class="hidden"><button class="btn" id="bSpinToggle">360° 회전</button><button class="btn" id="bPhoto">📸 기념사진</button><button class="btn sub" id="bResOpen">결과 보기</button><button class="btn sub" id="bShot2">장면 캡처</button><button class="btn sub" id="bRetry3">한 번 더</button></div>
+<div id="endbar" class="hidden"><button class="btn" id="bSpinToggle">360° 회전</button><button class="btn" id="bSnow">❄️ 눈 던지기</button><button class="btn" id="bPhoto">📸 기념사진</button><button class="btn sub" id="bResOpen">결과 보기</button><button class="btn sub" id="bShot2">장면 캡처</button><button class="btn sub" id="bRetry3">한 번 더</button></div>
 <div id="orbitHint" aria-hidden="true">👆 드래그해서 360° 둘러보기 · 팻말 터치</div>
+<div id="cardView" class="modal hidden" aria-hidden="true"><div class="panel cvbox" role="dialog" aria-modal="true" aria-label="트리에 걸린 빈티지 엽서">
+  <button type="button" class="cv-x" id="cardViewX" aria-label="엽서 닫기">✕</button>
+  <div class="cv-env" aria-hidden="true"></div>
+  <div class="cv-card" id="cardViewCard">
+    <div class="cv-top">
+      <svg class="cv-post" viewBox="0 0 200 124" aria-hidden="true" focusable="false">
+        <g fill="none" stroke="currentColor"><circle cx="62" cy="62" r="52" stroke-width="3.4"/><circle cx="62" cy="62" r="44" stroke-width="1.4"/></g>
+        <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2.4" opacity=".9">
+          <path d="M120 42 q11 -7 22 0 t22 0 t22 0 t22 0"/><path d="M120 56 q11 -7 22 0 t22 0 t22 0 t22 0"/>
+          <path d="M120 70 q11 -7 22 0 t22 0 t22 0 t22 0"/><path d="M120 84 q11 -7 22 0 t22 0 t22 0 t22 0"/>
+        </g>
+        <g fill="currentColor" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-weight="700">
+          <text x="62" y="52" font-size="8.6" letter-spacing=".6">CHRISTMAS POST</text>
+          <text x="62" y="67" font-size="10.6">DEC 25 · 2026</text>
+          <text x="62" y="80" font-size="7.4" letter-spacing="1.6">CiT WINTER</text>
+        </g>
+      </svg>
+      <div class="cv-stamp" role="img" aria-label="빈티지 우표"><i id="cvStampImg"></i></div>
+    </div>
+    <p class="cv-msg" id="cvMsg"></p>
+    <div class="cv-foot"><b class="cv-from" id="cvFrom">From. 익명</b><span class="cv-to" id="cvTo">To. 모두에게</span></div>
+    <div class="cv-when" id="cvWhen"></div>
+    <div class="cv-own hidden" id="cvOwn"><span>내가 이 기기에서 남긴 카드</span><button type="button" class="cv-share" id="cvShare">💌 공유하기</button></div>
+  </div>
+</div></div>
 <div id="shot" class="modal hidden"><div class="panel shotbox">
   <button class="x" id="bShotX" title="닫기" aria-label="장면 캡처 닫기"><b>✕</b></button>
   <h2 id="shotTitle">장면 캡처</h2>
@@ -908,6 +978,23 @@ function signPhoto() { return signTex((x, w, h) => { woodSign(x, w, h); try { x.
 // ===== 지오메트리 합치기 (정점 색) =====
 function bake(geo, color, m) { const g = geo.index ? geo.toNonIndexed() : geo.clone(); if (m) g.applyMatrix4(m); const n = g.attributes.position.count, c = new Float32Array(n * 3), col = new THREE.Color(color); for (let i = 0; i < n; i++) { c[i * 3] = col.r; c[i * 3 + 1] = col.g; c[i * 3 + 2] = col.b; } g.setAttribute('color', new THREE.BufferAttribute(c, 3)); return g; }
 function merge(list) { let n = 0; list.forEach(g => n += g.attributes.position.count); const P = new Float32Array(n * 3), N = new Float32Array(n * 3), C = new Float32Array(n * 3); let o = 0; list.forEach(g => { P.set(g.attributes.position.array, o); N.set(g.attributes.normal.array, o); C.set(g.attributes.color.array, o); o += g.attributes.position.count * 3; }); const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(P, 3)); g.setAttribute('normal', new THREE.BufferAttribute(N, 3)); g.setAttribute('color', new THREE.BufferAttribute(C, 3)); return g; }
+function shaded(geo, cA, cB, seed, m) { // 정점 높이·각도로 명암을 살짝 섞은 색 (한 번에 합쳐 그릴 때 깊이감)
+  const g = geo.index ? geo.toNonIndexed() : geo.clone();
+  if (m) g.applyMatrix4(m);
+  const p = g.attributes.position, n = p.count, arr = new Float32Array(n * 3);
+  let y0 = Infinity, y1 = -Infinity;
+  for (let i = 0; i < n; i++) { const y = p.getY(i); if (y < y0) y0 = y; if (y > y1) y1 = y; }
+  const A = new THREE.Color(cA), B = new THREE.Color(cB), T = new THREE.Color();
+  for (let i = 0; i < n; i++) {
+    const t = (p.getY(i) - y0) / Math.max(0.001, y1 - y0);
+    const th = Math.atan2(p.getZ(i), p.getX(i));
+    const f = 0.5 + 0.5 * Math.sin(th * 5.5 + seed * 1.7);
+    T.copy(A).lerp(B, clamp(0.14 + 0.62 * t + 0.16 * f, 0, 1));
+    arr[i * 3] = T.r; arr[i * 3 + 1] = T.g; arr[i * 3 + 2] = T.b;
+  }
+  g.setAttribute('color', new THREE.BufferAttribute(arr, 3));
+  return g;
+}
 const _p = new THREE.Vector3(), _q = new THREE.Quaternion(), _s = new THREE.Vector3(), _e = new THREE.Euler();
 function MX(x, y, z, sx = 1, sy = sx, sz = sx, rx = 0, ry = 0, rz = 0) { return new THREE.Matrix4().compose(_p.set(x, y, z), _q.setFromEuler(_e.set(rx, ry, rz, 'YXZ')), _s.set(sx, sy, sz)); }
 class Batch {
@@ -1251,14 +1338,71 @@ function buildWorld(scene) {
     for (let k = 0; k < 3; k++) for (const x of [-0.75, 0.75]) { B.deer.add(L(frame(1873.5 + k * 3.4, -15.5), MX(x, 0, 0, 1.15))); } for (const x of [-0.75, 0.75]) lines.push(...PT(F, x, 1.3, -1.6).toArray(), ...PT(F, x, 1.4, -17).toArray());
     giftPile(1862, -15.5, 6, 3);
   }
-  { // 결승점 대형 트리
-    const F = frame(2112, 0), a = [bake(Cyl(0.9, 1.2, 4, 10), '#7a5236', MX(0, 2, 0))]; let y = 3;
-    [[8, 7], [6.6, 6.4], [5.2, 5.8], [3.8, 5.2], [2.4, 4.6]].forEach(([rad, h], i) => { a.push(bake(new THREE.ConeGeometry(rad, h, 16), ['#236b4c', '#28765a', '#2e8262', '#348e6a', '#3b9a72'][i], MX(0, y + h / 2, 0))); a.push(bake(new THREE.ConeGeometry(rad * 0.74, h * 0.58, 16, 1, true), '#ffffff', MX(0, y + h * 0.75, 0))); for (let k = 0; k < 14 + (4 - i) * 5; k++) { const t = k / (14 + (4 - i) * 5), ang = t * Math.PI * 2 + i, yy = y + h * (0.08 + 0.5 * ((k * 0.37) % 1)), rr2 = rad * (1 - (yy - y) / h) + 0.25; bulb(PT(F, Math.cos(ang) * rr2, yy, Math.sin(ang) * rr2), BULBC[(k + i) % 6]); } y += h * 0.62; });
-    const m = new THREE.Mesh(merge(a), vc); m.matrixAutoUpdate = false; m.matrix.copy(F); m.frustumCulled = false; scene.add(m);
-    const sp = PT(F, 0, y + 2.6, 0), st = new THREE.Mesh(starGeo5(1.8, 0.44), new THREE.MeshBasicMaterial({ color: '#ffd84d', toneMapped: false, side: THREE.DoubleSide })); st.position.copy(sp); st.frustumCulled = false; scene.add(st); W.star = st; for (let k = 0; k < 4; k++) bigGlow(sp, '#ffe98a');
+  { // ---------- 결승점 대형 트리: 7단 유기적 가지 · 가지 끝 눈 · 샴페인 골드 가랜드 ----------
+    const F = frame(2112, 0), P = [], goldGeo = [];
+    const TOPL = TREE_LAYER_BASES[TREE_LAYER_BASES.length - 1], topY = TOPL.base + TOPL.h;
+    const WARM = ['#ffe4b0', '#ffd79a', '#fff2d4', '#ffc487', '#ffb98f'];
+    // 나무 기둥(아래로 갈수록 굵게) + 뿌리 + 밑동 눈더미
+    P.push(bake(Cyl(0.82, 1.3, 3.9, 14), '#6b432c', MX(0, 1.55, 0)));
+    P.push(bake(Cyl(1.38, 1.66, 0.34, 16), '#553823', MX(0, -0.12, 0)));
+    [[0.95, 0.62, 0.5], [-0.9, 0.55, -0.4], [0.1, -1.02, 0.2]].forEach(([x, z, rz]) => P.push(bake(Cyl(0.1, 0.32, 1.0, 7), '#5f3d27', MX(x, 0.2, z, 1, 1, 1, 0, 0, rz))));
+    P.push(bake(Sph(1, 20, 14), '#f4f9ff', MX(0, -0.42, 0, 6.4, 1.15, 6.4)));
+    P.push(bake(Sph(1, 16, 10), '#ffffff', MX(2.9, -0.05, 3.2, 2.6, 0.75, 2.3)));
+    P.push(bake(Sph(1, 16, 10), '#ffffff', MX(-3.4, -0.02, -2.4, 2.2, 0.7, 2.0)));
+    TREE_LAYER_BASES.forEach((T, i) => {
+      const rad = T.rad, h = T.h, y = T.base, ph = i * 1.7;
+      const wav = (th) => Math.sin(th * 6 + ph) * 0.085 + Math.sin(th * 11 + ph * 1.7) * 0.045 + Math.sin(th * 17 + ph * 0.6) * 0.022;
+      const cone = new THREE.ConeGeometry(rad, h, 34, 5, false), cp = cone.attributes.position;
+      for (let vi = 0; vi < cp.count; vi++) {
+        const x = cp.getX(vi), yy = cp.getY(vi), z = cp.getZ(vi), t = clamp((yy + h / 2) / h, 0, 1), k = 1 - t, th = Math.atan2(z, x);
+        const w = 1 + wav(th) * Math.pow(k, 0.55);
+        cp.setX(vi, x * w); cp.setZ(vi, z * w);
+        cp.setY(vi, yy - (0.5 + 0.5 * Math.sin(th * 6 + ph)) * h * 0.085 * k * k + Math.sin(th * 9 + ph) * h * 0.012 * k);
+      }
+      cone.computeVertexNormals();
+      P.push(shaded(cone, ['#1b5a3f', '#20694a', '#257452', '#2a7f59', '#2f8a60', '#359569', '#3b9f70'][i], '#4fae80', i, MX(0, y + h / 2, 0)));
+      // 가지 끝에 소복하게 앉은 눈
+      const sl = new THREE.ConeGeometry(rad * 1.006, h * 0.16, 34, 1, true), sp2 = sl.attributes.position;
+      for (let vi = 0; vi < sp2.count; vi++) { const x = sp2.getX(vi), yy = sp2.getY(vi), z = sp2.getZ(vi), t = clamp((yy + h * 0.08) / (h * 0.16), 0, 1), th = Math.atan2(z, x), w = 1 + wav(th) * Math.pow(1 - t, 0.55); sp2.setX(vi, x * w); sp2.setZ(vi, z * w); }
+      sl.computeVertexNormals();
+      P.push(bake(sl, '#f3f9ff', MX(0, y + h * 0.08, 0)));
+      // 따뜻한 전구: 층마다 고르게
+      const nb = 9;
+      for (let k2 = 0; k2 < nb; k2++) {
+        const ang = (k2 + 0.5) / nb * Math.PI * 2 + i * 0.8;
+        const yy2 = y + h * (0.10 + 0.62 * ((k2 * 0.41 + i * 0.23) % 1));
+        const rr = rad * (1 - (yy2 - y) / h) * 0.97 + 0.12;
+        bulb(PT(F, Math.cos(ang) * rr, yy2, Math.sin(ang) * rr), WARM[(k2 + i) % WARM.length]);
+      }
+    });
+    // 샴페인 골드 리본 가랜드 — 두 줄로 트리를 감아 내려온다 + 작은 골드 구슬
+    [[0.35, 2.55, 0.18], [1.9, 2.15, 0.30]].forEach(([phase, turns, off]) => {
+      const pts = [];
+      for (let k2 = 0; k2 <= 240; k2++) {
+        const t = k2 / 240, yy = 3.35 + t * (topY - 1.1 - 3.35), ang = phase + t * Math.PI * 2 * turns;
+        const rr = treeRadiusAt(yy) * 1.02 + off;
+        pts.push(new THREE.Vector3(Math.cos(ang) * rr, yy, Math.sin(ang) * rr));
+      }
+      goldGeo.push(bake(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 220, 0.075, 6, false), '#ffffff'));
+      for (let k2 = 0; k2 < 12; k2++) {
+        const t = (k2 + 0.5) / 12, yy = 3.35 + t * (topY - 1.1 - 3.35), ang = phase + t * Math.PI * 2 * turns;
+        const rr = treeRadiusAt(yy) * 1.02 + off;
+        P.push(bake(Sph(0.07, 8, 6), '#f0d091', MX(Math.cos(ang) * rr, yy, Math.sin(ang) * rr)));
+      }
+    });
+    // 발치 선물 상자
+    giftPile(2111.5, 3.4, 3, 1.8); giftPile(2111.0, -3.6, 3, 1.8); giftPile(2108.8, 1.2, 2, 1.4);
+    const m = new THREE.Mesh(merge(P), vc); m.matrixAutoUpdate = false; m.matrix.copy(F); m.frustumCulled = false; scene.add(m);
+    const gMesh = new THREE.Mesh(merge(goldGeo), new THREE.MeshStandardMaterial({ color: '#e6c078', metalness: 0.9, roughness: 0.26, emissive: '#4a340a', emissiveIntensity: 0.55 }));
+    gMesh.matrixAutoUpdate = false; gMesh.matrix.copy(F); gMesh.frustumCulled = false; scene.add(gMesh);
+    // 꼭대기 금빛 별
+    const sp = PT(F, 0, topY + 2.0, 0);
+    const st = new THREE.Mesh(starGeo5(2.0, 0.5), new THREE.MeshBasicMaterial({ color: '#ffd75a', toneMapped: false, side: THREE.DoubleSide }));
+    st.position.copy(sp); st.frustumCulled = false; scene.add(st); W.star = st;
+    for (let k2 = 0; k2 < 5; k2++) bigGlow(sp, k2 % 2 ? '#ffe98a' : '#ffd24a');
     W.treeTop = sp.clone();
     W.treeMesh = m; W.treeFrame = F;
-    W.cardLinks = [];
+    W.cardLinks = []; W.cardProxies = [];
     W.cardGroup = new THREE.Group(); W.cardGroup.frustumCulled = false; scene.add(W.cardGroup);
   }
   { // ---------- 엔딩: CiT 오두막과 파티 준비 ----------
@@ -1289,7 +1433,7 @@ function buildWorld(scene) {
     chims.push({ p: PT(F, 2.7, h + 5.4, -1.2), sc: 1.15, n: 7 });
     a.push(bake(Box, '#6f4a31', MX(0, h + 1.05, zg + 0.1, 6.1, 1.66, 0.1)));                                                                           // 간판 받침
     a.push(bake(Box, '#8a5a3c', MX(4.3, 0.4, zf + 0.8, 0.9, 0.8, 0.9)), bake(Box, '#6f4a31', MX(4.3, 0.82, zf + 0.8, 0.96, 0.06, 0.96)));        // 나무 상자
-    const cm = new THREE.Mesh(merge(a), vc); cm.matrixAutoUpdate = false; cm.matrix.copy(F); cm.castShadow = true; cm.frustumCulled = false; scene.add(cm);
+    const cm = new THREE.Mesh(merge(a), vc); cm.matrixAutoUpdate = false; cm.matrix.copy(F); cm.castShadow = true; cm.frustumCulled = false; scene.add(cm); W.hutMesh = cm;
     const plate = (map, pw, ph, M, arr) => { const mt = new THREE.MeshBasicMaterial({ map, transparent: true }), m = new THREE.Mesh(new THREE.PlaneGeometry(pw, ph), mt); m.matrixAutoUpdate = false; m.matrix.copy(M); m.matrixWorld.copy(M); m.frustumCulled = false; scene.add(m); W.signMats.push(mt); (arr || W.links).push(m); return m; };
     plate(signCiT(), 5.9, 1.48, L(F, MX(0, h + 1.05, zg + 0.17)));
     // 팻말: 오두막 좌·우 바깥쪽 — 문·리스·창문을 가리지 않고, 기둥은 판 뒤쪽에 숨긴다
@@ -1524,10 +1668,11 @@ MGA.addEventListener('ended', () => {
   menuI = (menuI + 1) % MENU_TRACKS.length; playMenuTrack();
 });
 function playMenuTrack() {
-  try { MGA.src = bgmSrc(MENU_TRACKS[menuI]); const p = MGA.play(); if (p && p.catch) p.catch(() => { }); } catch (e) { }
+  try { MGA.src = bgmSrc(MENU_TRACKS[menuI]); MGA.muted = AU.muted; MGA.volume = BGM_VOL * 0.7; const p = MGA.play(); if (p && p.catch) p.catch(() => { }); } catch (e) { }
 }
 function menuBgm(on) {
   try {
+    MGA.muted = AU.muted;
     if (!on) { MGA.pause(); return; }
     if (AU.muted) return;
     if (!MGA.getAttribute('src')) { playMenuTrack(); return; }
@@ -1537,7 +1682,7 @@ function menuBgm(on) {
 function bgmTrack() { if (AU.celeb) return CELEB[(AU.celebI || 0) % CELEB.length]; return AU.carol || TRACKS[0]; }
 function nextCeleb() { AU.celebI = ((AU.celebI || 0) + 1) % CELEB.length; return CELEB[AU.celebI]; }
 function bgmSrc(tr) { return new URL(tr.file, location.href).href; }
-window.AU = AU; window.BGA = BGA; window.TRACKS = TRACKS; // 진단용(개발자 도구에서 상태 확인)
+window.AU = AU; window.BGA = BGA; window.TRACKS = TRACKS; window.MGA = MGA; // 진단용(개발자 도구에서 상태 확인)
 // iOS 사파리는 사용자 제스처 안에서 한 번 재생해 둔 <audio>만 이후 자동 재생을 허용한다.
 function bgmUnlock() {
   if (bgaUnlocked) return;
@@ -1556,6 +1701,8 @@ function setPlaybackSession() {
 }
 setPlaybackSession();
 function auResume() {
+  // 첫 제스처에서 메뉴 음악이 실제 소리로 나오도록 음소거 상태를 맞춰 둔다
+  try { MGA.muted = AU.muted; if (G.state === 'menu' && !AU.muted) menuBgm(true); } catch (e) { }
   const c = AU.ctx; if (!c) return;
   if (c.state === 'suspended' || c.state === 'interrupted') {
     try { const p = c.resume(); if (p && p.catch) p.catch(() => { }); } catch (e) { }
@@ -1598,7 +1745,9 @@ const SFX = {
   beep(hi) { const t = AU.ctx && AU.ctx.currentTime; if (!t) return; tone(hi ? 1175 : 587, t, hi ? 0.6 : 0.22, 'square', 0.16); tone(hi ? 2350 : 1174, t, hi ? 0.6 : 0.22, 'sine', 0.08); },
   fanfare() { const t = AU.ctx && AU.ctx.currentTime; if (!t) return;[[523, 0, .18], [523, .18, .18], [523, .36, .18], [659, .54, .4], [587, .94, .18], [659, 1.12, .18], [784, 1.3, .9]].forEach(([f, d, l]) => { tone(f, t + d, l + 0.1, 'square', 0.13); tone(f * 2, t + d, l + 0.1, 'triangle', 0.1); tone(f / 2, t + d, l + 0.1, 'triangle', 0.14); }); },
   firework() { const t = AU.ctx && AU.ctx.currentTime; if (!t) return; nz(t, 0.5, 900, 0.4, 0.22, 'lowpass'); nz(t + 0.05, 0.6, 5000, 1, 0.05); },
-  click() { const t = AU.ctx && AU.ctx.currentTime; if (!t) return; tone(900, t, 0.08, 'triangle', 0.15); }
+  click() { const t = AU.ctx && AU.ctx.currentTime; if (!t) return; tone(900, t, 0.08, 'triangle', 0.15); },
+  paper() { const t = AU.ctx && AU.ctx.currentTime; if (!t) return; nz(t, 0.22, 2600, 0.8, 0.10, 'bandpass'); nz(t + 0.06, 0.16, 4200, 1.2, 0.05, 'highpass'); },
+  thud() { const t = AU.ctx && AU.ctx.currentTime; if (!t) return; tone(190, t, 0.16, 'sine', 0.2, null, 90); nz(t, 0.2, 900, 0.7, 0.26, 'lowpass'); tone(1200, t + 0.02, 0.09, 'triangle', 0.05); }
 };
 // 캐럴 멜로디: 레이스마다 다른 캐럴이 흐른다 (모두 퍼블릭 도메인) + 방울 리듬
 const N = { C: 523.25, D: 587.33, E: 659.25, F: 698.46, Fs: 739.99, G: 783.99, A: 880.00, B: 493.88, C4: 261.63, D4: 293.66, E4: 329.63, F4: 349.23, G4: 392.00, A4: 440.00, B4: 493.88, C3: 130.81, D3: 146.83, E3: 164.81, F3: 174.61, Fs3: 185.00, G3: 196.00, A3: 220.00, B3: 246.94, C6: 1046.50, D6: 1174.66, E6: 1318.51, F6: 1396.91, G6: 1567.98 };
@@ -1786,7 +1935,7 @@ function setCam(dt, snap) {
   else if (st === 'intro') { menuCam(G.time); chaseCam(dt, true); const e = sst(0, 1, G.introT / 2.6), b = Math.sin(e * Math.PI); cam.pos.lerpVectors(mC.pos, cT.pos, e); cam.pos.y += b * 1.8; cam.look.lerpVectors(mC.look, cT.look, e); cam.fov = lerp(mC.fov, cT.fov, e); oP.copy(cam.pos); oL.copy(cam.look); fov = cam.fov; off = mC.off * (1 - e); }
   else { chaseCam(dt, snap); const k = snap ? 1 : 1 - Math.exp(-9 * dt); cam.pos.lerp(cT.pos, k); cam.look.lerp(cT.look, snap ? 1 : 1 - Math.exp(-12 * dt)); cam.fov += (cT.fov - cam.fov) * (snap ? 1 : Math.min(1, dt * 4)); oP.copy(cam.pos); oL.copy(cam.look); fov = cam.fov;
     if (G.treeView) { // 결승 대형 트리를 정면에서 천천히 둘러보는 카메라
-      const yaw = (G.treeBaseAng || 0) + (G.orbitYaw || 0), pit = Math.max(-0.06, Math.min(0.8, G.orbitPitch || 0)), dist = 54;
+      const yaw = (G.treeBaseAng || 0) + (G.orbitYaw || 0), pit = Math.max(-0.06, Math.min(0.8, G.orbitPitch || 0)), dist = clamp(G.orbitDist || (innerWidth / innerHeight > 1.15 ? 34 : 26), 4.5, 48);
       wpos(2112, 0, 0, eP);
       oP.set(eP.x + Math.sin(yaw) * Math.cos(pit) * dist, eP.y + 12 + Math.sin(pit) * dist, eP.z + Math.cos(yaw) * Math.cos(pit) * dist);
       oL.set(eP.x, eP.y + 10.5, eP.z);
@@ -2090,7 +2239,8 @@ function openTreeView() {
   G.treeView = true; G.state = 'result'; G.resOpen = false; G.finT = 4.5;
   const tP = wpos(2112, 0, 0, new THREE.Vector3()), hP = wpos(2080, 0, 0, new THREE.Vector3());
   G.treeBaseAng = Math.atan2(hP.x - tP.x, hP.z - tP.z);
-  G.autoSpin = true; G.orbitYaw = 0; G.orbitPitch = 0.18;
+  G.autoSpin = true; G.orbitYaw = 0; G.orbitPitch = 0.18; G.orbitDist = innerWidth / innerHeight > 1.15 ? 34 : 26;
+  closeCardView();
   resetWorld(); G.lastSec = -1; G.offR = 0;
   $('#result').classList.add('hidden'); $('#endbar').classList.add('hidden'); orbitHint(false);
   $('#help').classList.add('hidden'); $('#board').classList.add('hidden');
@@ -2098,6 +2248,8 @@ function openTreeView() {
   setTimeout(() => { if (G.treeView) $('#menu').classList.add('hidden'); }, 520);
   $('#hud').classList.add('hidden');
   $('#treebar').classList.remove('hidden');
+  const oh = $('#orbitHint');
+  if (oh) { oh.innerHTML = '👆 드래그 360° · 두 손가락·휠로 확대 · 봉투를 누르면 엽서가 열려요'; oh.classList.add('on'); setTimeout(() => { if (G.treeView) oh.classList.remove('on'); }, 5600); }
   loadCards();
 }
 function closeTreeView() {
@@ -2130,7 +2282,7 @@ function paintCards() {
   }
   list.innerHTML = CARDS.map(c => {
     const th = CARD_THEMES[c.theme] || CARD_THEMES.cream;
-    return '<article class="vcard" style="background-color:' + th.bg + ';color:' + th.ink + ';border-color:' + th.edge + '">'
+    return '<article class="vcard" role="button" tabindex="0" data-card-id="' + (c.id | 0) + '" aria-label="' + esc(c.name || '익명') + ' 님의 엽서 열어 보기" style="background-color:' + th.bg + ';color:' + th.ink + ';border-color:' + th.edge + '">'
       + '<span class="vc-stamp" style="background-image:url(\'' + stampArt(c.stamp) + '\')"></span>'
       + '<p class="vc-msg">' + esc(c.message) + '</p>'
       + '<div class="vc-foot"><b>From. ' + esc(c.name) + '</b><span>To. ' + esc(c.toName || '모두에게') + '</span></div>'
@@ -2215,6 +2367,18 @@ function initCards() {
     e.preventDefault(); e.stopPropagation();
     shareMyCard(+b.dataset.cardId);
   });
+  // 목록 아래 카드를 눌러도 트리 위 봉투와 똑같이 엽서 뷰어가 열린다
+  const openListCard = (el) => { if (!el) return; const c = CARDS.find(q => +q.id === +(el.dataset.cardId | 0)); if (c) openCardView(c); };
+  $('#cardList').addEventListener('click', (e) => {
+    if (!e.target || !e.target.closest || e.target.closest('.vc-share')) return;
+    openListCard(e.target.closest('.vcard'));
+  });
+  $('#cardList').addEventListener('keydown', (e) => {
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    if (!e.target || !e.target.closest) return;
+    const el = e.target.closest('.vcard'); if (!el) return;
+    e.preventDefault(); openListCard(el);
+  });
   $('#cardMsg').addEventListener('input', () => { $('#cardCounter').textContent = $('#cardMsg').value.length + ' / ' + CARD_MSG_MAX; renderCardPreview(); });
   $('#cardName').addEventListener('input', renderCardPreview);
   $('#cardToIn').addEventListener('input', renderCardPreview);
@@ -2234,20 +2398,24 @@ function initCards() {
   renderCardPreview();
   paintCards();
 }
-// 완주 트리 가지에 미니 엽서를 매다는 장식 (등록 카드 수만큼)
-const CARD_LAYERS = [[8, 7], [6.6, 6.4], [5.2, 5.8], [3.8, 5.2], [2.4, 4.6]];
-const TREE_LAYER_BASES = (() => { // 결승 트리 가지가 쌓이는 높이(코드의 y += h*0.62와 동일)
-  let b = 3; return CARD_LAYERS.map(([rad, h]) => { const base = b; b += h * 0.62; return { base, h, rad }; });
-})();
-function treeRadiusAt(y) { // 겹친 가지 중 가장 바깥 실루엣 반경 — 엽서가 가지 밖으로 걸려 보이도록
+// ---------- 트리에 꽂는 작은 봉투 엽서 오너먼트 ----------
+// 결승 트리의 7개 가지 층 — buildWorld의 결승 트리와 같은 수치(가지 끝 반경·높이)
+const TREE_TIERS = [[8.6, 5.0], [7.9, 4.8], [7.1, 4.6], [6.2, 4.4], [5.2, 4.2], [4.0, 4.0], [2.7, 3.4]];
+const TREE_LAYER_BASES = (() => { let b = 3; return TREE_TIERS.map(([rad, h]) => { const base = b; b += h * 0.58; return { base, h, rad }; }); })();
+function treeRadiusAt(y) { // 겹친 가지 중 가장 바깥 실루엣 반경 — 봉투가 가지 끝에 걸려 보이도록
   let r = 0;
   for (const L of TREE_LAYER_BASES) {
     if (y < L.base || y > L.base + L.h) continue;
     const rr = L.rad * (1 - (y - L.base) / L.h);
     if (rr > r) r = rr;
   }
-  return Math.max(0.7, r) + 0.35;
+  return Math.max(0.55, r);
 }
+function treeTopY() { const L = TREE_LAYER_BASES[TREE_LAYER_BASES.length - 1]; return L.base + L.h; }
+// 카드 ID 기반 결정적 난수 — 새로고침해도 같은 카드는 같은 자리·같은 기울기로 꽂힌다
+function cardSeedNum(id) { let h = 2166136261 >>> 0; const s = 'sled-card:' + id; for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return h >>> 0; }
+function cardRnd(id, k) { let h = (cardSeedNum(id) ^ Math.imul(k + 1, 0x9e3779b1)) >>> 0; h ^= h >>> 15; h = Math.imul(h, 0x85ebca6b); h ^= h >>> 13; h = Math.imul(h, 0xc2b2ae35); h ^= h >>> 16; return (h >>> 0) / 4294967296; }
+
 const cardTexCache = new Map();
 function cardTexture(c) {
   const key = (c.id || '') + '|' + c.name + '|' + c.message + '|' + c.theme + '|' + c.stamp;
@@ -2282,34 +2450,171 @@ function cardTexture(c) {
   return tex;
 }
 function hutRadiusAt(hw) { const y = hw / 1.35; return Math.max(0.16, (1.28 * (1 - (y - 0.9) / 3.7) + 0.08) * 1.35); }
-function hangCards(g, frameM, count, yFrom, yTo, radiusAt, scale, startIdx, links) {
-  for (let i = 0; i < count; i++) {
-    const c = CARDS[startIdx + i]; if (!c) break;
-    const t = count === 1 ? 0.62 : i / (count - 1);
-    const y = yFrom + t * (yTo - yFrom);
-    const ang = i * 2.399963229728653 + (i % 3) * 0.55;
-    const rad = radiusAt(y) * 1.08;
-    const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: cardTexture(c), transparent: true, depthWrite: false }));
-    sp.position.copy(PT(frameM, Math.cos(ang) * rad, y, Math.sin(ang) * rad));
-    sp.scale.set(scale, scale * 0.703, 1);
-    sp.userData.card = c;
-    g.add(sp); if (links) links.push(sp);
-  }
+const CARD_BOX = new THREE.BoxGeometry(1, 1, 1);
+const cardCyl = (a, b, h, n) => new THREE.CylinderGeometry(a, b, h, n || 10);
+const cardSph = (r, a, b) => new THREE.SphereGeometry(r, a || 10, b || 8);
+const cardPlaneGeo = new THREE.PlaneGeometry(0.78, 0.56);
+const cardProxyGeo = new THREE.BoxGeometry(1.32, 1.62, 0.64);
+const cardProxyMat = new THREE.MeshBasicMaterial({ visible: false });
+const cardEnvMat = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.86, metalness: 0.02 });
+function cardTri(w, h) { // 봉투 앞면 삼각 플랩
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.Float32BufferAttribute([-w / 2, h / 2, 0, 0, -h / 2, 0, w / 2, h / 2, 0], 3));
+  g.setAttribute('uv', new THREE.Float32BufferAttribute([0, 1, 0.5, 0, 1, 1], 2));
+  g.computeVertexNormals(); return g;
 }
-function updateTreeCards() {
+function cardCharm(kind, parts, M, id) { // 카드에 고른 우표 모양의 작은 금빛 참
+  const seed = cardRnd(id, 9), tilt = (seed - 0.5) * 0.55;
+  const add = (geo, col, mx) => parts.push(bake(geo, col, L(M, mx)));
+  const G = '#e9c47a', G2 = '#c99a45';
+  if (kind === 'star') add(starGeo5(0.12, 0.035), G, MX(0.44, 0.46, 0.02, 1, 1, 1, 0, 0.25, tilt));
+  else if (kind === 'bell') { add(cardCyl(0.045, 0.1, 0.13, 12), G, MX(0.44, 0.44, 0.02, 1, 1, 1, 0, 0, tilt)); add(cardSph(0.032), G2, MX(0.44, 0.365, 0.02)); add(cardSph(0.028), G, MX(0.44, 0.515, 0.02)); }
+  else if (kind === 'wreath') { add(new THREE.TorusGeometry(0.075, 0.026, 6, 14), '#2f7a54', MX(0.44, 0.46, 0.02, 1, 1, 1, 0, 0, tilt)); add(cardSph(0.032), '#bd2f34', MX(0.37, 0.40, 0.03)); }
+  else if (kind === 'santa') { add(cardSph(0.055), '#d33a36', MX(0.44, 0.44, 0.02)); add(new THREE.ConeGeometry(0.052, 0.1, 8), '#d33a36', MX(0.47, 0.52, 0.02, 1, 1, 1, 0, 0, -0.45)); add(cardSph(0.02), '#fff6ea', MX(0.51, 0.565, 0.02)); }
+  else { add(new THREE.ConeGeometry(0.08, 0.15, 8), '#2f8258', MX(0.44, 0.42, 0.02)); add(new THREE.ConeGeometry(0.058, 0.11, 8), '#3a9566', MX(0.44, 0.51, 0.02)); add(cardSph(0.024), G, MX(0.44, 0.575, 0.02)); }
+  add(cardCyl(0.008, 0.008, 0.16, 5), G2, MX(0.44, 0.68, 0.02)); // 가지에 매단 금실
+}
+function updateTreeCards() { // 카드 배열과 봉투 오너먼트를 정확히 1:1로 — 장식용 가짜 카드는 없다
   if (!W || !W.cardGroup) return;
   const g = W.cardGroup;
   for (let i = g.children.length - 1; i >= 0; i--) {
     const ch = g.children[i]; g.remove(ch);
-    if (ch.material) ch.material.dispose();
+    if (ch.geometry && ch.geometry !== cardPlaneGeo && ch.geometry !== cardProxyGeo) { try { ch.geometry.dispose(); } catch (e) { } }
+    if (ch.material && ch.material !== cardProxyMat) { try { ch.material.dispose(); } catch (e) { } }
   }
-  W.cardLinks.length = 0;
-  if (W.treeMesh) W.cardLinks.push(W.treeMesh);
-  if (W.hutTreeProxy) W.cardLinks.push(W.hutTreeProxy);
-  const n = Math.min(CARDS.length, CARD_ORNAMENT_MAX);
-  if (n < 1) return;
-  hangCards(g, W.treeFrame, n, 4.3, 18.7, treeRadiusAt, 2.1, 0, W.cardLinks);
-  if (W.hutTreeFrame) hangCards(g, W.hutTreeFrame, Math.min(n, 8), 1.8, 5.5, hutRadiusAt, 0.72, 0, W.cardLinks);
+  W.cardLinks = []; if (W.treeMesh) W.cardLinks.push(W.treeMesh); if (W.hutTreeProxy) W.cardLinks.push(W.hutTreeProxy);
+  W.cardProxies = [];
+  const list = CARDS.slice().sort((a, b) => (+a.id || 0) - (+b.id || 0)), n = list.length;
+  if (!n) return;
+  const parts = [];
+  const yLo = 3.55, yHi = Math.max(yLo + 1.4, treeTopY() - 1.8);
+  list.forEach((c, i) => {
+    const nf = n === 1 ? 0.55 : (i + 0.5) / n;
+    const jitter = (cardRnd(c.id, 1) - 0.5) * Math.min(0.7 / n, 0.045);
+    const y = yLo + clamp(nf + jitter, 0, 1) * (yHi - yLo);
+    const ang = i * 2.399963229728653 + cardRnd(c.id, 2) * 0.9;
+    const rad = treeRadiusAt(y) * 1.05 + 0.30;
+    const pos = new THREE.Vector3(Math.cos(ang) * rad, y, Math.sin(ang) * rad);
+    const ry = Math.PI / 2 - ang + (cardRnd(c.id, 3) - 0.5) * 0.55;
+    const rx = -0.10 + (cardRnd(c.id, 4) - 0.5) * 0.36;  // 위쪽이 가지 속으로 살짝 기운 자연스러운 각도
+    const rz = (cardRnd(c.id, 5) - 0.5) * 0.42;
+    const sc = 0.9 + cardRnd(c.id, 6) * 0.24;
+    const M = new THREE.Matrix4().compose(pos, new THREE.Quaternion().setFromEuler(new THREE.Euler(rx, ry, rz, 'YXZ')), new THREE.Vector3(sc, sc, sc));
+    const WM = L(W.treeFrame, M); // 트리 로컬 좌표 → 월드 좌표 (cardGroup은 변환이 없다)
+    const add = (geo, col, mx) => parts.push(bake(geo, col, L(WM, mx)));
+    const body = ['#f7f1e3', '#f4ecda', '#efe3cc'][Math.floor(cardRnd(c.id, 7) * 3) % 3];
+    // 밝은 봉투 몸체 — 짙은 전나무 위에서도 또렷하게 보이도록 크림/크라프트
+    add(CARD_BOX, body, MX(0, 0, 0, 1.06, 0.72, 0.075));
+    add(CARD_BOX, '#e6d7ba', MX(0, -0.03, 0.042, 1.0, 0.62, 0.018));
+    add(cardTri(1.02, 0.64), '#e9dbbf', MX(0, 0.02, 0.055));
+    add(cardTri(0.86, 0.5), '#f2e7d1', MX(0, 0.055, 0.059));
+    add(cardCyl(0.105, 0.105, 0.04, 14), '#a5302f', MX(0, -0.10, 0.064, 1, 1, 1, Math.PI / 2, 0, 0));
+    add(cardSph(0.042), '#e8c377', MX(0, -0.10, 0.088));
+    add(CARD_BOX, '#fbf5e6', MX(0.34, 0.19, 0.058, 0.18, 0.22, 0.012));
+    add(CARD_BOX, ['#2f6a4c', '#a5302f', '#2b4f8a'][Math.floor(cardRnd(c.id, 8) * 3) % 3], MX(0.34, 0.19, 0.066, 0.13, 0.17, 0.008));
+    [0.3, 0.22, 0.13].forEach((w, k) => add(CARD_BOX, '#9b8a6f', MX(0.05, -0.22 - k * 0.055, 0.06, w, 0.012, 0.006)));
+    cardCharm(c.stamp, parts, WM, c.id);  // 고른 우표 모양 참(별·종·리스·미니트리)
+    // 엽서 윗면이 봉투 위로 살짝 보이게
+    const pp = new THREE.Mesh(cardPlaneGeo, new THREE.MeshBasicMaterial({ map: cardTexture(c), color: '#efe9dc', side: THREE.DoubleSide }));
+    pp.matrixAutoUpdate = false;
+    pp.matrix.copy(L(WM, MX(0, 0.34, -0.062, 1, 1, 1, -0.12, 0, 0.05)));
+    g.add(pp);
+    const px = new THREE.Mesh(cardProxyGeo, cardProxyMat);
+    px.matrixAutoUpdate = false;
+    px.matrix.copy(L(WM, MX(0, 0.14, 0.02)));
+    px.userData.card = c;
+    g.add(px); W.cardProxies.push(px);
+  });
+  const em = new THREE.Mesh(merge(parts), cardEnvMat);
+  em.frustumCulled = false; g.add(em);
+}
+
+// ---------- 트리에서 봉투를 누르면 엽서가 펼쳐지는 뷰어 ----------
+function openCardView(c) {
+  if (!c) return;
+  const m = $('#cardView'); if (!m) return;
+  const th = CARD_THEMES[c.theme] || CARD_THEMES.cream;
+  m.style.setProperty('--cv-bg', th.bg);
+  m.style.setProperty('--cv-ink', th.ink);
+  m.style.setProperty('--cv-edge', th.edge);
+  m.style.setProperty('--cv-line', th.dark ? 'rgba(250,244,230,.26)' : 'rgba(60,45,30,.14)');
+  m.style.setProperty('--cv-soft', th.dark ? 'rgba(250,244,230,.82)' : 'rgba(38,29,22,.66)');
+  m.style.setProperty('--cv-mark', th.dark ? 'rgba(242,224,180,.62)' : 'rgba(124,35,41,.55)');
+  m.classList.toggle('dark', !!th.dark);
+  const st = $('#cvStampImg'); if (st) st.style.backgroundImage = 'url(' + stampArt(c.stamp) + ')';
+  const msg = $('#cvMsg'); if (msg) msg.textContent = c.message || '';
+  const fr = $('#cvFrom'); if (fr) fr.textContent = 'From. ' + (c.name || '익명');
+  const to = $('#cvTo'); if (to) to.textContent = 'To. ' + (c.toName || '모두에게');
+  const wh = $('#cvWhen'); if (wh) wh.textContent = c.createdAt ? cardWhen(c.createdAt) + ' · 트리에 걸린 엽서' : '';
+  const own = myCardById(c.id), ow = $('#cvOwn');
+  if (ow) ow.classList.toggle('hidden', !own);
+  const sb = $('#cvShare');
+  if (sb) sb.onclick = () => { if (!own) return; closeCardView(); shareMyCard(c.id); };
+  if (G.treeView) { G.spinBeforeCard = !!G.autoSpin; G.autoSpin = false; }
+  m.classList.remove('hidden', 'closing');
+  void m.offsetWidth;  // 애니메이션을 다시 시작
+  requestAnimationFrame(() => m.classList.add('open'));
+  try { SFX.paper(); } catch (e) { }
+}
+function closeCardView() {
+  const m = $('#cardView'); if (!m || m.classList.contains('hidden')) return;
+  m.classList.add('closing'); m.classList.remove('open');
+  setTimeout(() => {
+    m.classList.add('hidden'); m.classList.remove('closing');
+    if (G.treeView && G.spinBeforeCard) { G.autoSpin = true; G.spinBeforeCard = false; }
+  }, 230);
+}
+
+// ---------- ❄️ 눈 던지기 (트리·360도 화면에서 화면을 탭해 눈덩이 투척) ----------
+const SNOWBALLS = [], SNOWBALL_GEO = new THREE.SphereGeometry(0.24, 12, 9), SNOWBALL_MAT = new THREE.MeshStandardMaterial({ color: '#f8fcff', roughness: 0.92 });
+let snowT = 0;
+function snowTargets() {
+  const t = [];
+  if (!W) return t;
+  if (W.terrain) t.push(W.terrain); if (W.treeMesh) t.push(W.treeMesh); if (W.hutMesh) t.push(W.hutMesh); if (W.hutTreeProxy) t.push(W.hutTreeProxy);
+  if (W.cardProxies && W.cardProxies.length) t.push(...W.cardProxies);
+  if (Array.isArray(meshes)) t.push(...meshes);
+  if (W.snowmen) for (const k in W.snowmen) t.push(W.snowmen[k]);
+  return t;
+}
+function throwSnowball(e) {
+  if (!camera || !W) return;
+  const nd2 = new THREE.Vector2(e.clientX / innerWidth * 2 - 1, -(e.clientY / innerHeight) * 2 + 1);
+  const rc = new THREE.Raycaster(); rc.setFromCamera(nd2, camera);
+  let hit = null;
+  try { const hs = rc.intersectObjects(snowTargets(), true); if (hs.length) hit = hs[0]; } catch (err) { }
+  const start = camera.position.clone().addScaledVector(rc.ray.direction, 1.1);
+  const end = hit ? hit.point.clone() : camera.position.clone().addScaledVector(rc.ray.direction, 42);
+  const T = Math.max(0.3, Math.min(1.5, start.distanceTo(end) / 30));
+  const v = end.clone().sub(start).divideScalar(T); v.y += 0.5 * 14 * T;
+  let b = SNOWBALLS.find(q => !q.on);
+  if (!b) {
+    if (SNOWBALLS.length >= 8) return;
+    const mesh = new THREE.Mesh(SNOWBALL_GEO, SNOWBALL_MAT); mesh.visible = false; mesh.frustumCulled = false; scene.add(mesh);
+    b = { mesh, on: false };
+    SNOWBALLS.push(b);
+  }
+  b.on = true; b.t = 0; b.T = T; b.p = start; b.v = v; b.end = end;
+  b.mesh.visible = true; b.mesh.position.copy(start);
+  try { SFX.click(); } catch (err) { }
+}
+function updateSnowballs(dt) {
+  if (!SNOWBALLS.length) return;
+  for (const b of SNOWBALLS) {
+    if (!b.on) continue;
+    b.t += dt;
+    b.mesh.position.copy(b.p).addScaledVector(b.v, b.t);
+    b.mesh.position.y -= 0.5 * 14 * b.t * b.t;
+    b.mesh.rotation.x += dt * 12; b.mesh.rotation.z += dt * 9;
+    if (b.t >= b.T) {
+      b.on = false; b.mesh.visible = false;
+      try {
+        W.emit(b.end, 0, 1.8, 0, 24, 5.4);
+        W.emit(b.end, 0, 0.8, 0, 10, 3.2);
+        SFX.thud();
+      } catch (err) { }
+    }
+  }
 }
 
 // ---------- 장면 캡처 · 공유 이미지 ----------
@@ -2583,17 +2888,56 @@ function buildUI() {
   $('#bMenu2').onclick = () => whiteFade(() => { pause(false, true); toMenu(); });
   // 마지막 장면의 팻말·간판을 누르면 홈페이지로
   const ray = new THREE.Raycaster(), nd = new THREE.Vector2(), hitOn = (e, list) => { if (G.state !== 'result' || !list || !list.length) return false; nd.set(e.clientX / innerWidth * 2 - 1, -(e.clientY / innerHeight) * 2 + 1); ray.setFromCamera(nd, camera); return ray.intersectObjects(list, false).length > 0; }, hit = (e) => hitOn(e, W.links), hitPhoto = (e) => hitOn(e, W.photoLinks);
-  // 완주 트리와 트리에 매단 카드 엽서를 누르면 빈티지 카드 창이 열린다
+  // 완주 트리(기둥)를 누르면 카드 목록, 봉투를 누르면 그 엽서가 펼쳐진다
   const hitCard = (e) => { if (!W.cardLinks || !W.cardLinks.length) return false; if (!(G.state === 'result' || G.state === 'menu' || G.state === 'intro')) return false; nd.set(e.clientX / innerWidth * 2 - 1, -(e.clientY / innerHeight) * 2 + 1); ray.setFromCamera(nd, camera); return ray.intersectObjects(W.cardLinks, false).length > 0; };
-  $('#gl').addEventListener('click', (e) => { if (hitPhoto(e)) { takePolaroid(); return; } if (hitCard(e)) { toggleCards(true); return; } if (hit(e)) window.open(HOME, '_blank', 'noopener'); });
-  $('#gl').addEventListener('pointermove', (e) => { $('#gl').style.cursor = (hitPhoto(e) || hitCard(e) || hit(e)) ? 'pointer' : ''; });
+  const cardAt = (e) => {
+    if (!W.cardProxies || !W.cardProxies.length) return null;
+    nd.set(e.clientX / innerWidth * 2 - 1, -(e.clientY / innerHeight) * 2 + 1);
+    ray.setFromCamera(nd, camera);
+    const hs = ray.intersectObjects(W.cardProxies, false);
+    return hs.length ? hs[0].object.userData.card : null;
+  };
+  const canPlay = () => G.treeView || G.state === 'finish' || G.state === 'result';
+  let tap0 = null, tapLock = 0;
+  $('#gl').addEventListener('pointerdown', (e) => { if (e.pointerType === 'mouse' && e.button !== 0) return; tap0 = { x: e.clientX, y: e.clientY, id: e.pointerId, t: Date.now() }; });
+  $('#gl').addEventListener('pointerup', (e) => {
+    const t0 = tap0; tap0 = null;
+    if (!t0 || t0.id !== e.pointerId || Date.now() - t0.t > 900) return;
+    if (Math.hypot(e.clientX - t0.x, e.clientY - t0.y) > 8) return; // 8px 넘게 움직이면 드래그(360° 회전)
+    if (!canPlay() || G.paused) return;
+    const c = cardAt(e);
+    if (c) { tapLock = Date.now(); openCardView(c); return; }      // 봉투를 직접 탭하면 카드 열기가 먼저
+    if (G.snowball && !G.resOpen) { tapLock = Date.now(); auInit(); throwSnowball(e); }
+  });
+  $('#gl').addEventListener('click', (e) => {
+    if (Date.now() - tapLock < 420) { e.preventDefault(); return; }
+    if (hitPhoto(e)) { takePolaroid(); return; }
+    if (hitCard(e)) { toggleCards(true); return; }
+    if (hit(e)) window.open(HOME, '_blank', 'noopener');
+  });
+  $('#gl').addEventListener('pointermove', (e) => {
+    if (!canPlay()) { $('#gl').style.cursor = ''; return; }
+    const over = cardAt(e);
+    $('#gl').style.cursor = over ? 'pointer' : (G.snowball && !G.resOpen ? 'crosshair' : ((hitPhoto(e) || hit(e)) ? 'pointer' : ''));
+  });
+  // ❄️ 눈 던지기 토글 — 트리 보기·360도 둘러보기 하단 독
+  const setSnow = (v) => {
+    G.snowball = v === undefined ? !G.snowball : !!v;
+    ['#tbSnow', '#bSnow'].forEach(q => { const b = $(q); if (b) b.classList.toggle('on', G.snowball); });
+    $('#gl').style.cursor = G.snowball ? 'crosshair' : '';
+    toast(G.snowball ? '❄️ 눈 던지기 켜짐' : '눈 던지기 꺼짐', G.snowball ? '화면을 눌러 눈덩이를 던져 보세요 (봉투를 누르면 엽서가 열려요)' : '봉투를 누르면 엽서가 열려요');
+  };
+  G.setSnow = setSnow;
+  ['#tbSnow', '#bSnow'].forEach(q => { const b = $(q); if (b) b.onclick = (e) => { e.preventDefault(); e.stopPropagation(); auInit(); setSnow(); }; });
+  $('#cardViewX').onclick = closeCardView;
+  $('#cardView').addEventListener('click', (e) => { if (e.target && e.target.id === 'cardView') closeCardView(); });
 }
 function toggleHelp(v) { const h = $('#help'); const show = v === undefined ? h.classList.contains('hidden') : v; h.classList.toggle('hidden', !show); if (show && G.state === 'race') pause(true, true); }
 function whiteFade(fn) { const f = $('#fade'); f.classList.add('on'); setTimeout(() => { fn(); setTimeout(() => f.classList.remove('on'), 120); }, 360); }
 function pause(v, silent) { if (G.state !== 'race' && !G.paused) return; G.paused = v === undefined ? !G.paused : v; $('#pause').classList.toggle('hidden', !G.paused || !!silent || !$('#help').classList.contains('hidden')); document.body.classList.toggle('paused', G.paused); if (G.paused) auEngine(0, false, true); }
 function resetWorld() { Object.values(W.snowmen).forEach(m => { m.visible = true; m.position.copy(m.userData.home); m.rotation.x = m.rotation.z = 0; }); trails.forEach(t => t.reset()); W.fireOn = false; G.lastSec = -1; G.offR = 0; G.last = null; G.saved = 0; G.mine = null; G.resOpen = false; $('#endbar').classList.add('hidden'); orbitHint(false); $('#shot').classList.add('hidden'); $('#turbo').classList.remove('on'); $('#gl').style.cursor = ''; }
 function toMenu(first) {
-  G.state = 'menu'; G.R = newRace(G.diff, 1); resetWorld(); G.finT = 0; G.orbitYaw = 0; G.orbitPitch = 0; G.autoSpin = false; AU.celeb = false; bgm(false); auEngine(0, false, true);
+  G.state = 'menu'; G.R = newRace(G.diff, 1); resetWorld(); G.finT = 0; G.orbitYaw = 0; G.orbitPitch = 0; G.autoSpin = false; G.orbitDist = 22; G.snowball = false; ['#tbSnow', '#bSnow'].forEach(q => { const b = $(q); if (b) b.classList.remove('on'); }); AU.celeb = false; bgm(false); auEngine(0, false, true);
   $('#result').classList.add('hidden'); $('#board').classList.add('hidden'); $('#hud').classList.remove('on'); $('#menu').classList.remove('hidden'); requestAnimationFrame(() => $('#menu').classList.remove('out')); showBest(); $('#speedlines').style.opacity = 0;
   if (!first) setTimeout(() => { if (G.state === 'menu') $('#hud').classList.add('hidden'); }, 500); else $('#hud').classList.add('hidden');
   setTimeout(() => { if (G.state === 'menu') menuBgm(true); }, 60);
@@ -2654,7 +2998,7 @@ function bindInput() {
     if (k === 'KeyH') { if ($('#help').classList.contains('hidden')) toggleHelp(true); else { toggleHelp(false); if (G.paused) pause(false); } }
     if (k === 'KeyM') { auInit(); auMute(!AU.muted); sndIcon(); }
     if (k === 'KeyC') G.camMode = (G.camMode + 1) % 3;
-    if (k === 'KeyP' || k === 'Escape') { if (G.treeView && !isOpen('#cards')) { closeTreeView(); return; } if (isOpen('#cards')) toggleCards(false); else if (isOpen('#shot')) $('#shot').classList.add('hidden'); else if (isOpen('#board')) toggleBoard(false); else if (k === 'Escape' && G.state === 'result') setResOpen(!G.resOpen); else if (isOpen('#help')) { toggleHelp(false); if (G.paused) pause(false); } else pause(); }
+    if (k === 'KeyP' || k === 'Escape') { if (isOpen('#cardView')) { closeCardView(); return; } if (G.treeView && !isOpen('#cards')) { closeTreeView(); return; } if (isOpen('#cards')) toggleCards(false); else if (isOpen('#shot')) $('#shot').classList.add('hidden'); else if (isOpen('#board')) toggleBoard(false); else if (k === 'Escape' && G.state === 'result') setResOpen(!G.resOpen); else if (isOpen('#help')) { toggleHelp(false); if (G.paused) pause(false); } else pause(); }
   });
   addEventListener('keyup', (e) => { keys[e.code] = false; });
   addEventListener('blur', () => { for (const k in keys) keys[k] = false; if (G.state === 'race' && !G.paused) pause(true); });
@@ -2727,6 +3071,7 @@ function frame_(dt) {
   setCam(dt, false);
   wpos(p.s, p.u, 0, P0); W.sun.target.position.copy(P0); W.sun.position.set(P0.x + 34, P0.y + 72, P0.z + 46);
   W.update(dt, t, camera, G.state === 'menu' ? 0 : p.s);
+  updateSnowballs(dt);
   renderer.render(scene, camera);
 }
 function devShot(v) { // 개발용: ?shot=<s|result>
@@ -2786,31 +3131,49 @@ boot().catch(e => { console.error(e); const l = $('#loading'); l.classList.remov
   }, { passive: false });
 })();
 
-// ---------- 주변 구경하기 360도 드래그 ----------
-(function() {
+// ---------- 주변 구경하기 360도 드래그 · 핀치/휠 확대 ----------
+(function () {
   let isDrag = false, dragX = 0, dragY = 0, startYaw = 0, startPitch = 0;
-  window.addEventListener('pointerdown', function(e) {
+  const pts = new Map();
+  let pinchD = 0, pinchZoom = 0;
+  const can = () => window.G && (G.state === 'finish' || G.state === 'result') && !G.resOpen;
+  const pinchNow = () => { const a = [...pts.values()]; return a.length < 2 ? 0 : Math.hypot(a[0].x - a[1].x, a[0].y - a[1].y); };
+  window.addEventListener('pointerdown', function (e) {
     const h = document.getElementById('orbitHint'); if (h) h.classList.remove('on');
-    if (window.G && (G.state === 'finish' || G.state === 'result') && !G.resOpen) {
-      if (e.target.closest('button, input, a, .tb, #endbar, .modal:not(.hidden)')) return;
-      isDrag = true;
-      G.autoSpin = false;
-      dragX = e.clientX;
-      dragY = e.clientY;
-      startYaw = G.orbitYaw || 0;
-      startPitch = G.orbitPitch || 0;
+    pts.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    if (!can()) return;
+    if (e.target && e.target.closest && e.target.closest('button, input, a, .tb, #endbar, .modal:not(.hidden)')) return;
+    if (pts.size >= 2 && window.G && G.treeView) { // 두 손가락 핀치 줌
+      pinchD = pinchNow() || 1; pinchZoom = G.orbitDist || 26; isDrag = false; G.autoSpin = false; return;
+    }
+    if (pts.size > 1) { isDrag = false; return; }
+    isDrag = true;
+    G.autoSpin = false;
+    dragX = e.clientX; dragY = e.clientY;
+    startYaw = G.orbitYaw || 0;
+    startPitch = G.orbitPitch || 0;
+  });
+  window.addEventListener('pointermove', function (e) {
+    if (pts.has(e.pointerId)) pts.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    if (pts.size >= 2 && pinchD && window.G && G.treeView) {
+      const d = pinchNow(); if (d > 0) G.orbitDist = Math.max(4.5, Math.min(48, pinchZoom * pinchD / d));
+      return;
+    }
+    if (isDrag && can()) {
+      G.orbitYaw = startYaw + (e.clientX - dragX) * 0.008;
+      G.orbitPitch = Math.max(-0.05, Math.min(0.8, startPitch + (e.clientY - dragY) * 0.006));
     }
   });
-  window.addEventListener('pointermove', function(e) {
-    if (isDrag && window.G && (G.state === 'finish' || G.state === 'result')) {
-      const dx = e.clientX - dragX;
-      const dy = e.clientY - dragY;
-      G.orbitYaw = startYaw + dx * 0.008;
-      G.orbitPitch = Math.max(-0.05, Math.min(0.72, startPitch + dy * 0.006));
-    }
-  });
-  window.addEventListener('pointerup', function() { isDrag = false; });
-  window.addEventListener('pointercancel', function() { isDrag = false; });
+  const up = function (e) { pts.delete(e.pointerId); isDrag = false; if (pts.size < 2) { pinchD = 0; } };
+  window.addEventListener('pointerup', up);
+  window.addEventListener('pointercancel', up);
+  window.addEventListener('wheel', function (e) { // PC 마우스 휠 확대/축소 (트리 보기)
+    if (!window.G || !G.treeView) return;
+    if (e.target && e.target.closest && e.target.closest('.modal:not(.hidden), #treebar, #endbar')) return;
+    e.preventDefault();
+    G.orbitDist = Math.max(4.5, Math.min(48, (G.orbitDist || 26) * (1 + Math.sign(e.deltaY) * 0.08)));
+    G.autoSpin = false;
+  }, { passive: false });
 })();
 </script>
 </body>
