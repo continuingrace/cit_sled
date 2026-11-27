@@ -279,11 +279,12 @@ body.paused *{animation-play-state:paused!important}
 #cards .vcard .vc-share:active{transform:scale(.97)}
 #cards .vin-empty{grid-column:1/-1;margin:0;text-align:center;font-size:12px;font-weight:500;line-height:1.7;color:var(--iv-sub);padding:22px 6px}
 /* 첫 화면에서 트리 구경하기 바 */
-#treebar{position:fixed;left:0;right:0;bottom:0;z-index:18;display:flex;gap:8px;justify-content:center;padding:16px 14px calc(16px + env(safe-area-inset-bottom,0px));pointer-events:none}
-#treebar button{pointer-events:auto;display:inline-flex;align-items:center;gap:7px;padding:12px 18px;border-radius:999px;border:1px solid rgba(255,255,255,.18);background:rgba(13,19,42,.86);color:#f6f2e8;font-family:inherit;font-size:13px;font-weight:700;letter-spacing:.01em;box-shadow:0 14px 34px rgba(4,8,26,.42);cursor:pointer;transition:transform .12s,border-color .15s}
+#treebar{position:fixed;left:0;right:0;bottom:0;z-index:18;display:flex;gap:8px;justify-content:center;align-items:center;padding:16px 14px calc(16px + env(safe-area-inset-bottom,0px));pointer-events:none}
+#treebar button{pointer-events:auto;display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:12px 16px;border-radius:999px;border:1px solid rgba(240,220,170,.32);background:rgba(13,22,38,.78);-webkit-backdrop-filter:blur(18px) saturate(1.15);backdrop-filter:blur(18px) saturate(1.15);color:#f6efdc;font-family:inherit;font-size:13px;font-weight:700;letter-spacing:-.005em;line-height:1;white-space:nowrap;flex:none;box-shadow:0 14px 34px rgba(4,8,26,.46),inset 0 1px 0 rgba(255,255,255,.10);cursor:pointer;transition:transform .12s,border-color .15s,background .15s}
 #treebar button:active{transform:scale(.97)}
-#treebar button.primary{background:linear-gradient(180deg,#a3373a,#7c2329);border-color:rgba(255,255,255,.16)}
-#treebar button:hover{border-color:rgba(255,255,255,.34)}
+#treebar button.primary{background:linear-gradient(180deg,rgba(214,186,124,.96),rgba(160,128,68,.96));border-color:rgba(248,236,205,.72);color:#241d12;box-shadow:0 14px 30px rgba(4,8,26,.44),inset 0 1px 0 rgba(255,255,255,.5)}
+#treebar button:hover{border-color:rgba(240,220,170,.7);background:rgba(20,31,52,.86)}
+#treebar button.primary:hover{background:linear-gradient(180deg,#e6cf9b,#ae8c4d)}
 #treeCount{position:fixed;left:50%;transform:translateX(-50%);top:calc(12px + env(safe-area-inset-top,0px));bottom:auto;z-index:18;display:none;padding:9px 16px;border-radius:999px;background:rgba(13,19,42,.84);border:1px solid rgba(255,255,255,.16);color:#f6f2e8;font-family:inherit;font-size:12.5px;font-weight:700;letter-spacing:.01em;box-shadow:0 12px 30px rgba(4,8,26,.44);pointer-events:none;white-space:nowrap}
 #treeCount.on{display:block}
 #treeCount b{color:#ffd84d}
@@ -365,22 +366,22 @@ body.paused *{animation-play-state:paused!important}
   #cardView .cv-post{width:96px;height:60px}
   #cardView .cv-stamp{width:48px;height:58px}
   #cardView .cv-x{top:-42px;right:0}
-  #treebar{gap:6px;padding:14px 10px calc(14px + env(safe-area-inset-bottom,0px))}
-  #treebar button{padding:11px 12px;font-size:12px;gap:5px}
+  #treebar{gap:6px;padding:13px 8px calc(13px + env(safe-area-inset-bottom,0px))}
+  #treebar button{padding:11px 13px;font-size:12.5px;gap:5px;letter-spacing:-.015em}
 }
 
 /* ---------- 트리 오너먼트 꾸미기 ---------- */
-#tbOrn.on{background:linear-gradient(180deg,#fff0f4,#f7c9d6);color:#3d1622;border-color:rgba(255,255,255,.62);box-shadow:0 12px 28px rgba(240,150,180,.32)}
-#ornbar{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(80px + env(safe-area-inset-bottom,0px));z-index:19;display:none;flex-direction:column;gap:7px;padding:9px;border-radius:16px;background:rgba(11,17,38,.92);border:1px solid rgba(255,255,255,.16);box-shadow:0 16px 40px rgba(4,8,26,.55);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);width:min(94vw,430px);box-sizing:border-box}
+#tbOrn.on{background:linear-gradient(180deg,rgba(226,203,148,.96),rgba(170,138,76,.96));color:#241d12;border-color:rgba(248,236,205,.72);box-shadow:0 12px 28px rgba(4,8,26,.4),inset 0 1px 0 rgba(255,255,255,.45)}
+#ornbar{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(80px + env(safe-area-inset-bottom,0px));z-index:19;display:none;flex-direction:column;gap:7px;padding:9px;border-radius:16px;background:rgba(13,22,38,.86);border:1px solid rgba(240,220,170,.28);box-shadow:0 16px 40px rgba(4,8,26,.55),inset 0 1px 0 rgba(255,255,255,.08);backdrop-filter:blur(18px) saturate(1.15);-webkit-backdrop-filter:blur(18px) saturate(1.15);width:min(94vw,430px);box-sizing:border-box}
 #ornbar.on{display:flex}
 #ornbar .orn-picks{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
-#ornbar .orn-chip{display:flex;flex-direction:column;align-items:center;gap:2px;padding:7px 2px 6px;border-radius:11px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);color:#e9edfb;font-family:inherit;font-size:10.5px;font-weight:700;letter-spacing:-.01em;cursor:pointer;overflow:hidden}
+#ornbar .orn-chip{display:flex;flex-direction:column;align-items:center;gap:2px;padding:7px 2px 6px;border-radius:11px;border:1px solid rgba(240,220,170,.16);background:rgba(255,255,255,.04);color:#efe8d8;font-family:inherit;font-size:10.5px;font-weight:700;letter-spacing:-.01em;white-space:nowrap;cursor:pointer;overflow:hidden}
 #ornbar .orn-chip em{font-style:normal;font-size:17px;line-height:1}
-#ornbar .orn-chip.on{border-color:rgba(255,216,140,.75);background:rgba(255,214,140,.16);color:#ffe6ae;box-shadow:inset 0 0 0 1px rgba(255,216,140,.25)}
+#ornbar .orn-chip.on{border-color:rgba(240,220,170,.8);background:rgba(232,208,150,.16);color:#ffe9b8;box-shadow:inset 0 0 0 1px rgba(240,220,170,.24)}
 #ornbar .orn-acts{display:flex;gap:6px}
-#ornbar .orn-acts button{flex:1;padding:8px 6px;border-radius:10px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);color:#dfe5f8;font-family:inherit;font-size:11.5px;font-weight:700;cursor:pointer}
-#ornbar .orn-acts button:hover{background:rgba(255,255,255,.13)}
-#ornbar .orn-tip{margin:0;text-align:center;font-size:10.5px;font-weight:600;letter-spacing:-.01em;color:rgba(200,208,232,.78)}
+#ornbar .orn-acts button{flex:1;padding:8px 6px;border-radius:10px;border:1px solid rgba(240,220,170,.16);background:rgba(255,255,255,.04);color:#efe8d8;font-family:inherit;font-size:11.5px;font-weight:700;white-space:nowrap;cursor:pointer}
+#ornbar .orn-acts button:hover{background:rgba(232,208,150,.12);border-color:rgba(240,220,170,.4)}
+#ornbar .orn-tip{margin:0;text-align:center;font-size:10.5px;font-weight:600;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:rgba(230,220,198,.8)}
 @media (max-width:520px){ #ornbar{bottom:calc(74px + env(safe-area-inset-bottom,0px));padding:8px} #ornbar .orn-chip{font-size:10px;padding:6px 1px 5px} }
 * { touch-action: manipulation; }
 #gl, canvas, #touch, .tb, button, .btn { touch-action: none !important; }
@@ -505,7 +506,7 @@ body.paused *{animation-play-state:paused!important}
   <div class="vin-grid" id="cardList"></div>
 </div></div></div>
 <div id="ornbar" aria-label="오너먼트 꾸미기"><div class="orn-picks"><button type="button" class="orn-chip on" data-k="red"><em>🔴</em>빨강</button><button type="button" class="orn-chip" data-k="gold"><em>🟡</em>골드</button><button type="button" class="orn-chip" data-k="star"><em>⭐</em>별</button><button type="button" class="orn-chip" data-k="cane"><em>🍬</em>캔디</button><button type="button" class="orn-chip" data-k="bow"><em>🎀</em>리본</button></div><div class="orn-acts"><button type="button" id="ornUndo">↩ 되돌리기</button><button type="button" id="ornClear">🗑 초기화</button></div><p class="orn-tip">나뭇가지를 눌러 오너먼트를 달아 보세요</p></div>
-<div id="treebar" class="hidden"><button id="tbBack">← 첫 화면으로</button><button id="tbSnow">❄️ 눈 던지기</button><button id="tbOrn">🎀 오너먼트</button><button id="tbCard" class="primary">🎄 카드 남기기</button></div>
+<div id="treebar" class="hidden"><button id="tbBack">← 이전</button><button id="tbSnow">❄️ 눈</button><button id="tbOrn">🎀 꾸미기</button><button id="tbCard" class="primary">💌 카드</button></div>
 <div id="treeCount" aria-live="polite"></div>
 <div id="endbar" class="hidden"><button class="btn" id="bSpinToggle">360° 회전</button><button class="btn" id="bPhoto">📸 기념사진</button><button class="btn sub" id="bSnow">❄️ 눈 던지기</button><button class="btn sub" id="bResOpen">결과 보기</button><button class="btn sub" id="bShot2">장면 캡처</button><button class="btn sub" id="bRetry3">한 번 더</button></div>
 <div id="orbitHint" aria-hidden="true">👆 드래그해서 360° 둘러보기 · 팻말 터치</div>
@@ -1784,34 +1785,60 @@ function menuBgm(on) {
 // 3D 트리 보기 전용 BGM — O Christmas Tree (미 공군 Heartland of America Band 'Raptor' 재즈 연주, PD-USGov)
 const TREE_BGM = { file: './audio/tree-o-christmas-tree.mp3' };
 const TGA = new Audio();
-TGA.loop = true; TGA.preload = 'none'; TGA.volume = BGM_VOL * 0.62; TGA.muted = true;
+TGA.loop = true; TGA.preload = 'auto'; TGA.volume = BGM_VOL * 0.62; TGA.muted = true;
 TGA.setAttribute('playsinline', ''); TGA.setAttribute('webkit-playsinline', '');
+try { TGA.src = new URL(TREE_BGM.file, location.href).href; TGA.load(); } catch (e) { }
 try { window.TGA = TGA; } catch (e) { }
+let tgaUnlocked = false, tgaUnlockPending = false; // iOS 사파리: 첫 제스처에서 무음 재생 — 일시정지로 요소를 미리 깨워 둔다
 function prepareTreeBgm() {
-  try { if (!TGA.getAttribute('src')) { TGA.src = new URL(TREE_BGM.file, location.href).href; TGA.preload = 'auto'; TGA.load(); } } catch (e) { }
+  try { if (!TGA.getAttribute('src')) { TGA.src = new URL(TREE_BGM.file, location.href).href; } if (TGA.preload !== 'auto') TGA.preload = 'auto'; if (!TGA.readyState) TGA.load(); } catch (e) { }
 }
 function treeBgm(on) {
   try {
     if (!on) { TGA.pause(); return; }
     if (AU.muted) { TGA.muted = true; TGA.pause(); return; }
     prepareTreeBgm();
-    TGA.muted = AU.muted; TGA.volume = BGM_VOL * 0.62;
-    if (TGA.paused) { const p = TGA.play(); if (p && p.catch) p.catch(() => { }); }
+    try { if (!BGA.paused) BGA.pause(); } catch (e) { } // 세리머니 곡·트리 곡이 겹치지 않게
+    TGA.muted = false; TGA.volume = BGM_VOL * 0.62;
+    if (TGA.paused) { const p = TGA.play(); if (p && p.catch) p.catch(() => { if (!tgaUnlocked) tgaUnlockNow(); }); }
   } catch (e) { }
 }
+function tgaUnlockNow() { // 사용자 제스처 안에서만 호출 — 무음으로 한 번 재생해 iOS의 오디오 잠금을 풀어 둔다
+  if (tgaUnlocked || tgaUnlockPending) return;
+  try {
+    tgaUnlockPending = true;
+    prepareTreeBgm();
+    TGA.muted = true;
+    const done = () => {
+      tgaUnlocked = true; tgaUnlockPending = false;
+      if (G.treeView) { TGA.muted = AU.muted; return; }
+      try { TGA.pause(); TGA.currentTime = 0; } catch (e) { }
+      TGA.muted = AU.muted;
+    };
+    const p = TGA.play();
+    if (p && p.then) p.then(done).catch(() => { tgaUnlocked = true; tgaUnlockPending = false; TGA.muted = AU.muted; });
+    else done();
+  } catch (e) { tgaUnlocked = true; tgaUnlockPending = false; }
+}
+TGA.addEventListener('canplay', () => { // iOS에서 첫 재생이 로딩에 막히면 준비되는 대로 다시 튼다
+  try { if (G.treeView && !AU.muted && TGA.paused) { TGA.muted = false; const p = TGA.play(); if (p && p.catch) p.catch(() => { }); } } catch (e) { }
+});
 function bgmTrack() { if (AU.celeb) return CELEB[(AU.celebI || 0) % CELEB.length]; return AU.carol || TRACKS[0]; }
 function nextCeleb() { AU.celebI = ((AU.celebI || 0) + 1) % CELEB.length; return CELEB[AU.celebI]; }
 function bgmSrc(tr) { return new URL(tr.file, location.href).href; }
 window.AU = AU; window.BGA = BGA; window.TRACKS = TRACKS; window.MGA = MGA; // 진단용(개발자 도구에서 상태 확인)
 // iOS 사파리는 사용자 제스처 안에서 한 번 재생해 둔 <audio>만 이후 자동 재생을 허용한다.
 function bgmUnlock() {
-  if (bgaUnlocked) return;
-  try {
-    if (!BGA.src) BGA.src = bgmSrc(bgmTrack());
-    BGA.muted = true;
-    const p = BGA.play();
-    if (p && p.then) p.then(() => { try { if (!AU.on) { BGA.pause(); BGA.currentTime = 0; } } catch (e) { } BGA.muted = AU.muted; bgaUnlocked = true; }).catch(() => { BGA.muted = AU.muted; });
-  } catch (e) { BGA.muted = AU.muted; }
+  if (!bgaUnlocked) {
+    try {
+      if (!BGA.src) BGA.src = bgmSrc(bgmTrack());
+      BGA.muted = true;
+      const p = BGA.play();
+      if (p && p.then) p.then(() => { try { if (!AU.on) { BGA.pause(); BGA.currentTime = 0; } } catch (e) { } BGA.muted = AU.muted; bgaUnlocked = true; }).catch(() => { BGA.muted = AU.muted; });
+    } catch (e) { BGA.muted = AU.muted; }
+  }
+  // 트리 전용 곡도 같은 제스처에서 함께 깨워 둔다 — 아이폰 사파리에서 3D 트리 음악이 안 나오던 문제
+  if (!tgaUnlocked && !(G.treeView && !TGA.paused)) tgaUnlockNow();
 }
 
 function setPlaybackSession() {
@@ -1831,6 +1858,7 @@ function auResume() {
 ['touchstart', 'touchend', 'click', 'pointerdown'].forEach(evt => {
   window.addEventListener(evt, () => {
     setPlaybackSession();
+    bgmUnlock();
     auResume();
   }, { passive: true });
 });
@@ -1876,10 +1904,11 @@ const SFX = {
   paper() { const t = AU.ctx && AU.ctx.currentTime; if (!t) return; nz(t, 0.22, 2600, 0.8, 0.10, 'bandpass'); nz(t + 0.06, 0.16, 4200, 1.2, 0.05, 'highpass'); },
   thud() { const t = AU.ctx && AU.ctx.currentTime; if (!t) return; tone(190, t, 0.16, 'sine', 0.2, null, 90); nz(t, 0.2, 900, 0.7, 0.26, 'lowpass'); tone(1200, t + 0.02, 0.09, 'triangle', 0.05); },
   whoosh() { const t = AU.ctx && AU.ctx.currentTime; if (!t) return; nzSweep(t, 0.2, 520, 2400, 1.2, 0.16, 'bandpass'); nzSweep(t + 0.02, 0.16, 1500, 3600, 1.0, 0.05, 'highpass'); },
-  splat() { const t = AU.ctx && AU.ctx.currentTime; if (!t) return; // 눈덩이가 부서지는 푸석·폭 (피치 없는 노이즈)
-    nzSweep(t, 0.26, 900, 300, 0.9, 0.5, 'lowpass'); nz(t, 0.22, 620, 0.7, 0.34, 'lowpass');
-    nz(t + 0.01, 0.12, 2100, 1.6, 0.16, 'bandpass'); nz(t + 0.07, 0.14, 900, 1.1, 0.12, 'bandpass');
-    tone(55, t, 0.04, 'sine', 0.1, null, 48); }
+  splat() { const t = AU.ctx && AU.ctx.currentTime; if (!t) return; // 눈이 부서져 사방으로 흩어지는 가볍고 선명한 눈거품 마찰음(저음 둔탁함 없음)
+    nzSweep(t, 0.22, 1800, 650, 1.1, 0.34, 'bandpass');
+    nz(t + 0.004, 0.11, 2600, 2.0, 0.13, 'bandpass');
+    nz(t + 0.03, 0.16, 4400, 1.5, 0.07, 'highpass');
+    nz(t + 0.055, 0.2, 1150, 0.9, 0.09, 'bandpass'); }
 };
 // 캐럴 멜로디: 레이스마다 다른 캐럴이 흐른다 (모두 퍼블릭 도메인) + 방울 리듬
 const N = { C: 523.25, D: 587.33, E: 659.25, F: 698.46, Fs: 739.99, G: 783.99, A: 880.00, B: 493.88, C4: 261.63, D4: 293.66, E4: 329.63, F4: 349.23, G4: 392.00, A4: 440.00, B4: 493.88, C3: 130.81, D3: 146.83, E3: 164.81, F3: 174.61, Fs3: 185.00, G3: 196.00, A3: 220.00, B3: 246.94, C6: 1046.50, D6: 1174.66, E6: 1318.51, F6: 1396.91, G6: 1567.98 };
@@ -2370,7 +2399,13 @@ function renderCardPreview() {
   $('#vpTo').textContent = 'To. ' + (to || '모두에게');
   const st = $('#vpStampImg'); if (st) st.style.backgroundImage = 'url(' + stampArt(cardPick.stamp) + ')';
 }
+let treeReturnTo = 'menu', treeReturnCards = false, treeReturnResOpen = false;
 function openTreeView() {
+  if (!G.treeView) { // 어느 화면에서 들어왔는지 기억 — '← 이전'은 그 화면으로 되돌아간다
+    treeReturnTo = (G.state === 'result' || G.state === 'finish') ? 'result' : 'menu';
+    treeReturnCards = isOpen('#cards');
+    treeReturnResOpen = !!G.resOpen;
+  }
   menuBgm(false);
   toggleCards(false);
   const R = G.R; if (!R) return;
@@ -2393,11 +2428,23 @@ function openTreeView() {
   loadCards();
 }
 function closeTreeView() {
+  const back = treeReturnTo, backCards = treeReturnCards, backResOpen = treeReturnResOpen;
   G.treeView = false; G.autoSpin = false; treeBgm(false);
   const oh = $('#orbitHint'); if (oh) { oh.classList.remove('on'); oh.innerHTML = '👆 드래그해서 360° 둘러보기 · 팻말 터치'; }
   $('#treebar').classList.add('hidden');
+  const ob = $('#ornbar'); if (ob) ob.classList.remove('on'); G.ornMode = false; G.snowball = false;
+  ['#tbSnow', '#bSnow', '#tbOrn'].forEach(q => { const b = $(q); if (b) b.classList.remove('on'); });
   const tb = $('#treeCount'); if (tb) { tb.classList.remove('on'); tb.innerHTML = ''; }
-  whiteFade(() => { toMenu(true); $('#menu').classList.remove('out'); });
+  if (back === 'result') { // 결과 화면(세리머니)으로 복귀 — 결과창·하단 독 상태와 세리머니 음악을 그대로 되살린다
+    G.state = 'result'; G.finT = 4.5; G.resOpen = false;
+    $('#menu').classList.add('hidden');
+    $('#hud').classList.add('hidden');
+    setResOpen(backResOpen);
+    try { if (!AU.muted) { BGA.muted = false; BGA.volume = BGM_VOL; const p = BGA.play(); if (p && p.catch) p.catch(() => { }); } } catch (e) { }
+    if (backCards) setTimeout(() => { if (G.state === 'result' && !G.treeView) toggleCards(true); }, 200);
+  } else {
+    whiteFade(() => { toMenu(true); $('#menu').classList.remove('out'); if (backCards) setTimeout(() => { if (G.state === 'menu') toggleCards(true); }, 220); });
+  }
 }
 function cardWhen(ts) { const d = new Date((+ts || 0) * 1000); return isNaN(d.getTime()) ? '' : (d.getMonth() + 1) + '월 ' + d.getDate() + '일'; }
 function cardCount() { // 몇 명이 카드를 걸었는지(이름 기준) + 장수 — 모달 상단과 3D 트리 화면에 같이 보여 준다
@@ -2532,7 +2579,7 @@ function initCards() {
   });
   const cs = $('#cards');
   if (cs) { cs.style.setProperty('--stamp-mask', stampMaskUri()); cs.style.setProperty('--postmark-mask', postmarkMaskUri()); }
-  $('#cardTree').onclick = () => openTreeView();
+  $('#cardTree').onclick = () => { auInit(); openTreeView(); }; // 동기 실행: 제스처 안에서 바로 트리 곡 재생
   const sb = $('#cardShare'); if (sb) sb.onclick = () => shareVintageCard();
   $('#tbCard').onclick = () => { auInit(); toggleCards(true); };
   $('#tbBack').onclick = () => closeTreeView();
@@ -2745,7 +2792,7 @@ function closeCardView() {
 }
 
 // ---------- ❄️ 눈 던지기 (트리·360도 화면에서 화면을 탭해 눈덩이 투척) ----------
-const SNOWBALLS = [], SNOWBALL_GEO = new THREE.SphereGeometry(0.24, 12, 9), SNOWBALL_MAT = new THREE.MeshStandardMaterial({ color: '#ffffff', roughness: 0.95, emissive: '#d8ecff', emissiveIntensity: 0.65 });
+const SNOWBALLS = [], SNOWBALL_GEO = new THREE.SphereGeometry(0.24, 12, 9), SNOWBALL_MAT = new THREE.MeshBasicMaterial({ color: 0xffffff }); SNOWBALL_MAT.toneMapped = false; // 조명에 따라 회색빛으로 죽지 않는 순백 눈덩이
 let snowT = 0;
 function snowTargets() {
   const t = [];
@@ -2833,10 +2880,24 @@ const ORN_MAT = {
   bow: new THREE.MeshStandardMaterial({ color: '#c62b3a', roughness: 0.35, metalness: 0.15, emissive: '#3a0a0e', emissiveIntensity: 0.35 }),
   thread: new THREE.MeshStandardMaterial({ color: '#d9b25c', roughness: 0.4, metalness: 0.65 })
 };
+const ORN_DROP = 0.36, ORN_BALL_R = 0.29, ORN_GAP = 0.1;
+const _ornAxis = new THREE.Vector3();
 function ornPlace(o) {
   const n = new THREE.Vector3(o.nx || 0, 0, o.nz || 1); if (n.lengthSq() < 1e-6) n.set(0, 0, 1); n.normalize();
   const p = new THREE.Vector3(o.x, o.y, o.z);
-  return { p, n, center: p.clone().addScaledVector(n, 0.2).add(new THREE.Vector3(0, -0.32, 0)) };
+  // 가지에 반쯤 파묻히지 않게: 오너먼트 본체가 놓이는 높이의 가지 실루엣 반경보다
+  // (본체 반지름 + 여유)만큼 더 바깥으로 띄운다 — 금실 고리가 가지에 걸리고 본체는 가지 바깥에 온전히 보인다.
+  let out = 0.36;
+  try {
+    if (W && W.treeMesh) {
+      _ornAxis.setFromMatrixPosition(W.treeMesh.matrixWorld);
+      const rHere = Math.hypot(p.x - _ornAxis.x, p.z - _ornAxis.z);
+      const yBody = Math.max(0.3, p.y - _ornAxis.y - ORN_DROP);
+      const rNeed = treeRadiusAt(yBody) + ORN_BALL_R + ORN_GAP;
+      out = Math.max(0.36, Math.min(1.5, rNeed - rHere + 0.06));
+    }
+  } catch (e) { }
+  return { p, n, center: p.clone().addScaledVector(n, out).add(new THREE.Vector3(0, -ORN_DROP, 0)) };
 }
 function rebuildOrnaments() {
   if (!scene) return;
@@ -2865,9 +2926,11 @@ function rebuildOrnaments() {
   });
   if (by.cane) mk(ORN_GEO.cane, ORN_MAT.cane, by.cane.map(o => new THREE.Matrix4().compose(ornPlace(o).center, I, S)));
   const tm = ORNS.map(o => {
-    const q = ornPlace(o), top = q.center.clone().add(new THREE.Vector3(0, 0.29, 0));
-    const mid = q.p.clone().lerp(top, 0.5), len = Math.max(0.02, q.p.distanceTo(top));
-    return new THREE.Matrix4().compose(mid, I, new THREE.Vector3(1, len, 1));
+    const q = ornPlace(o), ring = q.center.clone().add(new THREE.Vector3(0, 0.39, 0));
+    const dir = ring.clone().sub(q.p), len = Math.max(0.02, dir.length());
+    const mid = q.p.clone().lerp(ring, 0.5);
+    const quat = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), dir.normalize());
+    return new THREE.Matrix4().compose(mid, quat, new THREE.Vector3(1, len, 1));
   });
   mk(ORN_GEO.thread, ORN_MAT.thread, tm);
   const tip = document.querySelector('#ornbar .orn-tip');
@@ -3302,6 +3365,8 @@ function bindInput() {
   const tb = (id, key) => { const el = $(id), on = (e) => { e.preventDefault(); if (key === 'j') { if (G.state === 'race') G.jumpQ = true; } else touch[key] = true; el.classList.add('on'); }, off = (e) => { e.preventDefault(); if (key !== 'j') touch[key] = false; el.classList.remove('on'); }; el.addEventListener('pointerdown', on); el.addEventListener('pointerup', off); el.addEventListener('pointercancel', off); el.addEventListener('pointerleave', off); };
   tb('#tL', 'l'); tb('#tR', 'r'); tb('#tB', 'b'); tb('#tJ', 'j');
   document.addEventListener('pointerdown', () => { if (G.state === 'menu' && !AU.muted && MGA.paused) menuBgm(true); }, true);
+  // 트리 음악이 iOS에서 막혀 멈춰 있으면 다음 터치(제스처)에서 바로 다시 틀어 준다
+  document.addEventListener('pointerdown', () => { if (G.treeView && !AU.muted && TGA.paused) { try { TGA.muted = false; TGA.volume = BGM_VOL * 0.62; const p = TGA.play(); if (p && p.catch) p.catch(() => { }); } catch (e) { } } }, true);
   document.addEventListener('contextmenu', (e) => { if (e.target && e.target.id === 'shotImg') return; e.preventDefault(); });
 }
 const pin = { steer: 0, brake: false, push: false, jump: false, spin: 0 };
@@ -3456,15 +3521,15 @@ boot().catch(e => { console.error(e); const l = $('#loading'); l.classList.remov
     if (pts.size >= 2 && pinchD && window.G && G.treeView) {
       const d = pinchNow(); if (d > 0) G.orbitDist = Math.max(4.5, Math.min(70, pinchZoom * pinchD / d));
       const a = [...pts.values()], cy = (a[0].y + a[1].y) / 2;
-      G.orbitFocus = Math.max(0, Math.min(1, pinchFocus - (cy - pinchCY) * 0.0016)); // 두 손가락으로도 시선 높이 이동
+      G.orbitFocus = Math.max(0, Math.min(1, pinchFocus + (cy - pinchCY) * 0.0016)); // 두 손가락으로도 시선 높이 이동
       return;
     }
     if (isDrag && can()) {
       const dy = e.clientY - dragY;
-      G.orbitYaw = startYaw + (e.clientX - dragX) * 0.008;
+      G.orbitYaw = startYaw - (e.clientX - dragX) * 0.008; // 손가락을 따라 트리가 같이 돌아가게(모바일 직관)
       if (window.G && G.treeView) {
-        G.orbitPitch = Math.max(-0.35, Math.min(0.9, startPitch + dy * 0.0008));
-        G.orbitFocus = Math.max(0, Math.min(1, startFocus - dy * 0.0016)); // 위로 끌면 위쪽, 아래로 끌면 선물상자 쪽
+        G.orbitPitch = Math.max(-0.35, Math.min(0.9, startPitch - dy * 0.0008));
+        G.orbitFocus = Math.max(0, Math.min(1, startFocus + dy * 0.0016)); // 위로 끌면 위쪽, 아래로 끌면 선물상자 쪽
       } else {
         G.orbitPitch = Math.max(-0.05, Math.min(0.8, startPitch + dy * 0.006));
       }
