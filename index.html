@@ -2225,7 +2225,7 @@ async function boot() {
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.75)); renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   scene = new THREE.Scene(); camera = new THREE.PerspectiveCamera(60, 1, 0.3, 3200);
   makeTextures(); W = buildWorld(scene); W.onFirework = () => { if (G.state === 'finish') SFX.firework(); }; updateTreeCards(); rebuildOrnaments();
-  try { window.__dbg = { camera, W }; } catch (e) { } // 진단용(개발자 도구에서 상태 확인)
+  try { window.__dbg = { camera, W, meshes, G }; } catch (e) { } // 진단용(개발자 도구에서 상태 확인)
   ROSTER.forEach((q, i) => { const m = makeRacer(THREE, CAST[q.key]); m.scale.setScalar(1.12); m.rotation.order = 'YXZ'; m.traverse(o => { if (o.isMesh) o.frustumCulled = false; }); scene.add(m); meshes.push(m); trails.push(new Trail(scene)); });
   makeThumbs(); resize(); window.addEventListener('resize', resize);
   if (window.visualViewport) { visualViewport.addEventListener('resize', resize); visualViewport.addEventListener('scroll', resize); }
