@@ -167,13 +167,13 @@ kbd{display:inline-block;min-width:26px;padding:1px 7px;margin:0 2px;border-radi
 @keyframes ogPulse{0%,100%{opacity:1}50%{opacity:.6}}
 #turbo{position:absolute;left:50%;bottom:66px;width:170px;margin-left:-85px;padding:7px 14px 10px;border-radius:14px;background:var(--bg);font-size:12px;font-weight:800;color:var(--acc);text-align:center;letter-spacing:.14em;opacity:0;transition:opacity .2s}
 #turbo.on{opacity:1}#turbo i{display:block;height:5px;border-radius:3px;background:var(--acc);margin-top:6px;transform-origin:left center}
-.shotbox{text-align:center}.shotbox img,#shotPrev{display:block;width:auto;height:auto;max-width:min(560px,100%);border-radius:14px;margin:0 auto 14px;box-shadow:0 12px 30px rgba(0,0,0,.4)}
+.shotbox{text-align:center}.shotbox img,#shotPrev{display:block;width:auto;height:auto;max-width:min(560px,100%);border-radius:0;margin:0 auto 14px;box-shadow:0 12px 30px rgba(0,0,0,.4)}
 #shotImg{pointer-events:auto;-webkit-touch-callout:default;user-select:auto;-webkit-user-select:auto;touch-action:auto}
 #shotPrev{width:auto;height:auto}
 .shotbox .note{margin:0 auto 14px;max-width:440px;line-height:1.55;text-align:center;word-break:keep-all;padding:0 4px}
 #shotMsgRow{margin:0 auto 12px;max-width:min(430px,82vw);text-align:left}
 #shotMsgRow label{display:block;margin:0 0 6px 4px;font-size:12px;font-weight:700;letter-spacing:.04em;color:var(--sub)}
-#shotMsg{width:100%;padding:11px 13px;border-radius:12px;border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.08);color:#fff;font-family:var(--k);font-size:15px;font-weight:600;outline:none;user-select:text;-webkit-user-select:text;touch-action:auto}
+#shotMsg{width:100%;padding:11px 13px;border-radius:12px;border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.08);color:#fff;font-family:'TypewriterKR','Courier New',ui-monospace,'AppleMyungjo',serif;font-size:14px;letter-spacing:.02em;font-weight:500;outline:none;user-select:text;-webkit-user-select:text;touch-action:auto}
 #shotMsg:focus{border-color:var(--acc);box-shadow:0 0 0 3px rgba(255,216,77,.16)}
 #shotMsg::placeholder{color:#8f99c2;font-weight:500}
 @media (max-width:520px){.modal .panel.shotbox{padding:20px 16px 16px;max-width:96vw}}
@@ -3365,7 +3365,7 @@ let _polCanvas = null, _polarLast = null, _polarTimer2 = 0;
 // 문구를 고치는 동안에는 캔버스를 그대로 보여 주고(인코딩 없음), 입력이 멈추면 저장용 JPEG로 바꾼다
 function showPolaroidPreview() { if (!_polCanvas) return; _polCanvas.classList.remove('hidden'); $('#shotImg').classList.add('hidden'); }
 function hidePolaroidPreview() { if (_polCanvas) _polCanvas.classList.add('hidden'); $('#shotImg').classList.remove('hidden'); }
-function polaroidCanvas(raw, customText) { // 3D 원본 장면 + 실제 폴라로이드 600/SX-70 필름 틀 + Pretendard 문구 합성
+function polaroidCanvas(raw, customText) { // 3D 원본 장면 + 실제 폴라로이드 600/SX-70 필름 틀 + 카드와 같은 활자 문구 합성
   // 실제 폴라로이드 필름 비율(88×108mm): 사진 창 79×79mm 정사각, 위·좌·우 여백 4.5mm, 하단 친 24.5mm
   const PW = 1080, S = 58, IW = 964, PH = 1312, CHIN = PH - (S + IW);   // 여백 58 · 사진 964 정사각 · 친 290
   const c = _polCanvas || (_polCanvas = document.createElement('canvas'));
@@ -3374,7 +3374,7 @@ function polaroidCanvas(raw, customText) { // 3D 원본 장면 + 실제 폴라�
   const x = c.getContext('2d'); x.clearRect(0, 0, PW, PH);
   const rr = (px, py, w, h, r) => { x.beginPath(); x.moveTo(px + r, py); x.arcTo(px + w, py, px + w, py + h, r); x.arcTo(px + w, py + h, px, py + h, r); x.arcTo(px, py + h, px, py, r); x.arcTo(px, py, px + w, py, r); x.closePath(); };
   // ① 필름 종이 — 쨍한 흰색 대신 따뜻한 오프화이트 인화지 (아래로 살짝 가라앉는 톤 + 미세한 종이 섬유)
-  x.save(); rr(0, 0, PW, PH, 18); x.clip();
+  x.save(); rr(0, 0, PW, PH, 0); x.clip();
   const pg = x.createLinearGradient(0, 0, 0, PH);
   pg.addColorStop(0, '#faf7f0'); pg.addColorStop(0.55, '#f6f2e8'); pg.addColorStop(1, '#f1ece1');
   x.fillStyle = pg; x.fillRect(0, 0, PW, PH);
@@ -3382,7 +3382,7 @@ function polaroidCanvas(raw, customText) { // 3D 원본 장면 + 실제 폴라�
   for (let i = 0; i < 700; i++) { x.fillStyle = `rgba(255,255,255,${0.05 + Math.random() * 0.06})`; x.fillRect(Math.random() * PW, Math.random() * PH, 1 + Math.random() * 2, 1); }
   // ② 사진 창 — 아날로그 필름 색감 + 비네트 + 그레인
   const IX = S, IY = S;
-  x.save(); rr(IX, IY, IW, IW, 4); x.clip();
+  x.save(); rr(IX, IY, IW, IW, 0); x.clip();
   try { x.filter = 'blur(0.5px) contrast(0.94) saturate(0.9) sepia(0.09) brightness(1.02)'; } catch (e) { }
   try {
     const rw = raw.width, rh = raw.height, sc = Math.max(IW / rw, IW / rh);   // cover: 비율이 달라도 늘어나지 않고 잘리기만
@@ -3402,11 +3402,11 @@ function polaroidCanvas(raw, customText) { // 3D 원본 장면 + 실제 폴라�
   x.strokeRect(IX - 26, IY - 26, IW + 52, IW + 52);
   x.restore();
   // ③ 사진 창 경계 — 바깥쪽 얇은 빛(종이 두께) + 안쪽 헤어라인
-  x.strokeStyle = 'rgba(255,255,255,.5)'; x.lineWidth = 2; rr(IX - 1.5, IY - 1.5, IW + 3, IW + 3, 5); x.stroke();
-  x.strokeStyle = 'rgba(96,80,58,.2)'; x.lineWidth = 1; rr(IX + 0.5, IY + 0.5, IW - 1, IW - 1, 4); x.stroke();
+  x.strokeStyle = 'rgba(255,255,255,.5)'; x.lineWidth = 2; rr(IX - 1.5, IY - 1.5, IW + 3, IW + 3, 0); x.stroke();
+  x.strokeStyle = 'rgba(96,80,58,.2)'; x.lineWidth = 1; rr(IX + 0.5, IY + 0.5, IW - 1, IW - 1, 0); x.stroke();
   // ④ 하단 친 여백 — 넓은 여백 안에 제목·문구·출처를 여백과 균형 있게
   x.textAlign = 'center'; x.textBaseline = 'middle';
-  const titleF = `800 42px ${FONT_P}`, msgF = `700 36px ${FONT_P}`;
+  const titleF = `700 40px ${FONT_T}`, msgF = `400 38px ${FONT_T}`;
   x.font = msgF;
   const lines = wrapLines(x, customText, IW - 96, 2);
   const TITLE_H = 50, MSG_LH = 46, GAP = 16, FOOT = 68;
@@ -3417,18 +3417,18 @@ function polaroidCanvas(raw, customText) { // 3D 원본 장면 + 실제 폴라�
   x.font = msgF; x.fillStyle = '#252b50';
   lines.forEach((ln) => { x.fillText(ln, PW / 2, by + MSG_LH / 2, IW - 96); by += MSG_LH; });
   const dd = new Date(), ds = `${dd.getFullYear()}.${String(dd.getMonth() + 1).padStart(2, '0')}.${String(dd.getDate()).padStart(2, '0')}`;
-  x.textBaseline = 'alphabetic'; x.fillStyle = '#a8a294'; x.font = `500 22px ${FONT_P}`;
+  x.textBaseline = 'alphabetic'; x.fillStyle = '#a8a294'; x.font = `400 22px ${FONT_T}`;
   x.textAlign = 'left'; x.fillText('citkorea.co.kr', S + 4, PH - 34);
   x.textAlign = 'right'; x.fillText(ds, PW - S - 4, PH - 34);
   x.restore();
   // ⑤ 필름 가장자리 — 아주 얇은 테두리
-  x.save(); rr(0.8, 0.8, PW - 1.6, PH - 1.6, 18); x.strokeStyle = 'rgba(120,105,80,.22)'; x.lineWidth = 1.6; x.stroke(); x.restore();
+  x.save(); rr(0.8, 0.8, PW - 1.6, PH - 1.6, 0); x.strokeStyle = 'rgba(120,105,80,.22)'; x.lineWidth = 1.6; x.stroke(); x.restore();
   return c;
 }
 async function takePolaroid() { // 오두막 앞에 네 캐릭터를 모아 한 장 찍고 폴라로이드 틀에 담는다
   if (G.state !== 'finish' && G.state !== 'result') return;
   SFX.click();
-  try { await Promise.race([Promise.all([`800 42px ${FONT_P}`, `700 36px ${FONT_P}`, `500 22px ${FONT_P}`].map(f => document.fonts.load(f, '가A1').catch(() => null))), new Promise(r => setTimeout(r, 1200))]); } catch (e) { }
+  try { await Promise.race([Promise.all([`400 38px ${FONT_T}`, `700 40px ${FONT_T}`, `400 22px ${FONT_T}`].map(f => document.fonts.load(f, '가A1').catch(() => null))), new Promise(r => setTimeout(r, 1200))]); } catch (e) { }
   const saved = meshes.map(m => ({ p: m.position.clone(), q: m.quaternion.clone() }));
   const camP = camera.position.clone(), camQ = camera.quaternion.clone(), camFov = camera.fov;
   let src = null;
