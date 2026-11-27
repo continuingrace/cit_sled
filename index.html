@@ -1351,21 +1351,22 @@ function buildWorld(scene) {
     P.push(bake(Sph(1, 16, 10), '#ffffff', MX(-3.4, -0.02, -2.4, 2.2, 0.7, 2.0)));
     TREE_LAYER_BASES.forEach((T, i) => {
       const rad = T.rad, h = T.h, y = T.base, ph = i * 1.7;
-      const wav = (th) => Math.sin(th * 6 + ph) * 0.085 + Math.sin(th * 11 + ph * 1.7) * 0.045 + Math.sin(th * 17 + ph * 0.6) * 0.022;
-      const cone = new THREE.ConeGeometry(rad, h, 34, 5, false), cp = cone.attributes.position;
+      const wav = (th) => Math.sin(th * 5 + ph) * 0.075 + Math.sin(th * 9 + ph * 1.7) * 0.04 + Math.sin(th * 13 + ph * 0.6) * 0.018;
+      const cone = new THREE.ConeGeometry(rad, h, 44, 5, false), cp = cone.attributes.position;
       for (let vi = 0; vi < cp.count; vi++) {
         const x = cp.getX(vi), yy = cp.getY(vi), z = cp.getZ(vi), t = clamp((yy + h / 2) / h, 0, 1), k = 1 - t, th = Math.atan2(z, x);
         const w = 1 + wav(th) * Math.pow(k, 0.55);
         cp.setX(vi, x * w); cp.setZ(vi, z * w);
-        cp.setY(vi, yy - (0.5 + 0.5 * Math.sin(th * 6 + ph)) * h * 0.085 * k * k + Math.sin(th * 9 + ph) * h * 0.012 * k);
+        cp.setY(vi, yy - (0.5 + 0.5 * Math.sin(th * 5 + ph)) * h * 0.05 * k * k + Math.sin(th * 9 + ph) * h * 0.01 * k);
       }
       cone.computeVertexNormals();
       P.push(shaded(cone, ['#1b5a3f', '#20694a', '#257452', '#2a7f59', '#2f8a60', '#359569', '#3b9f70'][i], '#4fae80', i, MX(0, y + h / 2, 0)));
       // 가지 끝에 소복하게 앉은 눈
-      const sl = new THREE.ConeGeometry(rad * 1.006, h * 0.16, 34, 1, true), sp2 = sl.attributes.position;
-      for (let vi = 0; vi < sp2.count; vi++) { const x = sp2.getX(vi), yy = sp2.getY(vi), z = sp2.getZ(vi), t = clamp((yy + h * 0.08) / (h * 0.16), 0, 1), th = Math.atan2(z, x), w = 1 + wav(th) * Math.pow(1 - t, 0.55); sp2.setX(vi, x * w); sp2.setZ(vi, z * w); }
+      const sl = new THREE.ConeGeometry(rad * 1.008, h * 0.2, 44, 1, true), sp2 = sl.attributes.position;
+      for (let vi = 0; vi < sp2.count; vi++) { const x = sp2.getX(vi), yy = sp2.getY(vi), z = sp2.getZ(vi), t = clamp((yy + h * 0.1) / (h * 0.2), 0, 1), th = Math.atan2(z, x), w = 1 + wav(th) * Math.pow(1 - t, 0.55); sp2.setX(vi, x * w); sp2.setZ(vi, z * w); }
       sl.computeVertexNormals();
-      P.push(bake(sl, '#f3f9ff', MX(0, y + h * 0.08, 0)));
+      P.push(bake(sl, '#f7fbff', MX(0, y + h * 0.1, 0)));
+      for (let k2 = 0; k2 < 9; k2++) { const a2 = (k2 + 0.5) / 9 * Math.PI * 2 + ph, rr2 = rad * (1 + wav(a2)) * 1.01; P.push(bake(Sph(1, 8, 6), '#ffffff', MX(Math.cos(a2) * rr2, y + h * 0.12, Math.sin(a2) * rr2, 0.42, 0.22, 0.42))); }
       // 따뜻한 전구: 층마다 고르게
       const nb = 9;
       for (let k2 = 0; k2 < nb; k2++) {
@@ -1393,7 +1394,7 @@ function buildWorld(scene) {
     // 발치 선물 상자
     giftPile(2111.5, 3.4, 3, 1.8); giftPile(2111.0, -3.6, 3, 1.8); giftPile(2108.8, 1.2, 2, 1.4);
     const m = new THREE.Mesh(merge(P), vc); m.matrixAutoUpdate = false; m.matrix.copy(F); m.frustumCulled = false; scene.add(m);
-    const gMesh = new THREE.Mesh(merge(goldGeo), new THREE.MeshStandardMaterial({ color: '#e6c078', metalness: 0.9, roughness: 0.26, emissive: '#4a340a', emissiveIntensity: 0.55 }));
+    const gMesh = new THREE.Mesh(merge(goldGeo), new THREE.MeshStandardMaterial({ color: '#f6d896', metalness: 0.25, roughness: 0.45, emissive: '#8a6620', emissiveIntensity: 0.9 }));
     gMesh.matrixAutoUpdate = false; gMesh.matrix.copy(F); gMesh.frustumCulled = false; scene.add(gMesh);
     // 꼭대기 금빛 별
     const sp = PT(F, 0, topY + 2.0, 0);
@@ -1935,11 +1936,11 @@ function setCam(dt, snap) {
   else if (st === 'intro') { menuCam(G.time); chaseCam(dt, true); const e = sst(0, 1, G.introT / 2.6), b = Math.sin(e * Math.PI); cam.pos.lerpVectors(mC.pos, cT.pos, e); cam.pos.y += b * 1.8; cam.look.lerpVectors(mC.look, cT.look, e); cam.fov = lerp(mC.fov, cT.fov, e); oP.copy(cam.pos); oL.copy(cam.look); fov = cam.fov; off = mC.off * (1 - e); }
   else { chaseCam(dt, snap); const k = snap ? 1 : 1 - Math.exp(-9 * dt); cam.pos.lerp(cT.pos, k); cam.look.lerp(cT.look, snap ? 1 : 1 - Math.exp(-12 * dt)); cam.fov += (cT.fov - cam.fov) * (snap ? 1 : Math.min(1, dt * 4)); oP.copy(cam.pos); oL.copy(cam.look); fov = cam.fov;
     if (G.treeView) { // 결승 대형 트리를 정면에서 천천히 둘러보는 카메라
-      const yaw = (G.treeBaseAng || 0) + (G.orbitYaw || 0), pit = Math.max(-0.06, Math.min(0.8, G.orbitPitch || 0)), dist = clamp(G.orbitDist || (innerWidth / innerHeight > 1.15 ? 34 : 26), 4.5, 48);
+      const yaw = (G.treeBaseAng || 0) + (G.orbitYaw || 0), pit = Math.max(-0.06, Math.min(0.8, G.orbitPitch || 0)), treeH = treeTopY() + 2.6, wide = innerWidth / innerHeight > 1.15, dist = clamp(G.orbitDist || treeH * (wide ? 1.7 : 1.45), 4.5, 60);
       wpos(2112, 0, 0, eP);
       oP.set(eP.x + Math.sin(yaw) * Math.cos(pit) * dist, eP.y + 12 + Math.sin(pit) * dist, eP.z + Math.cos(yaw) * Math.cos(pit) * dist);
-      oL.set(eP.x, eP.y + 10.5, eP.z);
-      fov = innerWidth / innerHeight > 1.15 ? 48 : 62;
+      oL.set(eP.x, eP.y + treeH * 0.46, eP.z);
+      fov = wide ? 48 : 62;
     } else if (st === 'finish' || st === 'result') { // 오두막 앞 마지막 장면으로 천천히 이동
       const e = sst(0.4, 4.2, G.finT), sw = Math.sin(G.time * 0.22), wide = innerWidth / innerHeight > 1.15;
       wpos(2049.5 - sw * 0.8, 5.4 + sw * 1.1, 4.5, eP); wpos(2079, -0.6, 3.4, eL); oP.lerp(eP, e); oL.lerp(eL, e); fov = lerp(fov, wide ? 43 : 58, e);
@@ -2239,7 +2240,7 @@ function openTreeView() {
   G.treeView = true; G.state = 'result'; G.resOpen = false; G.finT = 4.5;
   const tP = wpos(2112, 0, 0, new THREE.Vector3()), hP = wpos(2080, 0, 0, new THREE.Vector3());
   G.treeBaseAng = Math.atan2(hP.x - tP.x, hP.z - tP.z);
-  G.autoSpin = true; G.orbitYaw = 0; G.orbitPitch = 0.18; G.orbitDist = innerWidth / innerHeight > 1.15 ? 34 : 26;
+  G.autoSpin = true; G.orbitYaw = 0; G.orbitPitch = 0.18; G.orbitDist = (treeTopY() + 2.6) * (innerWidth / innerHeight > 1.15 ? 1.7 : 1.45);
   closeCardView();
   resetWorld(); G.lastSec = -1; G.offR = 0;
   $('#result').classList.add('hidden'); $('#endbar').classList.add('hidden'); orbitHint(false);
@@ -2400,7 +2401,7 @@ function initCards() {
 }
 // ---------- 트리에 꽂는 작은 봉투 엽서 오너먼트 ----------
 // 결승 트리의 7개 가지 층 — buildWorld의 결승 트리와 같은 수치(가지 끝 반경·높이)
-const TREE_TIERS = [[8.6, 5.0], [7.9, 4.8], [7.1, 4.6], [6.2, 4.4], [5.2, 4.2], [4.0, 4.0], [2.7, 3.4]];
+const TREE_TIERS = [[7.8, 6.2], [7.1, 5.9], [6.4, 5.6], [5.6, 5.2], [4.7, 4.7], [3.7, 4.1], [2.6, 3.3]];
 const TREE_LAYER_BASES = (() => { let b = 3; return TREE_TIERS.map(([rad, h]) => { const base = b; b += h * 0.58; return { base, h, rad }; }); })();
 function treeRadiusAt(y) { // 겹친 가지 중 가장 바깥 실루엣 반경 — 봉투가 가지 끝에 걸려 보이도록
   let r = 0;
@@ -3144,7 +3145,7 @@ boot().catch(e => { console.error(e); const l = $('#loading'); l.classList.remov
     if (!can()) return;
     if (e.target && e.target.closest && e.target.closest('button, input, a, .tb, #endbar, .modal:not(.hidden)')) return;
     if (pts.size >= 2 && window.G && G.treeView) { // 두 손가락 핀치 줌
-      pinchD = pinchNow() || 1; pinchZoom = G.orbitDist || 26; isDrag = false; G.autoSpin = false; return;
+      pinchD = pinchNow() || 1; pinchZoom = G.orbitDist || 40; isDrag = false; G.autoSpin = false; return;
     }
     if (pts.size > 1) { isDrag = false; return; }
     isDrag = true;
@@ -3156,7 +3157,7 @@ boot().catch(e => { console.error(e); const l = $('#loading'); l.classList.remov
   window.addEventListener('pointermove', function (e) {
     if (pts.has(e.pointerId)) pts.set(e.pointerId, { x: e.clientX, y: e.clientY });
     if (pts.size >= 2 && pinchD && window.G && G.treeView) {
-      const d = pinchNow(); if (d > 0) G.orbitDist = Math.max(4.5, Math.min(48, pinchZoom * pinchD / d));
+      const d = pinchNow(); if (d > 0) G.orbitDist = Math.max(4.5, Math.min(60, pinchZoom * pinchD / d));
       return;
     }
     if (isDrag && can()) {
@@ -3171,7 +3172,7 @@ boot().catch(e => { console.error(e); const l = $('#loading'); l.classList.remov
     if (!window.G || !G.treeView) return;
     if (e.target && e.target.closest && e.target.closest('.modal:not(.hidden), #treebar, #endbar')) return;
     e.preventDefault();
-    G.orbitDist = Math.max(4.5, Math.min(48, (G.orbitDist || 26) * (1 + Math.sign(e.deltaY) * 0.08)));
+    G.orbitDist = Math.max(4.5, Math.min(60, (G.orbitDist || 40) * (1 + Math.sign(e.deltaY) * 0.08)));
     G.autoSpin = false;
   }, { passive: false });
 })();
