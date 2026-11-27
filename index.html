@@ -30,6 +30,9 @@ body{position:fixed;inset:0;overscroll-behavior:none;width:100%;height:100%;back
 @media (display-mode:standalone){html,body{height:100lvh}#gl{height:100lvh;min-height:100lvh}#menu,.modal,#loading,#fade{height:100lvh}}
 html.st,html.st body{height:100lvh}
 html.st #gl{height:100lvh;min-height:100lvh}
+/* iOS 홈화면 웹앱은 safe-area-inset-top이 작게(0~30px) 보고되는 경우가 있어, 상태바 아래로 확실히 내려가도록 하한을 둔다 */
+html.st{--hudtop:max(54px,calc(env(safe-area-inset-top,0px) + 8px))}
+html.st #menu .menu-snd{top:max(54px,calc(env(safe-area-inset-top,0px) + 12px))}
 html.st #menu,html.st .modal,html.st #loading,html.st #fade{height:100lvh}
 #sap{position:fixed;left:0;top:0;width:1px;height:env(safe-area-inset-top,0px);pointer-events:none;opacity:0;z-index:-1}
 .hidden{display:none!important}
@@ -483,13 +486,15 @@ body.paused *{animation-play-state:paused!important}
 }
 /* 2) 첫 메인 시트: 카드가 눌려 잘리지 않고(플렉스 축소 금지) 여백을 조금씩 줄여 '내 최고 기록'·버전까지 한 화면에 */
 @media (max-width:560px){
+  /* 하단 시스템 띠가 시트 바닥과 같은 색이 되도록 루트 배경색도 시트와 맞춤 */
+  html,body{background-color:#18203a}
   #menu{padding:calc(var(--sat) + 8px) 0 0}
   #menu .mcol{max-height:100%;gap:9px;padding:0}
   #menu .mcol>*{flex:none}
   #menu .brand{gap:4px}
   #menu .brand .logo{font-size:32px}
   #menu .brand-sub{font-size:9.5px}
-  #menu .card{padding:16px 16px calc(14px + var(--sab));gap:8px;flex:none;min-height:0}
+  #menu .card{padding:16px 16px calc(14px + var(--sab));gap:8px;flex:none;min-height:0;background-color:#18203a;background-image:linear-gradient(180deg,rgba(17,24,50,.92) 0%,rgba(21,28,53,.94) 55%,rgba(24,32,58,.98) 100%);border-bottom-left-radius:0;border-bottom-right-radius:0;margin-bottom:0}
   #menu .lbl{font-size:12px;margin-bottom:-5px}
   #menu .chars{gap:7px}
   #menu .char span{padding:5px 2px 6px;font-size:12px}
@@ -565,7 +570,7 @@ body.paused *{animation-play-state:paused!important}
       <button class="btn big" id="bStart">출발 <small>ENTER</small></button>
       <div class="row"><button class="btn sub" id="bHelp">조작법</button><button class="btn sub" id="bBoard">순위표</button><button class="btn sub" id="bCards">카드 남기기</button></div>
       <div class="best" id="best"></div>
-      <div class="appver" id="appVer">v1.4</div>
+      <div class="appver" id="appVer">v1.5</div>
     </div>
   </div>
 </div>
@@ -1970,7 +1975,7 @@ function makeVillager(o) {
 }
 
 // ===== 버전 표기 (배포할 때마다 이 값만 올린다) =====
-const APP_VER = 'v1.4';
+const APP_VER = 'v1.5';
 try { const av = document.getElementById('appVer'); if (av) av.textContent = APP_VER; } catch (e) { }
 
 // ===== 사운드 (효과음: Web Audio 직접 합성 / BGM: 실제 캐럴 MP3) =====
