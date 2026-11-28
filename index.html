@@ -2006,7 +2006,7 @@ function makeVillager(o) {
 }
 
 // ===== 버전 표기 (배포할 때마다 이 값만 올린다) =====
-const APP_VER = 'v1.27';
+const APP_VER = 'v1.28';
 try { const av = document.getElementById('appVer'); if (av) av.textContent = APP_VER; } catch (e) { }
 
 // ===== 사운드 (효과음: Web Audio 직접 합성 / BGM: 실제 캐럴 MP3) =====
@@ -2035,6 +2035,7 @@ const BGA = new Audio();
 BGA.loop = false; BGA.preload = 'auto'; BGA.volume = BGM_VOL;
 BGA.setAttribute('playsinline', ''); BGA.setAttribute('webkit-playsinline', '');
 let bgaUnlocked = false;
+let userGesture = false;   // 첫 터치·클릭이 있었는지 (오디오 깨우기·첫 재생 판단)
 BGA.addEventListener('error', () => { if (AU.on) { AU.synth = true; AU.idx = 0; AU.beatPos = 0; AU.next = AU.ctx ? AU.ctx.currentTime + 0.05 : 0; } });
 // 한 곡이 끝나면 같은 곡을 되풀이하지 않고 다음 캐럴로 넘어간다 (레이스 중일 때만 소리가 나므로 AU.on으로 판단)
 BGA.addEventListener('ended', () => {
@@ -2047,27 +2048,62 @@ BGA.addEventListener('ended', () => {
   if (!AU.celeb && G.state === 'race') pop('🎵 ' + tr.name, 'gold music');
 });
 // 메뉴 배경음악: 호두까기인형 중 '꽃의 왈츠'가 아닌 악장 3곡을 랜덤 시작 → 곡이 끝나면 다음 곡으로 순환
+// start: 앞부분의 거의 들리지 않는 도입부(무음·페이드인)를 건너뛰고 첫 소리가 바로 나도록 하는 재생 시작 위치(초).
+//   실측 dB — 행진곡은 1.2초까지 -45dB 이하, 트레팍은 0.62초, 사탕 요정은 0.28초까지 들리지 않는다.
 const MENU_TRACKS = [
-  { ko: '사탕 요정의 춤', name: 'Dance of the Sugar Plum Fairy (The Nutcracker)', file: './audio/menu-sugar-plum.mp3' },
-  { ko: '행진곡', name: 'March (The Nutcracker)', file: './audio/menu-march.mp3' },
-  { ko: '트레팍', name: 'Trepak - Russian Dance (The Nutcracker)', file: './audio/menu-trepak.mp3' }
+  { ko: '사탕 요정의 춤', name: 'Dance of the Sugar Plum Fairy (The Nutcracker)', file: './audio/menu-sugar-plum.mp3', start: 0.28 },
+  { ko: '행진곡', name: 'March (The Nutcracker)', file: './audio/menu-march.mp3', start: 1.20 },
+  { ko: '트레팍', name: 'Trepak - Russian Dance (The Nutcracker)', file: './audio/menu-trepak.mp3', start: 0.62 }
 ];
 const MGA = new Audio();
 MGA.preload = 'auto'; MGA.volume = BGM_VOL * 0.7; MGA.muted = true; // 첫 터치에 바로 소리가 나도록 미리 받아 둔다
 MGA.setAttribute('playsinline', ''); MGA.setAttribute('webkit-playsinline', '');
 let menuI = Math.floor(Math.random() * MENU_TRACKS.length);
-try { MGA.src = bgmSrc(MENU_TRACKS[menuI]); MGA.load(); } catch (e) { }
+// 아이폰 사파리는 <audio preload="auto">를 사실상 무시하고 첫 play() 때부터 받기 시작한다.
+// 그래서 1.9MB짜리 곡을 그 순간 받느라 첫 터치 뒤 몇 초가 조용했다(v1.28).
+// 로딩 중에 fetch로 미리 받아 Blob으로 들고 있다가, 터치 순간 메모리에서 바로 재생한다.
+const MENU_BLOB = MENU_TRACKS.map(() => '');
+const MENU_FETCH = MENU_TRACKS.map(() => null);
+function menuSrc(i) { return MENU_BLOB[i] || bgmSrc(MENU_TRACKS[i]); }
+function menuStart(i) { return MENU_TRACKS[i].start || 0; }
+function adoptMenuBlob(i) { // 아직 재생을 시작하지 않았으면 미리 받아 둔 Blob을 물려 준다
+  if (i !== menuI || !MENU_BLOB[i]) return;
+  if (!MGA.paused || MGA.currentTime > 0.05) return;
+  try { MGA.src = MENU_BLOB[i]; MGA.currentTime = menuStart(i); } catch (e) { }
+}
+function prefetchMenuTrack(i) {
+  if (!window.fetch || MENU_BLOB[i] || MENU_FETCH[i]) return;
+  let ctl = null;
+  try { ctl = new AbortController(); } catch (e) { ctl = null; }
+  MENU_FETCH[i] = ctl;
+  let p;
+  try { p = fetch(MENU_TRACKS[i].file, ctl ? { cache: 'force-cache', signal: ctl.signal } : { cache: 'force-cache' }); } catch (e) { MENU_FETCH[i] = null; return; }
+  p.then(r => (r && r.ok) ? r.blob() : null).then(b => {
+    if (!b) return;
+    MENU_BLOB[i] = URL.createObjectURL(b);
+    adoptMenuBlob(i);
+  }).catch(() => { }).then(() => { if (MENU_FETCH[i] === ctl) MENU_FETCH[i] = null; });
+}
+function abortMenuFetch(i) { const c = MENU_FETCH[i]; if (!c) return; MENU_FETCH[i] = null; try { c.abort(); } catch (e) { } } // 직접 받아 재생하므로 중복 다운로드 취소
+prefetchMenuTrack(menuI);   // 로딩이 끝나기 전에 미리 받아 둔다 (첫 메인 터치 순간에 바로 재생)
 MGA.addEventListener('ended', () => {
   if (G.state !== 'menu' || AU.muted) return;
   menuI = (menuI + 1) % MENU_TRACKS.length; playMenuTrack();
 });
+// iOS에서 첫 재생이 로딩에 막혀 멈춰 있으면 준비되는 대로 다시 튼다 (사용자가 한 번이라도 건드린 뒤에만)
+MGA.addEventListener('canplay', () => { try { if (userGesture && wantMenuBgm() && MGA.paused) playMenuGuarded(); } catch (e) { } });
+// 한 곡이 흐르기 시작하면 다음 곡을 뒤에서 미리 받아 둔다 — 곡이 끝나 다음 곡으로 넘어갈 때도 지연 없이
+MGA.addEventListener('playing', () => { try { prefetchMenuTrack((menuI + 1) % MENU_TRACKS.length); } catch (e) { } });
 function playMenuTrack() {
   try {
     if (!wantMenuBgm()) { stopMenuBgm(); return; }  // 이미 다른 화면이면 시작하지 않는다
     stopRaceBgm(); stopTreeBgm();                   // 메인 곡 하나만 남긴다
-    const want = bgmSrc(MENU_TRACKS[menuI]);
-    if (MGA.src !== want) MGA.src = want;   // 이미 받아 둔 곡이면 다시 받지 않는다
+    const want = menuSrc(menuI);
+    if (MGA.src !== want) { MGA.src = want; MGA.currentTime = 0; }   // 이미 받아 둔 곡이면 다시 받지 않는다
+    if (!MENU_BLOB[menuI]) abortMenuFetch(menuI);   // 직접 받아 재생하는 경우 미리 받기는 취소
     MGA.muted = AU.muted; MGA.volume = BGM_VOL * 0.7;
+    if (MGA.currentTime < 0.05) { const st = menuStart(menuI); if (st) { try { MGA.currentTime = st; } catch (e) { } } } // 앞 무음 건너뛰기
+    prefetchMenuTrack((menuI + 1) % MENU_TRACKS.length); // 다음 곡은 이 곡이 흐르는 동안 미리 받아 둔다
     playMenuGuarded();
   } catch (e) { }
 }
@@ -2132,7 +2168,7 @@ function hardPause(el) { try { el.pause(); } catch (e) { } }
 function stopMenuBgm() { menuPlayGen++; hardPause(MGA); }
 function stopRaceBgm() { racePlayGen++; hardPause(BGA); }
 function stopTreeBgm() { treePlayGen++; hardPause(TGA); }
-function wantMenuBgm() { return !AU.muted && !G.treeView && G.state === 'menu'; }
+function wantMenuBgm() { return !AU.muted && !G.treeView && (G.state === 'menu' || G.state === 'boot'); }   // 로딩 중 첫 터치에서도 바로 켠다
 function playMenuGuarded() {
   if (document.hidden) return;   // 백그라운드에서는 어떤 경로로도 소리를 켜지 않는다
   const gen = ++menuPlayGen;
@@ -2198,6 +2234,7 @@ function auResume() {
 }
 ['touchstart', 'touchend', 'click', 'pointerdown'].forEach(evt => {
   window.addEventListener(evt, () => {
+    userGesture = true;   // 한 번이라도 건드렸으면 메뉴 곡을 켜도 된다(오토플레이 시도·제한 회피 판단에 사용)
     setPlaybackSession();
     bgmUnlock();
     auResume();
@@ -4563,11 +4600,12 @@ function whiteFade(fn) { const f = $('#fade'); f.classList.add('on'); setTimeout
 function pause(v, silent) { if (G.state !== 'race' && !G.paused) return; G.paused = v === undefined ? !G.paused : v; $('#pause').classList.toggle('hidden', !G.paused || !!silent || !$('#help').classList.contains('hidden')); document.body.classList.toggle('paused', G.paused); if (G.paused) auEngine(0, false, true); }
 function resetWorld() { Object.values(W.snowmen).forEach(m => { m.visible = true; m.position.copy(m.userData.home); m.rotation.x = m.rotation.z = 0; }); trails.forEach(t => t.reset()); W.fireOn = false; G.lastSec = -1; G.offR = 0; G.last = null; G.saved = 0; G.mine = null; G.resOpen = false; $('#endbar').classList.add('hidden'); orbitHint(false); $('#shot').classList.add('hidden'); $('#turbo').classList.remove('on'); $('#gl').style.cursor = ''; }
 function toMenu(first) {
-  G.state = 'menu'; G.R = newRace(G.diff, 1); resetWorld(); G.finT = 0; G.orbitYaw = 0; G.orbitPitch = 0; G.orbitFocus = 0.45; G.autoSpin = false; G.orbitDist = 22; G.snowball = false; G.ornMode = false; ['#tbSnow', '#bSnow', '#tbOrn'].forEach(q => { const b = $(q); if (b) b.classList.remove('on'); }); const ob = $('#ornbar'); if (ob) ob.classList.remove('on'); AU.celeb = false; bgm(false); stopMenuBgm(); stopTreeBgm(); auEngine(0, false, true);
+  const keepMenu = !!first && !MGA.paused;   // 로딩 중 첫 터치로 이미 켠 메뉴 곡은 끊지 않고 이어 간다
+  G.state = 'menu'; G.R = newRace(G.diff, 1); resetWorld(); G.finT = 0; G.orbitYaw = 0; G.orbitPitch = 0; G.orbitFocus = 0.45; G.autoSpin = false; G.orbitDist = 22; G.snowball = false; G.ornMode = false; ['#tbSnow', '#bSnow', '#tbOrn'].forEach(q => { const b = $(q); if (b) b.classList.remove('on'); }); const ob = $('#ornbar'); if (ob) ob.classList.remove('on'); AU.celeb = false; bgm(false); if (!keepMenu) stopMenuBgm(); stopTreeBgm(); auEngine(0, false, true);
   $('#result').classList.add('hidden'); $('#board').classList.add('hidden'); $('#hud').classList.remove('on'); $('#menu').classList.remove('hidden'); requestAnimationFrame(() => $('#menu').classList.remove('out')); showBest(); $('#speedlines').style.opacity = 0;
   if (!first) setTimeout(() => { if (G.state === 'menu') $('#hud').classList.add('hidden'); }, 500); else $('#hud').classList.add('hidden');
   requestAnimationFrame(fitBrand); setTimeout(fitBrand, 120);
-  setTimeout(() => { if (G.state === 'menu') menuBgm(true); }, 60);
+  if (!keepMenu) setTimeout(() => { if (G.state === 'menu' && (userGesture || MENU_BLOB[menuI])) menuBgm(true); }, 60);   // 미리 받아 둔 곡이 있으면 자동재생이 허용된 브라우저에서는 바로 튼다(첫 터치 전 선반입은 건드리지 않게)
 }
 function startRace(again) {
   if (G.state !== 'menu' && !again) return;
