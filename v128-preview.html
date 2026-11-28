@@ -2092,6 +2092,8 @@ MGA.addEventListener('ended', () => {
 });
 // iOS에서 첫 재생이 로딩에 막혀 멈춰 있으면 준비되는 대로 다시 튼다 (사용자가 한 번이라도 건드린 뒤에만)
 MGA.addEventListener('canplay', () => { try { if (userGesture && wantMenuBgm() && MGA.paused) playMenuGuarded(); } catch (e) { } });
+// 한 곡이 흐르기 시작하면 다음 곡을 뒤에서 미리 받아 둔다 — 곡이 끝나 다음 곡으로 넘어갈 때도 지연 없이
+MGA.addEventListener('playing', () => { try { prefetchMenuTrack((menuI + 1) % MENU_TRACKS.length); } catch (e) { } });
 function playMenuTrack() {
   try {
     if (!wantMenuBgm()) { stopMenuBgm(); return; }  // 이미 다른 화면이면 시작하지 않는다
