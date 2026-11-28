@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>BGM 즉시재생 계측 (v1.28 검증용)</title>
+<style>
+  body{margin:0;padding:24px;background:#101a4a;color:#fff;font:16px/1.5 -apple-system,system-ui,sans-serif}
+  h1{font-size:18px;margin:0 0 6px}
+  #tap{display:block;width:100%;max-width:520px;height:52vh;margin:14px 0;border:2px solid #c9a24a;border-radius:14px;background:#16224f;color:#f3e6c8;font-size:20px}
+  table{border-collapse:collapse;width:100%;max-width:760px;font-size:13px}
+  td,th{border-bottom:1px solid #2a3768;padding:6px 8px;text-align:left}
+  code{color:#9fd0ff}
+</style></head><body>
+<h1>BGM 즉시재생 계측 — 첫 터치 → 소리까지</h1>
+<p>화면을 누르면 4가지 경우를 차례로 잰다. (Blob 선반입 vs 직접 URL 스트리밍)</p>
+<button id="tap">여기를 누르세요 (터치 = 측정 시작)</button>
+<table id="out"><thead><tr><th>경우</th><th>터치→playing</th><th>터치→소리 진행</th><th>재생 전 readyState</th></tr></thead><tbody></tbody></table>
+<div id="env" style="margin-top:12px;font-size:12px;opacity:.8"></div>
+<script>
+const TRACK = './audio/menu-march.mp3';
+const START = 1.20;
+const rows = []; window.BENCH = rows;
+let blobURL = '';
+const tb = document.querySelector('#out tbody');
+function addRow(name, t1, t2, rs) {
+  rows.push({ name, playing: t1, advance: t2, readyBefore: rs });
+  const tr = document.createElement('tr');
+  tr.innerHTML = '<td>' + name + '</td><td>' + (t1 == null ? '-' : Math.round(t1) + ' ms') + '</td><td>' + (t2 == null ? '-' : Math.round(t2) + ' ms') + '</td><td>' + rs + '</td>';
+  tb.appendChild(tr);
+}
+// 선반입: 실제 게임과 같은 방식(fetch → Blob URL)
+const t0 = performance.now();
+fetch(TRACK, { cache: 'force-cache' }).then(r => r.ok ? r.blob() : null).then(b => {
+  if (!b) return;
+  blobURL = URL.createObjectURL(b);
+  document.querySelector('#env').textContent = 'Blob 준비: ' + Math.round(performance.now() - t0) + 'ms, ' + Math.round(b.size / 1024) + 'KB, UA=' + navigator.userAgent.slice(0, 80);
+}).catch(() => { });
+function measure(name, src, preload, tDown) {
+  return new Promise(res => {
+    const a = new Audio();
+    a.preload = preload; a.volume = 0.5;
+    a.src = src;
+    const rs = a.readyState;
+    let tPlay = null, tAdv = null, done = false;
+    const fin = () => {
+      if (done) return; done = true;
+      try { a.pause(); } catch (e) { }
+      addRow(name, tPlay == null ? null : tPlay - tDown, tAdv == null ? null : tAdv - tDown, rs);
+      res();
+    };
+    a.addEventListener('playing', () => { if (tPlay == null) tPlay = performance.now(); });
+    a.addEventListener('timeupdate', () => { if (a.currentTime > 0.02 && tAdv == null) tAdv = performance.now(); });
+    a.addEventListener('error', fin);
+    try { a.currentTime = START; } catch (e) { }
+    const p = a.play();
+    if (p && p.catch) p.catch(() => { });
+    setTimeout(fin, 6000);
+  });
+}
+document.getElementById('tap').addEventListener('pointerdown', async (e) => {
+  const tDown = performance.now();
+  document.getElementById('tap').textContent = '측정 중…';
+  if (!blobURL) addRow('Blob(아직 준비 전)', null, null, 0);
+  if (blobURL) await measure('A. Blob 선반입 (v1.28 방식)', blobURL, 'auto', tDown);
+  await measure('B. 직접 URL · preload=none (아이폰 기본 동작)', TRACK, 'none', tDown);
+  if (blobURL) await measure('A2. Blob 선반입 (반복)', blobURL, 'auto', tDown);
+  await measure('B2. 직접 URL · preload=none (반복)', TRACK, 'none', tDown);
+  document.getElementById('tap').textContent = '다시 누르면 재측정';
+}, { once: false });
+</script>
+</body></html>
