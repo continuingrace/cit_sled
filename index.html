@@ -4124,6 +4124,21 @@ function sceneShot() {
   x.strokeStyle = 'rgba(216,190,134,0.34)'; x.lineWidth = Math.max(1, 1.1 * u); rr(x, bx + x.lineWidth / 2, by + x.lineWidth / 2, tw + padX * 2 - x.lineWidth, bh - x.lineWidth, (bh - x.lineWidth) / 2); x.stroke();
   x.fillStyle = '#e0c795';
   let lx = bx + padX; for (const ch of label) { x.fillText(ch, lx, by + bh / 2 + 1 * u); lx += x.measureText(ch).width + track; }
+  // 좌하단 게임 주소 — 우하단 배지와 같은 높이·수직 중앙, 좌우 여백 대칭(각 64u)의 얇은 알약
+  // 좁은 모바일 캡처에서는 배지와 겹치지 않도록 글자 크기를 줄여 폭을 맞춥니다
+  const url = 'continuingrace.github.io/cit_sled';
+  const EDGE = 64 * u, gapMin = 22 * u; let uPad = 22 * u, ufs = 22 * u, uw = 0;
+  x.textAlign = 'left'; x.textBaseline = 'middle';
+  const uwAt = (f) => { x.font = `500 ${f}px ${FONT_P}`; return x.measureText(url).width; };
+  uw = uwAt(ufs);
+  const uwMax = w - EDGE * 2 - (tw + padX * 2) - gapMin - uPad * 2;
+  while (uw > uwMax && ufs > 9 * u) { ufs -= 0.5 * u; uw = uwAt(ufs); }
+  if (uw > uwMax) { uPad = Math.max(8 * u, uPad * 0.6); }
+  x.fillStyle = 'rgba(11,16,36,0.38)'; rr(x, EDGE, by, uw + uPad * 2, bh, bh / 2); x.fill();
+  x.strokeStyle = 'rgba(216,190,134,0.22)'; x.lineWidth = Math.max(1, 1.1 * u); rr(x, EDGE + x.lineWidth / 2, by + x.lineWidth / 2, uw + uPad * 2 - x.lineWidth, bh - x.lineWidth, (bh - x.lineWidth) / 2); x.stroke();
+  x.save(); x.shadowColor = 'rgba(6,12,32,.45)'; x.shadowBlur = 8 * u;
+  x.fillStyle = 'rgba(224,199,149,0.92)'; x.font = `500 ${ufs}px ${FONT_P}`; x.fillText(url, EDGE + uPad, by + bh / 2 + 1 * u);
+  x.restore();
   openShot(c, '장면 캡처', 'cit-sled-scene.jpg');
 }
 function shareCard(kind) { // 인스타그램 스토리(9:16) · 피드(4:5) 크기의 결과 카드
